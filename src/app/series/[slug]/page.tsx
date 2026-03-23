@@ -75,7 +75,7 @@ export default function SeriesPage({ params }: Props) {
               href={s.bundleGumroadUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="px-6 py-3 border border-primary text-caption uppercase tracking-widest text-primary hover:bg-primary hover:text-bg transition-colors duration-500 text-center whitespace-nowrap"
+              className="px-6 py-3 bg-primary text-bg text-caption uppercase tracking-widest hover:opacity-90 transition-opacity duration-500 text-center whitespace-nowrap"
             >
               Download Bundle
             </a>

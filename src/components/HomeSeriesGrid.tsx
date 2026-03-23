@@ -68,31 +68,35 @@ export default function HomeSeriesGrid({ series, index }: HomeSeriesGridProps) {
         </div>
 
         {/* Mobile: horizontal scroll row */}
-        <div className="md:hidden flex overflow-x-auto gap-0 scrollbar-hide -mx-6 px-6">
-          {series.pieces.map((piece) => (
-            <Link
-              key={piece.id}
-              href={`/piece/${piece.id}`}
-              className="flex-shrink-0 block"
-              style={{ width: "45vw" }}
-            >
-              <div
-                className="overflow-hidden"
-                style={{ backgroundColor: series.background }}
+        <div className="md:hidden relative">
+          <div className="flex overflow-x-auto gap-3 scrollbar-hide -mx-6 px-6 snap-x snap-mandatory">
+            {series.pieces.map((piece) => (
+              <Link
+                key={piece.id}
+                href={`/piece/${piece.id}`}
+                className="flex-shrink-0 block snap-start"
+                style={{ width: "65vw" }}
               >
-                <Image
-                  src={piece.imageUrl}
-                  alt={`${piece.title} — ${piece.equation}`}
-                  width={240}
-                  height={165}
-                  className="w-full h-auto block"
-                />
-              </div>
-              <p className="text-center text-caption text-muted mt-1 truncate px-1">
-                {piece.title}
-              </p>
-            </Link>
-          ))}
+                <div
+                  className="overflow-hidden"
+                  style={{ backgroundColor: series.background }}
+                >
+                  <Image
+                    src={piece.imageUrl}
+                    alt={`${piece.title} — ${piece.equation}`}
+                    width={240}
+                    height={165}
+                    className="w-full h-auto block"
+                  />
+                </div>
+                <p className="text-center text-caption text-secondary mt-1 truncate px-1">
+                  {piece.title}
+                </p>
+              </Link>
+            ))}
+          </div>
+          {/* Right-edge gradient to signal scrollability */}
+          <div className="absolute right-0 top-0 bottom-6 w-8 bg-gradient-to-l from-bg to-transparent pointer-events-none" />
         </div>
       </div>
 

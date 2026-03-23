@@ -1,9 +1,10 @@
-import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import EquationLabel from "@/components/EquationLabel";
 import PrintCard from "@/components/PrintCard";
 import LicenseTerms from "@/components/LicenseTerms";
+import ImageLightbox from "@/components/ImageLightbox";
+import StickyBuyButton from "@/components/StickyBuyButton";
 import {
   allPieces,
   getPieceBySlug,
@@ -39,19 +40,18 @@ export default function PiecePage({ params }: Props) {
   );
 
   return (
-    <div className="pt-20 pb-16">
-      {/* Full-width image */}
+    <div className="pt-20 pb-24 md:pb-16">
+      {/* Full-width image with lightbox */}
       <div
         className="w-full max-w-5xl mx-auto md:px-6 mb-12"
         style={{ backgroundColor: piece.background }}
       >
-        <Image
+        <ImageLightbox
           src={piece.imageUrl}
           alt={`${piece.title} — ${piece.equation}`}
           width={1680}
           height={1155}
-          className="w-full h-auto"
-          priority
+          background={piece.background}
         />
       </div>
 
@@ -99,7 +99,7 @@ export default function PiecePage({ params }: Props) {
                   href={piece.gumroadUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="px-6 py-3 border border-primary text-caption uppercase tracking-widest text-primary hover:bg-primary hover:text-bg transition-colors duration-500"
+                  className="px-6 py-3 bg-primary text-bg text-caption uppercase tracking-widest hover:opacity-90 transition-opacity duration-500"
                 >
                   Purchase
                 </a>
@@ -143,6 +143,12 @@ export default function PiecePage({ params }: Props) {
           </div>
         )}
       </div>
+
+      <StickyBuyButton
+        title={piece.title}
+        price={piece.price}
+        gumroadUrl={piece.gumroadUrl}
+      />
     </div>
   );
 }

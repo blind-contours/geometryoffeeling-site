@@ -14,7 +14,7 @@ const config: Config = {
         border: "#E0DDD8",
         primary: "#1A1A18",
         secondary: "#6A6A68",
-        muted: "#9A9A98",
+        muted: "#767674",
       },
       fontFamily: {
         mono: [
@@ -26,8 +26,8 @@ const config: Config = {
       },
       fontSize: {
         headline: ["18px", { letterSpacing: "0.05em", fontWeight: "400" }],
-        body: ["14px", { lineHeight: "1.8", fontWeight: "300" }],
-        caption: ["11px", { letterSpacing: "0.08em", fontWeight: "300" }],
+        body: ["16px", { lineHeight: "1.8", fontWeight: "400" }],
+        caption: ["12px", { letterSpacing: "0.08em", fontWeight: "400" }],
       },
       maxWidth: {
         content: "1200px",

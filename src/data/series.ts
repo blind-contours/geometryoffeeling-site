@@ -632,6 +632,32 @@ export const allPieces: Piece[] = series.flatMap((s) => s.pieces);
 export const collectionPrice = 220;
 export const collectionGumroadUrl = "https://gumroad.com/l/placeholder-full-collection";
 
+export interface HeroSlide {
+  pieceId: string;
+  textColor: "white" | "black";
+}
+
+export const heroSlides: HeroSlide[] = [
+  { pieceId: "awe-singularity", textColor: "white" },
+  { pieceId: "connection-coupled-oscillators", textColor: "white" },
+  { pieceId: "overwhelm-attractors", textColor: "white" },
+  { pieceId: "cycles-loom", textColor: "black" },
+  { pieceId: "desire-pursuit", textColor: "white" },
+];
+
+export const featuredSeriesIds = [
+  "awe",
+  "connection",
+  "overwhelm",
+  "grief",
+  "growth",
+  "desire",
+  "cycles",
+  "solitude",
+  "wonder",
+  "tension",
+];
+
 export function getSeriesBySlug(slug: string): Series | undefined {
   return series.find((s) => s.id === slug);
 }

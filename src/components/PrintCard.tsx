@@ -40,7 +40,7 @@ export default function PrintCard({
               href={piece.gumroadUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="px-4 py-2 border border-primary text-caption uppercase tracking-widest text-primary hover:bg-primary hover:text-bg transition-colors duration-500"
+              className="px-4 py-2 bg-primary text-bg text-caption uppercase tracking-widest hover:opacity-90 transition-opacity duration-500"
             >
               Download
             </a>

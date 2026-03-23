@@ -1,6 +1,11 @@
+import Link from "next/link";
 import Hero from "@/components/Hero";
 import HomeSeriesGrid from "@/components/HomeSeriesGrid";
-import { series } from "@/data/series";
+import { series, featuredSeriesIds } from "@/data/series";
+
+const featuredSeries = featuredSeriesIds
+  .map((id) => series.find((s) => s.id === id)!)
+  .filter(Boolean);
 
 export default function Home() {
   return (
@@ -38,9 +43,18 @@ export default function Home() {
 
       {/* Series collection grid */}
       <section className="max-w-content mx-auto px-6 pb-24">
-        {series.map((s, i) => (
+        {featuredSeries.map((s, i) => (
           <HomeSeriesGrid key={s.id} series={s} index={i} />
         ))}
+
+        <div className="text-center mt-8">
+          <Link
+            href="/series"
+            className="text-caption uppercase tracking-widest text-secondary hover:text-primary transition-colors duration-500"
+          >
+            Explore all {series.length} series &rarr;
+          </Link>
+        </div>
       </section>
     </>
   );

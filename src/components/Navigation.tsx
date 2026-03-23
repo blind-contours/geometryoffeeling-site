@@ -41,7 +41,7 @@ export default function Navigation() {
         {/* Mobile toggle */}
         <button
           onClick={() => setOpen(!open)}
-          className="md:hidden text-caption uppercase tracking-widest text-secondary"
+          className="md:hidden min-h-[44px] min-w-[44px] flex items-center justify-center text-caption uppercase tracking-widest text-secondary"
           aria-label="Toggle menu"
         >
           {open ? "Close" : "Menu"}
@@ -51,25 +51,25 @@ export default function Navigation() {
       {/* Mobile menu */}
       {open && (
         <div className="md:hidden bg-bg border-b border-border px-6 pb-6 pt-2">
-          <div className="flex flex-col gap-4">
+          <div className="flex flex-col">
             <Link
               href="/series"
               onClick={() => setOpen(false)}
-              className="text-caption uppercase tracking-widest text-secondary hover:text-primary"
+              className="py-3 text-caption uppercase tracking-widest text-secondary hover:text-primary"
             >
               Series
             </Link>
             <Link
               href="/shop"
               onClick={() => setOpen(false)}
-              className="text-caption uppercase tracking-widest text-secondary hover:text-primary"
+              className="py-3 text-caption uppercase tracking-widest text-secondary hover:text-primary"
             >
               Shop
             </Link>
             <Link
               href="/about"
               onClick={() => setOpen(false)}
-              className="text-caption uppercase tracking-widest text-secondary hover:text-primary"
+              className="py-3 text-caption uppercase tracking-widest text-secondary hover:text-primary"
             >
               About
             </Link>
