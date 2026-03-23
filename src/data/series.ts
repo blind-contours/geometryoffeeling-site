@@ -653,7 +653,7 @@ export const featuredSeriesIds = [
   "connection",
   "overwhelm",
   "grief",
-  "growth",
+  "surrender",
   "desire",
   "cycles",
   "solitude",
