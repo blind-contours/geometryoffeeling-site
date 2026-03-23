@@ -658,7 +658,7 @@ export const featuredSeriesIds = [
   "cycles",
   "solitude",
   "wonder",
-  "tension",
+  "nostalgia",
 ];
 
 export function getSeriesBySlug(slug: string): Series | undefined {
