@@ -31,6 +31,9 @@ yarn-error.log*
 # vercel
 .vercel
 
+# source art files (PDFs are large - only JPG previews are committed)
+/mathematical_affect/
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts
