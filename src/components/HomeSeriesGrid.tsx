@@ -27,10 +27,11 @@ export default function HomeSeriesGrid({ series, index }: HomeSeriesGridProps) {
         <p className="text-body text-secondary italic mb-6">{series.tagline}</p>
       </div>
 
-      {/* Tight icon grid */}
-      <div className="group/grid relative">
+      {/* Desktop: tight grid / Mobile: horizontal scroll */}
+      <div className="group/grid relative w-full">
+        {/* Desktop grid */}
         <div
-          className="grid gap-0 transition-all duration-700"
+          className="hidden md:grid gap-0 transition-all duration-700"
           style={{
             gridTemplateColumns: `repeat(${Math.min(series.pieces.length, 5)}, 1fr)`,
           }}
@@ -62,6 +63,34 @@ export default function HomeSeriesGrid({ series, index }: HomeSeriesGridProps) {
                   {piece.title}
                 </p>
               )}
+            </Link>
+          ))}
+        </div>
+
+        {/* Mobile: horizontal scroll row */}
+        <div className="md:hidden flex overflow-x-auto gap-0 scrollbar-hide -mx-6 px-6">
+          {series.pieces.map((piece) => (
+            <Link
+              key={piece.id}
+              href={`/piece/${piece.id}`}
+              className="flex-shrink-0 block"
+              style={{ width: "45vw" }}
+            >
+              <div
+                className="overflow-hidden"
+                style={{ backgroundColor: series.background }}
+              >
+                <Image
+                  src={piece.imageUrl}
+                  alt={`${piece.title} — ${piece.equation}`}
+                  width={240}
+                  height={165}
+                  className="w-full h-auto block"
+                />
+              </div>
+              <p className="text-center text-caption text-muted mt-1 truncate px-1">
+                {piece.title}
+              </p>
             </Link>
           ))}
         </div>

@@ -2,16 +2,13 @@
 
 import Image from "next/image";
 import { useState, useEffect, useCallback } from "react";
-import { allPieces } from "@/data/series";
+import { series } from "@/data/series";
 
-const heroImages = [
-  allPieces[0],  // fractured
-  allPieces[5],  // connection
-  allPieces[10], // tension
-  allPieces[15], // overwhelm
-  allPieces[20], // grief
-  allPieces[25], // growth
-];
+// Pick one piece from every other series for visual variety
+const heroImages = series
+  .filter((_, i) => i % 3 === 0)
+  .map((s) => s.pieces[0])
+  .slice(0, 8);
 
 export default function Hero() {
   const [currentIndex, setCurrentIndex] = useState(0);

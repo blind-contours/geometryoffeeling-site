@@ -5,7 +5,7 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "All Series — Geometry of Feeling",
   description:
-    "Six series exploring the intersection of mathematics and human emotion. Each series uses a different mathematical primitive to render a different feeling.",
+    "Twenty-six series exploring the intersection of mathematics and human emotion. Each series uses a different mathematical primitive to render a different feeling.",
 };
 
 export default function SeriesPage() {
@@ -16,8 +16,9 @@ export default function SeriesPage() {
           Series
         </h1>
         <p className="text-body text-secondary max-w-xl mb-16">
-          Six mathematical languages for six human emotions. Each series uses a
-          different class of functions to render a different quality of feeling.
+          {series.length} mathematical languages for {series.length} human
+          emotions. Each series uses a different class of functions to render a
+          different quality of feeling.
         </p>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-16">

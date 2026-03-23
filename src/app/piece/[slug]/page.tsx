@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import EquationLabel from "@/components/EquationLabel";
 import PrintCard from "@/components/PrintCard";
+import LicenseTerms from "@/components/LicenseTerms";
 import {
   allPieces,
   getPieceBySlug,
@@ -41,7 +42,7 @@ export default function PiecePage({ params }: Props) {
     <div className="pt-20 pb-16">
       {/* Full-width image */}
       <div
-        className="w-full max-w-5xl mx-auto px-6 mb-12"
+        className="w-full max-w-5xl mx-auto md:px-6 mb-12"
         style={{ backgroundColor: piece.background }}
       >
         <Image
@@ -60,10 +61,7 @@ export default function PiecePage({ params }: Props) {
           <h1 className="text-2xl font-mono font-light text-primary mb-2">
             {piece.title}
           </h1>
-          <EquationLabel
-            equation={piece.equation}
-            className="text-sm mb-8"
-          />
+          <EquationLabel equation={piece.equation} className="text-sm mb-8" />
 
           {/* Description */}
           <p className="text-body text-secondary mb-4">{piece.description}</p>
@@ -85,12 +83,10 @@ export default function PiecePage({ params }: Props) {
           )}
 
           {/* Buy options */}
-          <div className="border border-border p-6 mb-16">
+          <div className="border border-border p-6 mb-4">
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
               <div>
-                <p className="text-headline text-primary">
-                  Digital Download
-                </p>
+                <p className="text-headline text-primary">Digital Download</p>
                 <p className="text-caption text-secondary">
                   High-resolution PDF, 300 DPI, print-ready
                 </p>
@@ -120,6 +116,16 @@ export default function PiecePage({ params }: Props) {
                 </Link>
               </div>
             )}
+          </div>
+
+          <div className="flex items-center gap-4 mb-8">
+            <LicenseTerms compact />
+            <Link
+              href="/printing"
+              className="text-caption text-muted hover:text-secondary transition-colors underline underline-offset-2"
+            >
+              How to print
+            </Link>
           </div>
         </div>
 

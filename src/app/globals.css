@@ -42,3 +42,12 @@ body {
 .hero-fade-out {
   animation: fadeOut 2s ease-in-out forwards;
 }
+
+/* Hide scrollbar for mobile horizontal scroll */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}

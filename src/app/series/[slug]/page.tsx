@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 import PrintCard from "@/components/PrintCard";
+import LicenseTerms from "@/components/LicenseTerms";
 import { series, getSeriesBySlug } from "@/data/series";
 import type { Metadata } from "next";
 
@@ -35,7 +36,10 @@ export default function SeriesPage({ params }: Props) {
           <p className="text-body text-secondary italic max-w-2xl mb-6">
             {s.tagline}
           </p>
-          <p className="text-body text-secondary max-w-2xl">{s.description}</p>
+          <p className="text-body text-secondary max-w-2xl mb-4">
+            {s.description}
+          </p>
+          <p className="text-caption text-muted">{s.makingOf}</p>
         </div>
 
         {/* Pieces grid — 2-up on desktop */}
@@ -46,7 +50,7 @@ export default function SeriesPage({ params }: Props) {
         </div>
 
         {/* Series bundle */}
-        <div className="border border-border p-8 mb-20">
+        <div className="border border-border p-8 mb-8">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
             <div>
               <h3 className="text-headline text-primary mb-2">
@@ -76,6 +80,10 @@ export default function SeriesPage({ params }: Props) {
               Download Bundle
             </a>
           </div>
+        </div>
+
+        <div className="mb-20">
+          <LicenseTerms compact />
         </div>
 
         {/* The Story Behind This Series */}
