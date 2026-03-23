@@ -50,7 +50,7 @@ export default function Hero() {
     intervalRef.current = setInterval(() => {
       const next = (currentRef.current + 1) % slides.length;
       goTo(next);
-    }, 8000);
+    }, 6000);
   }, [goTo]);
 
   // Start autoplay on mount
