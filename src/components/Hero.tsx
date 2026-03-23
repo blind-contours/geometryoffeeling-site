@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef } from "react";
 import { heroSlides, getPieceBySlug } from "@/data/series";
 import type { Piece } from "@/data/series";
 
@@ -16,60 +16,29 @@ const slides: ResolvedSlide[] = heroSlides
 
 export default function Hero() {
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [nextIndex, setNextIndex] = useState<number | null>(null);
-  const [fadeIn, setFadeIn] = useState(false);
-
-  // Refs to avoid stale closures in the interval
-  const currentRef = useRef(currentIndex);
-  const transitioningRef = useRef(false);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
-  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  currentRef.current = currentIndex;
-
-  const goTo = useCallback((target: number) => {
-    if (transitioningRef.current) return;
-    if (target === currentRef.current) return;
-    transitioningRef.current = true;
-    setNextIndex(target);
-    // Double rAF so the next-image element renders at opacity-0 first
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => setFadeIn(true));
-    });
-    timeoutRef.current = setTimeout(() => {
-      setCurrentIndex(target);
-      currentRef.current = target;
-      setNextIndex(null);
-      setFadeIn(false);
-      transitioningRef.current = false;
-    }, 2000);
-  }, []);
-
-  const startAutoplay = useCallback(() => {
+  const startAutoplay = () => {
     if (intervalRef.current) clearInterval(intervalRef.current);
     intervalRef.current = setInterval(() => {
-      const next = (currentRef.current + 1) % slides.length;
-      goTo(next);
+      setCurrentIndex((prev) => (prev + 1) % slides.length);
     }, 6000);
-  }, [goTo]);
+  };
 
-  // Start autoplay on mount
   useEffect(() => {
     startAutoplay();
     return () => {
       if (intervalRef.current) clearInterval(intervalRef.current);
-      if (timeoutRef.current) clearTimeout(timeoutRef.current);
     };
-  }, [startAutoplay]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handleDotClick = (i: number) => {
-    goTo(i);
-    startAutoplay(); // reset timer
+    setCurrentIndex(i);
+    startAutoplay();
   };
 
   const current = slides[currentIndex];
-  const next = nextIndex !== null ? slides[nextIndex] : null;
-
   const textClasses =
     current.textColor === "white" ? "text-white/80" : "text-black/80";
   const dotActive =
@@ -79,36 +48,25 @@ export default function Hero() {
 
   return (
     <section className="relative h-screen w-full overflow-hidden bg-primary">
-      {/* Layer A: current image — always fully visible */}
-      <div className="absolute inset-0">
-        <Image
-          src={current.piece.imageUrl}
-          alt={current.piece.title}
-          fill
-          className="object-cover object-center"
-          priority
-          style={{ backgroundColor: current.piece.background }}
-        />
-        <div className="absolute inset-0 bg-black/20" />
-      </div>
-
-      {/* Layer B: next image — fades in on top, then unmounts */}
-      {next && (
+      {/* All slides stacked — only current is visible */}
+      {slides.map((slide, i) => (
         <div
+          key={slide.piece.id}
           className={`absolute inset-0 transition-opacity duration-[2000ms] ${
-            fadeIn ? "opacity-100" : "opacity-0"
+            i === currentIndex ? "opacity-100" : "opacity-0"
           }`}
         >
           <Image
-            src={next.piece.imageUrl}
-            alt={next.piece.title}
+            src={slide.piece.imageUrl}
+            alt={slide.piece.title}
             fill
             className="object-cover object-center"
-            style={{ backgroundColor: next.piece.background }}
+            priority={i === 0}
+            style={{ backgroundColor: slide.piece.background }}
           />
           <div className="absolute inset-0 bg-black/20" />
         </div>
-      )}
+      ))}
 
       {/* Title + equation */}
       <div className="absolute inset-0 flex items-center justify-center">
