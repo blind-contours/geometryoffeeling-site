@@ -640,9 +640,12 @@ export interface HeroSlide {
 export const heroSlides: HeroSlide[] = [
   { pieceId: "awe-singularity", textColor: "white" },
   { pieceId: "connection-coupled-oscillators", textColor: "white" },
+  { pieceId: "grief-void", textColor: "black" },
   { pieceId: "overwhelm-attractors", textColor: "white" },
   { pieceId: "cycles-loom", textColor: "black" },
+  { pieceId: "wonder-strange-attractor", textColor: "white" },
   { pieceId: "desire-pursuit", textColor: "white" },
+  { pieceId: "growth-reaction-diffusion", textColor: "black" },
 ];
 
 export const featuredSeriesIds = [

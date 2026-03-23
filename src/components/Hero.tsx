@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useState, useEffect, useCallback, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { heroSlides, getPieceBySlug } from "@/data/series";
 import type { Piece } from "@/data/series";
 
@@ -18,54 +18,60 @@ export default function Hero() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [nextIndex, setNextIndex] = useState<number | null>(null);
   const [fadeIn, setFadeIn] = useState(false);
-  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Refs to avoid stale closures in the interval
+  const currentRef = useRef(currentIndex);
+  const transitioningRef = useRef(false);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const goTo = useCallback(
-    (target: number) => {
-      if (nextIndex !== null) return; // transition in progress
-      if (target === currentIndex) return;
-      setNextIndex(target);
-      // Trigger fade-in on next frame so the element renders at opacity-0 first
-      requestAnimationFrame(() => {
-        requestAnimationFrame(() => setFadeIn(true));
-      });
-      timerRef.current = setTimeout(() => {
-        setCurrentIndex(target);
-        setNextIndex(null);
-        setFadeIn(false);
-      }, 2000);
-    },
-    [currentIndex, nextIndex]
-  );
+  currentRef.current = currentIndex;
 
-  const advance = useCallback(() => {
-    const next = (currentIndex + 1) % slides.length;
-    goTo(next);
-  }, [currentIndex, goTo]);
+  const goTo = useCallback((target: number) => {
+    if (transitioningRef.current) return;
+    if (target === currentRef.current) return;
+    transitioningRef.current = true;
+    setNextIndex(target);
+    // Double rAF so the next-image element renders at opacity-0 first
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => setFadeIn(true));
+    });
+    timeoutRef.current = setTimeout(() => {
+      setCurrentIndex(target);
+      currentRef.current = target;
+      setNextIndex(null);
+      setFadeIn(false);
+      transitioningRef.current = false;
+    }, 2000);
+  }, []);
 
+  const startAutoplay = useCallback(() => {
+    if (intervalRef.current) clearInterval(intervalRef.current);
+    intervalRef.current = setInterval(() => {
+      const next = (currentRef.current + 1) % slides.length;
+      goTo(next);
+    }, 8000);
+  }, [goTo]);
+
+  // Start autoplay on mount
   useEffect(() => {
-    intervalRef.current = setInterval(advance, 8000);
+    startAutoplay();
     return () => {
       if (intervalRef.current) clearInterval(intervalRef.current);
-      if (timerRef.current) clearTimeout(timerRef.current);
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
     };
-  }, [advance]);
+  }, [startAutoplay]);
 
   const handleDotClick = (i: number) => {
-    if (intervalRef.current) clearInterval(intervalRef.current);
     goTo(i);
-    intervalRef.current = setInterval(advance, 8000);
+    startAutoplay(); // reset timer
   };
 
   const current = slides[currentIndex];
   const next = nextIndex !== null ? slides[nextIndex] : null;
 
   const textClasses =
-    current.textColor === "white"
-      ? "text-white/80"
-      : "text-black/80";
-
+    current.textColor === "white" ? "text-white/80" : "text-black/80";
   const dotActive =
     current.textColor === "white" ? "bg-white/80" : "bg-black/60";
   const dotInactive =
