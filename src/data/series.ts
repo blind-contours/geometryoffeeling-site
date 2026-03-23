@@ -657,7 +657,7 @@ export const featuredSeriesIds = [
   "desire",
   "cycles",
   "solitude",
-  "wonder",
+  "peace",
   "nostalgia",
 ];
 
