@@ -22,13 +22,13 @@ export default function Home() {
           <p className="text-body text-secondary">
             Every piece begins with a human emotion — grief, growth, connection
             — and asks: what mathematical function has the same shape as this
-            feeling? We researched that emotion across art history and science,
-            then built the image from first principles. The equation isn&apos;t
+            feeling? I research the emotion across art history and science,
+            then build the image from first principles. The equation isn&apos;t
             decoration. It&apos;s the reason the piece looks the way it does.
           </p>
           <p className="text-body text-secondary">
-            In a world of AI-generated imagery, we went the other direction.
-            This is minimalist fine art built from mathematical first principles
+            In a world of AI-generated imagery, I went the other direction.
+            Minimalist fine art built from mathematical first principles
             — not prompted, not generated, not automated. Every curve was chosen.
             Every parameter was earned.
           </p>

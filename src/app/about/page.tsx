@@ -33,10 +33,10 @@ export default function AboutPage() {
                 each other&apos;s rhythm without ever fully merging.
               </p>
               <p className="text-body text-secondary">
-                These are not metaphors. The mathematical functions genuinely
+                These aren&apos;t metaphors. The mathematical functions genuinely
                 behave the way the emotions do. The equation at the bottom of
-                each piece is not decoration. It is the reason the image looks
-                the way it does.
+                each piece isn&apos;t decoration — it&apos;s the reason the image
+                looks the way it does.
               </p>
             </div>
           </section>
@@ -47,28 +47,27 @@ export default function AboutPage() {
             </h2>
             <div className="space-y-4">
               <p className="text-body text-secondary">
-                <span className="text-primary">Research.</span> Before a single
-                line is rendered, the emotion is studied across millennia of
-                human art, philosophy, and science. What does this feeling do
-                over time? Does it decay? Oscillate? Branch? Converge?
+                <span className="text-primary">Research.</span> Before I render
+                a single line, I study the emotion across millennia of human
+                art, philosophy, and science. What does this feeling do over
+                time? Does it decay? Oscillate? Branch? Converge?
               </p>
               <p className="text-body text-secondary">
                 <span className="text-primary">Mathematical selection.</span>{" "}
-                The function class is chosen because its behavior mirrors the
+                I choose the function class because its behavior mirrors the
                 emotion&apos;s dynamics. Exponential decay for grief. L-system
                 branching for growth. Parametric coupling for connection.
               </p>
               <p className="text-body text-secondary">
-                <span className="text-primary">Iteration.</span> Hundreds of
-                parameter variations are rendered in Python. The palette, the
+                <span className="text-primary">Iteration.</span> I render
+                hundreds of parameter variations in Python. The palette, the
                 density, the negative space — every visual property maps to a
                 mathematical parameter.
               </p>
               <p className="text-body text-secondary">
-                <span className="text-primary">Human curation.</span> Most
-                renders are rejected. The ones that survive pass a simple test:
-                does this image make you feel the emotion it claims to
-                represent?
+                <span className="text-primary">Curation.</span> Most renders
+                get rejected. The ones that survive pass a simple test: does
+                this image make me feel the emotion it claims to represent?
               </p>
             </div>
           </section>
@@ -90,8 +89,8 @@ ys = baseline + PH*0.44 * np.exp(-lam*t) * np.cos(omega*np.pi*t)`}
             </div>
             <p className="text-body text-secondary italic">
               The decay rate (λ) controls how fast the waves shrink. The
-              frequency (ω) controls how often grief returns. The parameters
-              were chosen because they felt true.
+              frequency (ω) controls how often grief returns. I chose the
+              parameters because they felt true.
             </p>
           </section>
 
@@ -108,9 +107,9 @@ ys = baseline + PH*0.44 * np.exp(-lam*t) * np.cos(omega*np.pi*t)`}
                 architecture, and no verifiable truth.
               </p>
               <p className="text-body text-secondary">
-                We went the opposite direction. We started with the emotion. We
-                found the mathematics. We wrote the code. We rendered, evaluated,
-                and curated. The process took months. Each series represents
+                I went the opposite direction. I start with the emotion. I
+                find the mathematics. I write the code. I render, evaluate,
+                and curate. The process takes months. Each series represents
                 dozens of hours of research, coding, and aesthetic judgment.
               </p>
               <p className="text-body text-secondary">
@@ -121,9 +120,9 @@ ys = baseline + PH*0.44 * np.exp(-lam*t) * np.cos(omega*np.pi*t)`}
 
             <div className="border border-border p-6 mt-8">
               <p className="text-body text-secondary italic">
-                &ldquo;Built by a human. Rendered in Python. Grounded in
-                mathematics. Every piece is the result of asking one question:
-                what does this emotion look like as an equation?&rdquo;
+                Built by hand. Rendered in Python. Grounded in mathematics.
+                Every piece comes from asking one question: what does this
+                emotion look like as an equation?
               </p>
             </div>
           </section>
@@ -165,10 +164,10 @@ ys = baseline + PH*0.44 * np.exp(-lam*t) * np.cos(omega*np.pi*t)`}
                 The geometry is the experience.
               </p>
               <p className="text-body text-secondary">
-                Mathematical Affect adds one dimension to this tradition: every
-                visual decision can be traced back to a mathematical function.
-                The geometry is not arbitrary. The equation is the reason the
-                image looks the way it does.
+                This work adds one dimension to that tradition: every visual
+                decision traces back to a mathematical function. The geometry
+                isn&apos;t arbitrary. The equation is the reason the image looks
+                the way it does.
               </p>
             </div>
           </section>
@@ -178,17 +177,17 @@ ys = baseline + PH*0.44 * np.exp(-lam*t) * np.cos(omega*np.pi*t)`}
               The Standard
             </h2>
             <p className="text-lg font-mono font-light text-primary leading-relaxed">
-              The final question for every piece: if this were hanging in a
-              gallery with no label, would a viewer stop and feel something?
+              The final question I ask of every piece: if this were hanging
+              in a gallery with no label, would someone stop and feel something?
             </p>
           </section>
 
           <section className="border-t border-border pt-12">
             <p className="text-lg font-mono font-light text-primary leading-relaxed">
-              The equation at the bottom of each piece is real. It is the reason
-              the image looks the way it does. This is not a style filter applied
-              to a photograph. This is what the function actually looks like when
-              you render it.
+              The equation at the bottom of each piece is real. It&apos;s the
+              reason the image looks the way it does. This isn&apos;t a style
+              filter applied to a photograph. This is what the function actually
+              looks like when I render it.
             </p>
           </section>
         </div>

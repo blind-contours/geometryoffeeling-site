@@ -71,7 +71,7 @@ export default function Footer() {
 
         <div className="mt-16 pt-8 border-t border-border flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="text-caption text-muted">
-            Built by a human. Rendered in Python. Grounded in mathematics.
+            Built by hand. Rendered in Python. Grounded in mathematics.
           </p>
           <p className="text-caption text-muted">
             &copy; {new Date().getFullYear()} Mathematical Affect

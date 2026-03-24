@@ -43,7 +43,7 @@ export default function PrintingPage() {
               {[
                 { size: '11 x 7.5"', note: "Exact file size — sharpest possible" },
                 { size: '14 x 10"', note: "Slight upscale, still sharp" },
-                { size: '18 x 12"', note: "Ideal wall size — our recommendation" },
+                { size: '18 x 12"', note: "Ideal wall size — my recommendation" },
                 { size: '24 x 16"', note: "Large statement piece — maximum recommended size" },
               ].map((row) => (
                 <div key={row.size} className="flex justify-between px-4 py-3">
