@@ -18,7 +18,8 @@ export default function BuySection({ pieceId }: BuySectionProps) {
   async function handleSubmit() {
     setLoading(true);
     try {
-      await createCheckoutSession(pieceId, selectedSize);
+      const url = await createCheckoutSession(pieceId, selectedSize);
+      window.location.href = url;
     } catch {
       setLoading(false);
     }

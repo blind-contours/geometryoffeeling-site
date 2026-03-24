@@ -1,6 +1,5 @@
 "use server";
 
-import { redirect } from "next/navigation";
 import { getStripe } from "@/lib/stripe";
 import { getSizeById, SHIPPING_COUNTRIES } from "@/lib/products";
 import { getPieceBySlug } from "@/data/series";
@@ -58,5 +57,5 @@ export async function createCheckoutSession(pieceId: string, sizeId: string) {
   });
 
   if (!session.url) throw new Error("Failed to create checkout session");
-  redirect(session.url);
+  return session.url;
 }
