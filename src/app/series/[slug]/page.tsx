@@ -4,6 +4,9 @@ import LicenseTerms from "@/components/LicenseTerms";
 import { series, getSeriesBySlug } from "@/data/series";
 import type { Metadata } from "next";
 
+const baseUrl =
+  process.env.NEXT_PUBLIC_URL || "https://geometryoffeeling.com";
+
 interface Props {
   params: { slug: string };
 }
@@ -16,18 +19,19 @@ export function generateMetadata({ params }: Props): Metadata {
   const s = getSeriesBySlug(params.slug);
   if (!s) return { title: "Series Not Found" };
   const ogImage = s.pieces[0]?.imageUrl || "/prints/awe/awe_singularity.jpg";
+  const description = `The ${s.name} series — ${s.pieces.length} minimalist fine art prints exploring ${s.emotion}. ${s.tagline} From $45. Free shipping.`;
   return {
     title: `${s.name} — Geometry of Feeling`,
-    description: s.description,
+    description,
     openGraph: {
       title: `${s.name} — Geometry of Feeling`,
-      description: s.description,
+      description,
       images: [{ url: ogImage, width: 1680, height: 1155 }],
     },
     twitter: {
       card: "summary_large_image",
       title: `${s.name} — Geometry of Feeling`,
-      description: s.description,
+      description,
       images: [ogImage],
     },
   };
@@ -37,8 +41,28 @@ export default function SeriesPage({ params }: Props) {
   const s = getSeriesBySlug(params.slug);
   if (!s) notFound();
 
+  const collectionJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    name: `${s.name} Series — Mathematical Art About ${s.emotion.split(",")[0].trim().replace(/^\w/, (c: string) => c.toUpperCase())}`,
+    description: `The ${s.name} series — ${s.pieces.length} minimalist fine art prints exploring ${s.emotion}. ${s.tagline} Museum-quality giclée on Hahnemühle German Etching 310gsm. From $45.`,
+    mainEntity: {
+      "@type": "ItemList",
+      itemListElement: s.pieces.map((p, i) => ({
+        "@type": "ListItem",
+        position: i + 1,
+        url: `${baseUrl}/piece/${p.id}`,
+        name: p.title,
+      })),
+    },
+  };
+
   return (
     <div className="pt-28 pb-16">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(collectionJsonLd) }}
+      />
       <div className="max-w-content mx-auto px-6">
         {/* Series header */}
         <div className="mb-16">

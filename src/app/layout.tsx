@@ -23,13 +23,25 @@ export const metadata: Metadata = {
   title: defaultTitle,
   description: defaultDescription,
   keywords: [
-    "mathematical fine art prints",
-    "equation art prints",
-    "mathematics and emotion art",
-    "minimalist mathematical art",
+    // Aesthetic/decor intent
+    "minimalist fine art prints",
+    "abstract wall art",
+    "modern art prints",
+    "fine art prints for home",
+    "calm art for living room",
+    "contemporary fine art prints",
+    "museum quality art prints",
+    // Math/science discovery
+    "mathematical art prints",
+    "equation art",
+    "generative art prints",
+    // Gift intent
+    "gifts for math lovers",
+    "unique art gifts",
+    // Emotion
+    "abstract art about emotion",
+    // Brand
     "geometry of feeling",
-    "abstract math art",
-    "scientific art prints",
   ],
   openGraph: {
     title: defaultTitle,
@@ -46,6 +58,23 @@ export const metadata: Metadata = {
   },
 };
 
+const organizationJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  name: "Geometry of Feeling",
+  url: baseUrl,
+  description:
+    "Geometry of Feeling creates minimalist fine art prints derived from mathematical equations. Each museum-quality giclée print begins with a human emotion — grief, connection, awe, desire — and renders it through the mathematical function that shares its shape. Printed on Hahnemühle German Etching 310gsm. Equation-based generative art for collectors, homes, and offices.",
+  brand: { "@type": "Brand", name: "Geometry of Feeling" },
+};
+
+const websiteJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  name: "Geometry of Feeling",
+  url: baseUrl,
+};
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -54,6 +83,18 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${ibmPlexMono.variable} font-mono antialiased`}>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(organizationJsonLd),
+          }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(websiteJsonLd),
+          }}
+        />
         <Navigation />
         <main>{children}</main>
         <Footer />

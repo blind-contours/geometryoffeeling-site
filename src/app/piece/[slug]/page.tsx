@@ -12,7 +12,11 @@ import {
   getSeriesBySlug,
   getPiecesBySeries,
 } from "@/data/series";
+import { PRINT_SIZES } from "@/lib/products";
 import type { Metadata } from "next";
+
+const baseUrl =
+  process.env.NEXT_PUBLIC_URL || "https://geometryoffeeling.com";
 
 interface Props {
   params: { slug: string };
@@ -25,18 +29,21 @@ export function generateStaticParams() {
 export function generateMetadata({ params }: Props): Metadata {
   const piece = getPieceBySlug(params.slug);
   if (!piece) return { title: "Piece Not Found" };
+  const s = getSeriesBySlug(piece.series);
+  const seriesName = s?.name ?? piece.series;
+  const description = `${piece.title} — a minimalist fine art print from the ${seriesName} series. ${piece.description} Museum-quality giclée on Hahnemühle German Etching. From $45.`;
   return {
     title: `${piece.title} — Geometry of Feeling`,
-    description: piece.description,
+    description,
     openGraph: {
       title: `${piece.title} — Geometry of Feeling`,
-      description: piece.description,
+      description,
       images: [{ url: piece.imageUrl, width: 1680, height: 1155 }],
     },
     twitter: {
       card: "summary_large_image",
       title: `${piece.title} — Geometry of Feeling`,
-      description: piece.description,
+      description,
       images: [piece.imageUrl],
     },
   };
@@ -47,12 +54,41 @@ export default function PiecePage({ params }: Props) {
   if (!piece) notFound();
 
   const s = getSeriesBySlug(piece.series);
+  const seriesName = s?.name ?? piece.series;
   const relatedPieces = getPiecesBySeries(piece.series).filter(
     (p) => p.id !== piece.id
   );
 
+  const lowPrice = (Math.min(...PRINT_SIZES.map((sz) => sz.priceCents)) / 100).toFixed(2);
+  const highPrice = (Math.max(...PRINT_SIZES.map((sz) => sz.priceCents)) / 100).toFixed(2);
+
+  const pieceJsonLd = {
+    "@context": "https://schema.org",
+    "@type": ["Product", "VisualArtwork"],
+    name: `${piece.title} — Mathematical Fine Art Print`,
+    description: `Minimalist fine art print of ${piece.title.toLowerCase()} from the ${seriesName} series. ${piece.emotionalNote}. ${piece.description} Part of the ${seriesName} series exploring ${s?.emotion ?? "emotion"} through mathematics.`,
+    image: `${baseUrl}${piece.imageUrl}`,
+    artform: "Print",
+    artMedium: "Giclée print on Hahnemühle German Etching 310gsm",
+    creator: { "@type": "Person", name: "David McCoy" },
+    brand: { "@type": "Brand", name: "Geometry of Feeling" },
+    offers: {
+      "@type": "AggregateOffer",
+      lowPrice,
+      highPrice,
+      priceCurrency: "USD",
+      availability: "https://schema.org/InStock",
+      offerCount: PRINT_SIZES.length,
+    },
+    keywords: `minimalist fine art print, abstract wall art, ${s?.emotion ?? ""}, ${piece.title.toLowerCase()}, equation art, mathematical art`,
+  };
+
   return (
     <div className="pt-20 pb-24 md:pb-16">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(pieceJsonLd) }}
+      />
       {/* Full-width image with lightbox */}
       <div
         className="w-full max-w-5xl mx-auto md:px-6 mb-12"
