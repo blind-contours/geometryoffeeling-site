@@ -1,9 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
 import { Resend } from "resend";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
 const FROM = "Geometry of Feeling <onboarding@resend.dev>";
-const ARTIST_EMAIL = process.env.ARTIST_EMAIL || "hello@geometryoffeeling.com";
+
+function getResend() {
+  const key = process.env.RESEND_API_KEY;
+  if (!key) throw new Error("RESEND_API_KEY is not set");
+  return new Resend(key);
+}
 
 export async function POST(req: NextRequest) {
   const { name, email, piece, description } = await req.json();
@@ -15,10 +19,12 @@ export async function POST(req: NextRequest) {
     );
   }
 
+  const artistEmail = process.env.ARTIST_EMAIL || "hello@geometryoffeeling.com";
+
   try {
-    const { error } = await resend.emails.send({
+    const { error } = await getResend().emails.send({
       from: FROM,
-      to: ARTIST_EMAIL,
+      to: artistEmail,
       replyTo: email,
       subject: `Custom print inquiry from ${name}`,
       html: `
