@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { useState, useEffect, useRef } from "react";
 import { heroSlides, getPieceBySlug } from "@/data/series";
 import type { Piece } from "@/data/series";
@@ -82,6 +83,16 @@ export default function Hero() {
           >
             {current.piece.equation}
           </p>
+          <Link
+            href="/shop"
+            className={`inline-block mt-8 px-8 py-3 border ${
+              current.textColor === "white"
+                ? "border-white/60 text-white/80 hover:bg-white/10"
+                : "border-black/40 text-black/80 hover:bg-black/5"
+            } text-caption uppercase tracking-widest transition-all duration-500`}
+          >
+            Shop Prints
+          </Link>
         </div>
       </div>
 

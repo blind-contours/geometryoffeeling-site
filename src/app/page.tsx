@@ -1,10 +1,16 @@
 import Link from "next/link";
 import Hero from "@/components/Hero";
 import HomeSeriesGrid from "@/components/HomeSeriesGrid";
-import { series, featuredSeriesIds } from "@/data/series";
+import PrintCard from "@/components/PrintCard";
+import EmailCapture from "@/components/EmailCapture";
+import { series, featuredSeriesIds, featuredPieceIds, getPieceBySlug } from "@/data/series";
 
 const featuredSeries = featuredSeriesIds
   .map((id) => series.find((s) => s.id === id)!)
+  .filter(Boolean);
+
+const featuredPieces = featuredPieceIds
+  .map((id) => getPieceBySlug(id)!)
   .filter(Boolean);
 
 export default function Home() {
@@ -41,6 +47,18 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Featured pieces */}
+      <section className="max-w-content mx-auto px-6 pb-24">
+        <h2 className="text-headline uppercase tracking-widest text-primary mb-8">
+          Featured Pieces
+        </h2>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+          {featuredPieces.map((piece) => (
+            <PrintCard key={piece.id} piece={piece} showBuyButton />
+          ))}
+        </div>
+      </section>
+
       {/* Series collection grid */}
       <section className="max-w-content mx-auto px-6 pb-24">
         {featuredSeries.map((s, i) => (
@@ -56,6 +74,9 @@ export default function Home() {
           </Link>
         </div>
       </section>
+
+      {/* Email capture */}
+      <EmailCapture />
     </>
   );
 }

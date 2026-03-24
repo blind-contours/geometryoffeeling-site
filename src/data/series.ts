@@ -677,6 +677,17 @@ export const featuredSeriesIds = [
   "nostalgia",
 ];
 
+export const featuredPieceIds = [
+  "grief-void",
+  "awe-singularity",
+  "connection-coupled-oscillators",
+  "cycles-moebius",
+  "solitude-wanderer",
+  "desire-inspiral",
+  "peace-horizon",
+  "wonder-strange-attractor",
+];
+
 export function getSeriesBySlug(slug: string): Series | undefined {
   return series.find((s) => s.id === slug);
 }

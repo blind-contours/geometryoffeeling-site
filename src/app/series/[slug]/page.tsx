@@ -42,6 +42,19 @@ export default function SeriesPage({ params }: Props) {
           <p className="text-caption text-muted">{s.makingOf}</p>
         </div>
 
+        {/* Collection callout */}
+        <div className="border border-border p-6 md:p-8 mb-16">
+          <h2 className="text-headline text-primary mb-2">
+            The Complete {s.name} Series — {s.pieces.length} Pieces
+          </h2>
+          <p className="text-body text-secondary mb-1">
+            From $45 each — museum-grade Hahnemuhle German Etching prints.
+          </p>
+          <p className="text-caption text-muted">
+            Free shipping on every order. Collect the full series and see the emotion unfold.
+          </p>
+        </div>
+
         {/* Pieces grid — 2-up on desktop */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12 mb-20">
           {s.pieces.map((piece) => (

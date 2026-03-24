@@ -58,17 +58,17 @@ export default function PiecePage({ params }: Props) {
 
       <div className="max-w-content mx-auto px-6">
         <div className="max-w-2xl">
-          {/* Title and equation */}
+          {/* Title and emotional note */}
           <h1 className="text-2xl font-mono font-light text-primary mb-2">
             {piece.title}
           </h1>
-          <EquationLabel equation={piece.equation} className="text-sm mb-8" />
-
-          {/* Description */}
-          <p className="text-body text-secondary mb-4">{piece.description}</p>
           <p className="text-body text-muted italic mb-8">
             {piece.emotionalNote}
           </p>
+
+          {/* Description and equation */}
+          <p className="text-body text-secondary mb-4">{piece.description}</p>
+          <EquationLabel equation={piece.equation} className="text-sm mb-8" />
 
           {/* Series link */}
           {s && (
