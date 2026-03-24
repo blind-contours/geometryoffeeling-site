@@ -59,6 +59,26 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Custom prints callout */}
+      <section className="max-w-content mx-auto px-6 pb-24">
+        <div className="border border-border p-8 md:p-12 text-center">
+          <h2 className="text-lg md:text-xl font-mono font-light text-primary mb-4">
+            Want Something Unique?
+          </h2>
+          <p className="text-body text-secondary max-w-xl mx-auto mb-6">
+            I write the code that generates every piece — meaning custom colors,
+            dimensions, and entirely new compositions are possible. Tell me what
+            you&apos;re envisioning.
+          </p>
+          <Link
+            href="/custom"
+            className="inline-block px-8 py-3 border border-primary text-caption uppercase tracking-widest text-primary hover:bg-primary hover:text-bg transition-colors duration-500"
+          >
+            Commission a Custom Piece
+          </Link>
+        </div>
+      </section>
+
       {/* Series collection grid */}
       <section className="max-w-content mx-auto px-6 pb-24">
         {featuredSeries.map((s, i) => (

@@ -93,6 +93,14 @@ export default function Hero() {
           >
             Shop Prints
           </Link>
+          <div className="mt-4">
+            <Link
+              href="/custom"
+              className={`${textClasses} text-caption tracking-wide hover:opacity-70 transition-opacity duration-500`}
+            >
+              or commission a custom piece &rarr;
+            </Link>
+          </div>
         </div>
       </div>
 

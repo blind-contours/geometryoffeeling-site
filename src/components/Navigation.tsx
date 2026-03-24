@@ -31,6 +31,12 @@ export default function Navigation() {
             Shop
           </Link>
           <Link
+            href="/custom"
+            className="text-caption uppercase tracking-widest text-secondary hover:text-primary transition-colors duration-500"
+          >
+            Custom
+          </Link>
+          <Link
             href="/about"
             className="text-caption uppercase tracking-widest text-secondary hover:text-primary transition-colors duration-500"
           >
@@ -65,6 +71,13 @@ export default function Navigation() {
               className="py-3 text-caption uppercase tracking-widest text-secondary hover:text-primary"
             >
               Shop
+            </Link>
+            <Link
+              href="/custom"
+              onClick={() => setOpen(false)}
+              className="py-3 text-caption uppercase tracking-widest text-secondary hover:text-primary"
+            >
+              Custom
             </Link>
             <Link
               href="/about"

@@ -86,6 +86,19 @@ export default function PiecePage({ params }: Props) {
           {/* Buy options */}
           <BuySection pieceId={piece.id} />
 
+          {/* Custom piece CTA */}
+          <div className="border border-border px-6 py-4 mb-8">
+            <p className="text-body text-secondary">
+              Want this piece in different colors or dimensions?{" "}
+              <Link
+                href={`/custom?piece=${piece.id}`}
+                className="text-primary underline underline-offset-4 hover:opacity-70 transition-opacity duration-500"
+              >
+                Commission a custom version
+              </Link>
+            </p>
+          </div>
+
           {s && (
             <p className="text-caption text-secondary mb-4">
               <Link
