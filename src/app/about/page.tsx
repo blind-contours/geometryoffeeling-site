@@ -18,10 +18,10 @@ export default function AboutPage() {
             <div className="mb-10">
               <Image
                 src="/david-mccoy.jpg"
-                alt="David McCoy"
-                width={112}
-                height={112}
-                className="w-28 h-28 object-cover border border-border mb-6"
+                alt="David McCoy at work — Singularity render on one screen, Python code on the other"
+                width={800}
+                height={550}
+                className="w-full max-w-lg object-cover border border-border mb-8"
               />
               <h1 className="text-2xl font-mono font-light text-primary mb-1">
                 David McCoy, Ph.D.
