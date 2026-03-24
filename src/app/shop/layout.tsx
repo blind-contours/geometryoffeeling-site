@@ -1,13 +1,15 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Shop — Geometry of Feeling",
+  title:
+    "Shop Minimalist Fine Art Prints | Mathematical Art From $45 — Geometry of Feeling",
   description:
-    "Museum-grade fine art prints on Hahnemuhle German Etching 310gsm. Free shipping on every order.",
+    "Browse 170+ minimalist fine art prints derived from mathematical equations. Museum-quality giclée on Hahnemühle German Etching 310gsm. From $45 with free shipping.",
   openGraph: {
-    title: "Shop — Geometry of Feeling",
+    title:
+      "Shop Minimalist Fine Art Prints | Mathematical Art From $45 — Geometry of Feeling",
     description:
-      "Museum-grade fine art prints on Hahnemuhle German Etching 310gsm. Free shipping on every order.",
+      "Browse 170+ minimalist fine art prints derived from mathematical equations. Museum-quality giclée on Hahnemühle German Etching 310gsm. From $45 with free shipping.",
     images: [{ url: "/prints/connection/connection_pendulum.jpg", width: 1680, height: 1155 }],
   },
   twitter: {

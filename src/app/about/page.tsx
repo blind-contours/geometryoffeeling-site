@@ -3,13 +3,15 @@ import ProcessStats from "@/components/ProcessStats";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "About — Geometry of Feeling",
+  title:
+    "About the Artist — David McCoy, Ph.D. | Geometry of Feeling",
   description:
-    "David McCoy, Ph.D. — statistician, researcher, artist. Every piece starts with a human emotion and asks: what mathematical function has the same shape as this feeling?",
+    "David McCoy, Ph.D. — statistician, researcher, and mathematical artist. Creator of Geometry of Feeling: minimalist fine art prints where every piece begins with a human emotion and renders it through the equation that shares its shape.",
   openGraph: {
-    title: "About — Geometry of Feeling",
+    title:
+      "About the Artist — David McCoy, Ph.D. | Geometry of Feeling",
     description:
-      "David McCoy, Ph.D. — statistician, researcher, artist. Every piece starts with a human emotion and asks: what mathematical function has the same shape as this feeling?",
+      "David McCoy, Ph.D. — statistician, researcher, and mathematical artist. Creator of Geometry of Feeling: minimalist fine art prints where every piece begins with a human emotion and renders it through the equation that shares its shape.",
     images: [{ url: "/prints/growth/growth_reaction_diffusion.jpg", width: 1680, height: 1155 }],
   },
   twitter: {

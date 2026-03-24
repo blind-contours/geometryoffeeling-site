@@ -15,6 +15,17 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${baseUrl}/custom`, changeFrequency: "monthly", priority: 0.6 },
   ];
 
+  const collectionPages: MetadataRoute.Sitemap = [
+    "minimalist-prints",
+    "mathematical-art",
+    "gifts-for-stem-lovers",
+    "art-about-emotion",
+  ].map((slug) => ({
+    url: `${baseUrl}/collections/${slug}`,
+    changeFrequency: "weekly" as const,
+    priority: 0.85,
+  }));
+
   const seriesPages: MetadataRoute.Sitemap = series.map((s) => ({
     url: `${baseUrl}/series/${s.id}`,
     changeFrequency: "weekly",
@@ -27,5 +38,5 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.7,
   }));
 
-  return [...staticPages, ...seriesPages, ...piecePages];
+  return [...staticPages, ...collectionPages, ...seriesPages, ...piecePages];
 }

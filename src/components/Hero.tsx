@@ -59,7 +59,7 @@ export default function Hero() {
         >
           <Image
             src={slide.piece.imageUrl}
-            alt={slide.piece.title}
+            alt={`${slide.piece.title} — minimalist mathematical fine art print by Geometry of Feeling`}
             fill
             className="object-cover object-center"
             priority={i === 0}

@@ -27,7 +27,7 @@ export default function SeriesCard({ series }: SeriesCardProps) {
             >
               <Image
                 src={piece.imageUrl}
-                alt={piece.title}
+                alt={`${piece.title} — mathematical art print from the ${series.name} series exploring ${series.emotion}`}
                 width={400}
                 height={275}
                 className="w-full h-auto transition-opacity duration-700 group-hover:opacity-90"

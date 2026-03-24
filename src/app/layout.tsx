@@ -13,9 +13,10 @@ const ibmPlexMono = IBM_Plex_Mono({
 const baseUrl =
   process.env.NEXT_PUBLIC_URL || "https://geometryoffeeling.com";
 
-const defaultTitle = "Geometry of Feeling — Mathematical Fine Art";
+const defaultTitle =
+  "Geometry of Feeling — Minimalist Fine Art Prints | Mathematical Art for Home & Office";
 const defaultDescription =
-  "Mathematical fine art for people who think precisely and feel deeply. Every piece begins with a human emotion and asks: what mathematical function has the same shape as this feeling?";
+  "Minimalist fine art prints where every piece begins with a human emotion — grief, awe, connection, desire — and renders it through the mathematical equation that shares its shape. Museum-quality giclée prints on Hahnemühle German Etching 310gsm. From $45 with free shipping.";
 const defaultOgImage = "/prints/awe/awe_singularity.jpg";
 
 export const metadata: Metadata = {

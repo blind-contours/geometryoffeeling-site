@@ -18,7 +18,7 @@ export default function PrintCard({
         <div className="relative overflow-hidden mb-4">
           <Image
             src={piece.imageUrl}
-            alt={`${piece.title} — ${piece.equation}`}
+            alt={`${piece.title} — minimalist mathematical fine art print from the ${piece.series} series by Geometry of Feeling`}
             width={800}
             height={550}
             className="w-full h-auto transition-opacity duration-700 group-hover:opacity-90"

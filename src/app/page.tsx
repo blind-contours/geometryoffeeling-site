@@ -8,10 +8,13 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   openGraph: {
-    title: "Geometry of Feeling — Mathematical Fine Art",
+    title:
+      "Geometry of Feeling — Minimalist Fine Art Prints | Mathematical Art for Home & Office",
     description:
-      "Mathematical fine art for people who think precisely and feel deeply. Every piece begins with a human emotion and asks: what mathematical function has the same shape as this feeling?",
-    images: [{ url: "/prints/awe/awe_singularity.jpg", width: 1680, height: 1155 }],
+      "Minimalist fine art prints where every piece begins with a human emotion — grief, awe, connection, desire — and renders it through the mathematical equation that shares its shape. Museum-quality giclée prints on Hahnemühle German Etching 310gsm. From $45 with free shipping.",
+    images: [
+      { url: "/prints/awe/awe_singularity.jpg", width: 1680, height: 1155 },
+    ],
   },
   twitter: {
     card: "summary_large_image",

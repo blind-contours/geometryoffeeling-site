@@ -52,7 +52,7 @@ export default function HomeSeriesGrid({ series, index }: HomeSeriesGridProps) {
               >
                 <Image
                   src={piece.imageUrl}
-                  alt={`${piece.title} — ${piece.equation}`}
+                  alt={`${piece.title} — mathematical art print from the ${series.name} series by Geometry of Feeling`}
                   width={240}
                   height={165}
                   className="w-full h-auto block"
@@ -83,7 +83,7 @@ export default function HomeSeriesGrid({ series, index }: HomeSeriesGridProps) {
                 >
                   <Image
                     src={piece.imageUrl}
-                    alt={`${piece.title} — ${piece.equation}`}
+                    alt={`${piece.title} — mathematical art print from the ${series.name} series by Geometry of Feeling`}
                     width={240}
                     height={165}
                     className="w-full h-auto block"

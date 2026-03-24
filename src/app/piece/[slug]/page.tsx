@@ -32,17 +32,18 @@ export function generateMetadata({ params }: Props): Metadata {
   const s = getSeriesBySlug(piece.series);
   const seriesName = s?.name ?? piece.series;
   const description = `${piece.title} — a minimalist fine art print from the ${seriesName} series. ${piece.description} Museum-quality giclée on Hahnemühle German Etching. From $45.`;
+  const title = `${piece.title} — Minimalist Mathematical Art Print | Geometry of Feeling`;
   return {
-    title: `${piece.title} — Geometry of Feeling`,
+    title,
     description,
     openGraph: {
-      title: `${piece.title} — Geometry of Feeling`,
+      title,
       description,
       images: [{ url: piece.imageUrl, width: 1680, height: 1155 }],
     },
     twitter: {
       card: "summary_large_image",
-      title: `${piece.title} — Geometry of Feeling`,
+      title,
       description,
       images: [piece.imageUrl],
     },
@@ -96,7 +97,7 @@ export default function PiecePage({ params }: Props) {
       >
         <ImageLightbox
           src={piece.imageUrl}
-          alt={`${piece.title} — ${piece.equation}`}
+          alt={`${piece.title} — minimalist mathematical fine art print exploring ${s?.emotion ?? "emotion"}, from the ${seriesName} series by Geometry of Feeling`}
           width={1680}
           height={1155}
           background={piece.background}

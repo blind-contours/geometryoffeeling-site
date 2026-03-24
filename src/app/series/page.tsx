@@ -3,13 +3,15 @@ import { series } from "@/data/series";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "All Series — Geometry of Feeling",
+  title:
+    "Art Collections by Emotion | Abstract Mathematical Art Series — Geometry of Feeling",
   description:
-    "Twenty-six series exploring the intersection of mathematics and human emotion. Each series uses a different mathematical primitive to render a different feeling.",
+    "26 series of minimalist fine art prints, each exploring a different emotion through mathematics — grief, awe, connection, desire, solitude, and more. Museum-quality giclée prints from $45.",
   openGraph: {
-    title: "All Series — Geometry of Feeling",
+    title:
+      "Art Collections by Emotion | Abstract Mathematical Art Series — Geometry of Feeling",
     description:
-      "Twenty-six series exploring the intersection of mathematics and human emotion. Each series uses a different mathematical primitive to render a different feeling.",
+      "26 series of minimalist fine art prints, each exploring a different emotion through mathematics — grief, awe, connection, desire, solitude, and more. Museum-quality giclée prints from $45.",
     images: [{ url: "/prints/cycles/cycles_loom.jpg", width: 1680, height: 1155 }],
   },
   twitter: {

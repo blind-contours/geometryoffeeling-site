@@ -20,17 +20,19 @@ export function generateMetadata({ params }: Props): Metadata {
   if (!s) return { title: "Series Not Found" };
   const ogImage = s.pieces[0]?.imageUrl || "/prints/awe/awe_singularity.jpg";
   const description = `The ${s.name} series — ${s.pieces.length} minimalist fine art prints exploring ${s.emotion}. ${s.tagline} From $45. Free shipping.`;
+  const emotion = s.emotion.split(",")[0].trim();
+  const title = `${s.name} Series — Mathematical Art Prints About ${emotion.replace(/^\w/, (c: string) => c.toUpperCase())} | Geometry of Feeling`;
   return {
-    title: `${s.name} — Geometry of Feeling`,
+    title,
     description,
     openGraph: {
-      title: `${s.name} — Geometry of Feeling`,
+      title,
       description,
       images: [{ url: ogImage, width: 1680, height: 1155 }],
     },
     twitter: {
       card: "summary_large_image",
-      title: `${s.name} — Geometry of Feeling`,
+      title,
       description,
       images: [ogImage],
     },
