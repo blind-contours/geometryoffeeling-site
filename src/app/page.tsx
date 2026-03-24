@@ -36,7 +36,7 @@ export default function Home() {
 
         <div className="border border-border px-6 py-4 inline-block">
           <p className="text-caption uppercase tracking-widest text-secondary">
-            Built in Python. Evaluated as art. Not AI-generated.
+            Built in Python. Evaluated as art. No AI generated images.
           </p>
         </div>
       </section>

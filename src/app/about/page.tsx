@@ -97,7 +97,7 @@ ys = baseline + PH*0.44 * np.exp(-lam*t) * np.cos(omega*np.pi*t)`}
 
           <section className="mb-16">
             <h2 className="text-headline uppercase tracking-widest text-primary mb-6">
-              This Is Not AI-Generated Art
+              No AI Generated Images
             </h2>
             <div className="space-y-4">
               <p className="text-body text-secondary">
