@@ -41,6 +41,14 @@ export const metadata: Metadata = {
     "unique art gifts",
     // Emotion
     "abstract art about emotion",
+    "emotional art prints",
+    "minimalist art with emotion",
+    "art that expresses feelings",
+    "art about grief",
+    "art about connection",
+    "art about solitude",
+    "calming emotional art",
+    "meaningful wall art",
     // Brand
     "geometry of feeling",
   ],

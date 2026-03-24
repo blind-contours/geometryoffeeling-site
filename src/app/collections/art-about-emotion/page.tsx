@@ -5,14 +5,26 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title:
-    "Art About Emotion | Abstract Art Exploring Grief, Connection, Awe & More — Geometry of Feeling",
+    "Emotional Art Prints | Minimalist Art About Grief, Connection, Awe & More — Geometry of Feeling",
   description:
-    "Abstract art that explores specific human emotions through mathematics. 26 series covering grief, connection, awe, desire, solitude, overwhelm, joy, surrender, and more. Each emotion rendered through the equation that shares its shape. From $45.",
+    "Emotional art that means something. 26 series of minimalist fine art prints exploring grief, connection, awe, desire, solitude, overwhelm, joy, and surrender through mathematics. Art that expresses feelings through the equations that share their shape. Museum-quality prints from $45.",
+  keywords: [
+    "emotional art prints",
+    "art about grief",
+    "art about connection",
+    "minimalist art with emotion",
+    "art that expresses feelings",
+    "meaningful wall art",
+    "calming emotional art",
+    "abstract art about emotion",
+    "art about solitude",
+    "art about awe",
+  ],
   openGraph: {
     title:
-      "Art About Emotion | Abstract Art Exploring Grief, Connection, Awe & More — Geometry of Feeling",
+      "Emotional Art Prints | Minimalist Art About Grief, Connection, Awe & More — Geometry of Feeling",
     description:
-      "Abstract art that explores specific human emotions through mathematics. 26 series covering grief, connection, awe, desire, solitude, overwhelm, joy, surrender, and more. Each emotion rendered through the equation that shares its shape. From $45.",
+      "Emotional art that means something. 26 series of minimalist fine art prints exploring grief, connection, awe, desire, solitude, overwhelm, joy, and surrender through mathematics. Art that expresses feelings through the equations that share their shape. Museum-quality prints from $45.",
     images: [
       {
         url: "/prints/grief/grief_void.jpg",

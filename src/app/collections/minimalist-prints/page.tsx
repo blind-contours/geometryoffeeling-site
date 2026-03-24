@@ -5,14 +5,24 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title:
-    "Minimalist Fine Art Prints | Abstract Wall Art for Home — Geometry of Feeling",
+    "Minimalist Fine Art Prints | Calm Abstract Wall Art for Home — Geometry of Feeling",
   description:
-    "Minimalist fine art prints for your living room, bedroom, or office. Clean abstract compositions derived from mathematical equations. Museum-quality giclée on Hahnemühle German Etching 310gsm. From $45 with free shipping.",
+    "Minimalist fine art prints with emotional depth — calm, meaningful wall art for your living room, bedroom, or office. Each piece expresses a feeling through mathematical equations. Museum-quality giclée on Hahnemühle German Etching 310gsm. From $45 with free shipping.",
+  keywords: [
+    "minimalist fine art prints",
+    "minimalist art with emotion",
+    "calm art for living room",
+    "abstract wall art",
+    "meaningful wall art",
+    "minimalist wall art for bedroom",
+    "calming emotional art",
+    "contemporary fine art prints",
+  ],
   openGraph: {
     title:
-      "Minimalist Fine Art Prints | Abstract Wall Art for Home — Geometry of Feeling",
+      "Minimalist Fine Art Prints | Calm Abstract Wall Art for Home — Geometry of Feeling",
     description:
-      "Minimalist fine art prints for your living room, bedroom, or office. Clean abstract compositions derived from mathematical equations. Museum-quality giclée on Hahnemühle German Etching 310gsm. From $45 with free shipping.",
+      "Minimalist fine art prints with emotional depth — calm, meaningful wall art for your living room, bedroom, or office. Each piece expresses a feeling through mathematical equations. Museum-quality giclée on Hahnemühle German Etching 310gsm. From $45 with free shipping.",
     images: [
       {
         url: "/prints/peace/peace_harmonic_decay.jpg",
