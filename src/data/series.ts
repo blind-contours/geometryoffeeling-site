@@ -683,9 +683,10 @@ export const featuredPieceIds = [
   "connection-coupled-oscillators",
   "cycles-moebius",
   "solitude-wanderer",
-  "desire-inspiral",
+  "awe-murmuration",
   "peace-horizon",
-  "wonder-strange-attractor",
+  "connection-orbit-pair",
+  "overwhelm-attractors",
 ];
 
 export function getSeriesBySlug(slug: string): Series | undefined {

@@ -93,13 +93,14 @@ export default function Hero() {
           >
             Shop Prints
           </Link>
-          <div className="mt-4">
-            <Link
-              href="/custom"
-              className={`${textClasses} text-caption tracking-wide hover:opacity-70 transition-opacity duration-500`}
+          <div className="mt-6">
+            <button
+              onClick={() => window.scrollTo({ top: window.innerHeight, behavior: "smooth" })}
+              className={`${textClasses} text-caption tracking-wide hover:opacity-70 transition-opacity duration-500 flex items-center gap-2 mx-auto`}
             >
-              or commission a custom piece &rarr;
-            </Link>
+              scroll down for the gallery
+              <span className="inline-block animate-bounce">&darr;</span>
+            </button>
           </div>
         </div>
       </div>

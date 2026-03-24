@@ -59,6 +59,22 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Series collection grid */}
+      <section className="max-w-content mx-auto px-6 pb-24">
+        {featuredSeries.map((s, i) => (
+          <HomeSeriesGrid key={s.id} series={s} index={i} />
+        ))}
+
+        <div className="text-center mt-8">
+          <Link
+            href="/series"
+            className="text-caption uppercase tracking-widest text-secondary hover:text-primary transition-colors duration-500"
+          >
+            Explore all {series.length} series &rarr;
+          </Link>
+        </div>
+      </section>
+
       {/* Custom prints callout */}
       <section className="max-w-content mx-auto px-6 pb-24">
         <div className="border border-border p-8 md:p-12 text-center">
@@ -75,22 +91,6 @@ export default function Home() {
             className="inline-block px-8 py-3 border border-primary text-caption uppercase tracking-widest text-primary hover:bg-primary hover:text-bg transition-colors duration-500"
           >
             Commission a Custom Piece
-          </Link>
-        </div>
-      </section>
-
-      {/* Series collection grid */}
-      <section className="max-w-content mx-auto px-6 pb-24">
-        {featuredSeries.map((s, i) => (
-          <HomeSeriesGrid key={s.id} series={s} index={i} />
-        ))}
-
-        <div className="text-center mt-8">
-          <Link
-            href="/series"
-            className="text-caption uppercase tracking-widest text-secondary hover:text-primary transition-colors duration-500"
-          >
-            Explore all {series.length} series &rarr;
           </Link>
         </div>
       </section>
