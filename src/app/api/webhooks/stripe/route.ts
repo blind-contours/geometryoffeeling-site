@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getStripe } from "@/lib/stripe";
 import { createOrder } from "@/lib/prodigi";
+import { sendOrderConfirmation } from "@/lib/email";
 import { list } from "@vercel/blob";
 import type Stripe from "stripe";
 
@@ -95,6 +96,31 @@ export async function POST(req: NextRequest) {
       console.error("Failed to create Prodigi order:", err);
       // Don't return 500 — Stripe would retry and we'd double-process
       // Log for manual fulfillment
+    }
+
+    // Send order confirmation email
+    const customerEmail = fullSession.customer_details?.email;
+    if (customerEmail) {
+      try {
+        const { getPieceBySlug } = await import("@/data/series");
+        const { getSizeById } = await import("@/lib/products");
+        const piece = getPieceBySlug(pieceId);
+        const size = getSizeById(sizeId);
+        const baseUrl = process.env.NEXT_PUBLIC_URL || "https://geometryoffeeling.com";
+
+        await sendOrderConfirmation({
+          to: customerEmail,
+          customerName: shipping.name?.split(" ")[0] || "",
+          pieceTitle: piece?.title || pieceId,
+          sizeLabel: size?.label || sizeId,
+          imageUrl: piece ? `${baseUrl}${piece.imageUrl}` : imageUrl,
+          equation: piece?.equation || "",
+        });
+        console.log("Confirmation email sent to:", customerEmail);
+      } catch (err) {
+        console.error("Failed to send confirmation email:", err);
+        // Non-fatal — order still fulfilled
+      }
     }
   }
 
