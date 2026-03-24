@@ -3,12 +3,7 @@
 import { useState } from "react";
 import PrintCard from "@/components/PrintCard";
 import Link from "next/link";
-import {
-  series,
-  allPieces,
-  collectionPrice,
-  collectionGumroadUrl,
-} from "@/data/series";
+import { series, allPieces } from "@/data/series";
 
 export default function ShopPage() {
   const [filterSeries, setFilterSeries] = useState<string>("all");
@@ -26,8 +21,6 @@ export default function ShopPage() {
     return 0; // default: series order
   });
 
-  const totalIndividual = allPieces.reduce((sum, p) => sum + p.price, 0);
-
   return (
     <div className="pt-28 pb-16">
       <div className="max-w-content mx-auto px-6">
@@ -35,7 +28,7 @@ export default function ShopPage() {
           Shop
         </h1>
         <p className="text-body text-secondary max-w-xl mb-8">
-          High-resolution PDFs, print-ready at 300 DPI. Download instantly.
+          Museum-grade fine art prints on Hahnemuhle German Etching 310gsm. Free shipping.
         </p>
 
         {/* Start with a series — prominent CTA */}
@@ -60,34 +53,20 @@ export default function ShopPage() {
           </div>
         </div>
 
-        {/* Full collection */}
+        {/* Pricing info */}
         <div className="border border-primary p-8 mb-12">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
             <div>
               <h2 className="text-headline text-primary mb-2">
-                Complete Collection
+                Three Sizes, One Paper
               </h2>
               <p className="text-body text-secondary">
-                All {allPieces.length} pieces across {series.length} series.
+                8&times;10&quot; — $45 &nbsp;|&nbsp; 16&times;20&quot; — $95 &nbsp;|&nbsp; 24&times;36&quot; — $175
               </p>
-              <p className="text-body text-secondary mt-1">
-                <span className="line-through text-muted">
-                  ${totalIndividual}
-                </span>{" "}
-                <span className="text-primary font-medium">
-                  ${collectionPrice}
-                </span>{" "}
-                — save ${totalIndividual - collectionPrice}
+              <p className="text-caption text-muted mt-2">
+                Free shipping — 5-10 business days
               </p>
             </div>
-            <a
-              href={collectionGumroadUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="px-6 py-3 bg-primary text-bg text-caption uppercase tracking-widest hover:opacity-90 transition-opacity duration-500 text-center whitespace-nowrap"
-            >
-              Download Collection
-            </a>
           </div>
         </div>
 

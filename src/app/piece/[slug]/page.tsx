@@ -5,6 +5,7 @@ import PrintCard from "@/components/PrintCard";
 import LicenseTerms from "@/components/LicenseTerms";
 import ImageLightbox from "@/components/ImageLightbox";
 import StickyBuyButton from "@/components/StickyBuyButton";
+import BuySection from "@/components/BuySection";
 import {
   allPieces,
   getPieceBySlug,
@@ -83,49 +84,21 @@ export default function PiecePage({ params }: Props) {
           )}
 
           {/* Buy options */}
-          <div className="border border-border p-6 mb-4">
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-              <div>
-                <p className="text-headline text-primary">Digital Download</p>
-                <p className="text-caption text-secondary">
-                  High-resolution PDF, 300 DPI, print-ready
-                </p>
-              </div>
-              <div className="flex items-center gap-4">
-                <span className="text-lg font-mono text-primary">
-                  ${piece.price}
-                </span>
-                <a
-                  href={piece.gumroadUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="px-6 py-3 bg-primary text-bg text-caption uppercase tracking-widest hover:opacity-90 transition-opacity duration-500"
-                >
-                  Purchase
-                </a>
-              </div>
-            </div>
-            {s && (
-              <div className="mt-4 pt-4 border-t border-border">
-                <Link
-                  href={`/series/${s.id}`}
-                  className="text-caption text-secondary hover:text-primary transition-colors duration-500"
-                >
-                  Or get the complete {s.name} series for ${s.bundlePrice}{" "}
-                  &rarr;
-                </Link>
-              </div>
-            )}
-          </div>
+          <BuySection pieceId={piece.id} />
 
-          <div className="flex items-center gap-4 mb-8">
+          {s && (
+            <p className="text-caption text-secondary mb-4">
+              <Link
+                href={`/series/${s.id}`}
+                className="hover:text-primary transition-colors duration-500"
+              >
+                Browse the complete {s.name} series &rarr;
+              </Link>
+            </p>
+          )}
+
+          <div className="mb-8">
             <LicenseTerms compact />
-            <Link
-              href="/printing"
-              className="text-caption text-muted hover:text-secondary transition-colors underline underline-offset-2"
-            >
-              How to print
-            </Link>
           </div>
         </div>
 
@@ -144,11 +117,7 @@ export default function PiecePage({ params }: Props) {
         )}
       </div>
 
-      <StickyBuyButton
-        title={piece.title}
-        price={piece.price}
-        gumroadUrl={piece.gumroadUrl}
-      />
+      <StickyBuyButton pieceId={piece.id} title={piece.title} />
     </div>
   );
 }

@@ -35,15 +35,13 @@ export default function PrintCard({
         <EquationLabel equation={piece.equation} />
         {showBuyButton && (
           <div className="pt-3 flex items-center justify-between">
-            <span className="text-body text-secondary">${piece.price}</span>
-            <a
-              href={piece.gumroadUrl}
-              target="_blank"
-              rel="noopener noreferrer"
+            <span className="text-caption text-secondary">From ${piece.price}</span>
+            <Link
+              href={`/piece/${piece.id}`}
               className="px-4 py-2 bg-primary text-bg text-caption uppercase tracking-widest hover:opacity-90 transition-opacity duration-500"
             >
-              Download
-            </a>
+              View
+            </Link>
           </div>
         )}
       </div>

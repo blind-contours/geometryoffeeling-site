@@ -49,37 +49,20 @@ export default function SeriesPage({ params }: Props) {
           ))}
         </div>
 
-        {/* Series bundle */}
+        {/* Print info */}
         <div className="border border-border p-8 mb-8">
-          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
-            <div>
-              <h3 className="text-headline text-primary mb-2">
-                Complete {s.name} Series
-              </h3>
-              <p className="text-body text-secondary">
-                All {s.pieces.length} pieces as high-resolution PDFs.
-                Print-ready at 300 DPI.
-              </p>
-              <p className="text-body text-secondary mt-1">
-                <span className="line-through text-muted">
-                  ${s.pieces.reduce((sum, p) => sum + p.price, 0)}
-                </span>{" "}
-                <span className="text-primary font-medium">
-                  ${s.bundlePrice}
-                </span>{" "}
-                — save $
-                {s.pieces.reduce((sum, p) => sum + p.price, 0) - s.bundlePrice}
-              </p>
-            </div>
-            <a
-              href={s.bundleGumroadUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="px-6 py-3 bg-primary text-bg text-caption uppercase tracking-widest hover:opacity-90 transition-opacity duration-500 text-center whitespace-nowrap"
-            >
-              Download Bundle
-            </a>
-          </div>
+          <h3 className="text-headline text-primary mb-2">
+            Fine Art Prints
+          </h3>
+          <p className="text-body text-secondary mb-1">
+            Hahnemuhle German Etching 310gsm — museum-grade matte.
+          </p>
+          <p className="text-body text-secondary">
+            8&times;10&quot; — $45 &nbsp;|&nbsp; 16&times;20&quot; — $95 &nbsp;|&nbsp; 24&times;36&quot; — $175
+          </p>
+          <p className="text-caption text-muted mt-2">
+            Free shipping — 5-10 business days
+          </p>
         </div>
 
         <div className="mb-20">
