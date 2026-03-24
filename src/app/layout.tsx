@@ -10,10 +10,18 @@ const ibmPlexMono = IBM_Plex_Mono({
   variable: "--font-mono",
 });
 
+const baseUrl =
+  process.env.NEXT_PUBLIC_URL || "https://geometryoffeeling.com";
+
+const defaultTitle = "Geometry of Feeling — Mathematical Fine Art";
+const defaultDescription =
+  "Mathematical fine art for people who think precisely and feel deeply. Every piece begins with a human emotion and asks: what mathematical function has the same shape as this feeling?";
+const defaultOgImage = "/prints/awe/awe_singularity.jpg";
+
 export const metadata: Metadata = {
-  title: "Geometry of Feeling — Mathematical Fine Art",
-  description:
-    "Mathematical fine art for people who think precisely and feel deeply. Every piece begins with a human emotion and asks: what mathematical function has the same shape as this feeling?",
+  metadataBase: new URL(baseUrl),
+  title: defaultTitle,
+  description: defaultDescription,
   keywords: [
     "mathematical fine art prints",
     "equation art prints",
@@ -23,6 +31,19 @@ export const metadata: Metadata = {
     "abstract math art",
     "scientific art prints",
   ],
+  openGraph: {
+    title: defaultTitle,
+    description: defaultDescription,
+    siteName: "Geometry of Feeling",
+    images: [{ url: defaultOgImage, width: 1680, height: 1155 }],
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: defaultTitle,
+    description: defaultDescription,
+    images: [defaultOgImage],
+  },
 };
 
 export default function RootLayout({

@@ -4,6 +4,20 @@ import HomeSeriesGrid from "@/components/HomeSeriesGrid";
 import PrintCard from "@/components/PrintCard";
 import EmailCapture from "@/components/EmailCapture";
 import { series, featuredSeriesIds, featuredPieceIds, getPieceBySlug } from "@/data/series";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  openGraph: {
+    title: "Geometry of Feeling — Mathematical Fine Art",
+    description:
+      "Mathematical fine art for people who think precisely and feel deeply. Every piece begins with a human emotion and asks: what mathematical function has the same shape as this feeling?",
+    images: [{ url: "/prints/awe/awe_singularity.jpg", width: 1680, height: 1155 }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    images: ["/prints/awe/awe_singularity.jpg"],
+  },
+};
 
 const featuredSeries = featuredSeriesIds
   .map((id) => series.find((s) => s.id === id)!)

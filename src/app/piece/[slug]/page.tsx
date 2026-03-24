@@ -28,6 +28,17 @@ export function generateMetadata({ params }: Props): Metadata {
   return {
     title: `${piece.title} — Geometry of Feeling`,
     description: piece.description,
+    openGraph: {
+      title: `${piece.title} — Geometry of Feeling`,
+      description: piece.description,
+      images: [{ url: piece.imageUrl, width: 1680, height: 1155 }],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: `${piece.title} — Geometry of Feeling`,
+      description: piece.description,
+      images: [piece.imageUrl],
+    },
   };
 }
 

@@ -3,6 +3,13 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "Printing Guide — Geometry of Feeling",
   description: "How to print your Mathematical Affect digital downloads for the best results.",
+  openGraph: {
+    title: "Printing Guide — Geometry of Feeling",
+    description: "How to print your Mathematical Affect digital downloads for the best results.",
+  },
+  twitter: {
+    card: "summary_large_image",
+  },
 };
 
 export default function PrintingPage() {

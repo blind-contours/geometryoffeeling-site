@@ -15,9 +15,21 @@ export function generateStaticParams() {
 export function generateMetadata({ params }: Props): Metadata {
   const s = getSeriesBySlug(params.slug);
   if (!s) return { title: "Series Not Found" };
+  const ogImage = s.pieces[0]?.imageUrl || "/prints/awe/awe_singularity.jpg";
   return {
     title: `${s.name} — Geometry of Feeling`,
     description: s.description,
+    openGraph: {
+      title: `${s.name} — Geometry of Feeling`,
+      description: s.description,
+      images: [{ url: ogImage, width: 1680, height: 1155 }],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: `${s.name} — Geometry of Feeling`,
+      description: s.description,
+      images: [ogImage],
+    },
   };
 }
 

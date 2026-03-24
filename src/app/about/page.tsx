@@ -6,6 +6,16 @@ export const metadata: Metadata = {
   title: "About — Geometry of Feeling",
   description:
     "David McCoy, Ph.D. — statistician, researcher, artist. Every piece starts with a human emotion and asks: what mathematical function has the same shape as this feeling?",
+  openGraph: {
+    title: "About — Geometry of Feeling",
+    description:
+      "David McCoy, Ph.D. — statistician, researcher, artist. Every piece starts with a human emotion and asks: what mathematical function has the same shape as this feeling?",
+    images: [{ url: "/prints/growth/growth_reaction_diffusion.jpg", width: 1680, height: 1155 }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    images: ["/prints/growth/growth_reaction_diffusion.jpg"],
+  },
 };
 
 export default function AboutPage() {

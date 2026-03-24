@@ -3,6 +3,13 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "License — Geometry of Feeling",
   description: "Personal use license terms for Mathematical Affect digital downloads.",
+  openGraph: {
+    title: "License — Geometry of Feeling",
+    description: "Personal use license terms for Mathematical Affect digital downloads.",
+  },
+  twitter: {
+    card: "summary_large_image",
+  },
 };
 
 export default function LicensePage() {

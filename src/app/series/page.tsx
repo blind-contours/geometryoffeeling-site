@@ -6,6 +6,16 @@ export const metadata: Metadata = {
   title: "All Series — Geometry of Feeling",
   description:
     "Twenty-six series exploring the intersection of mathematics and human emotion. Each series uses a different mathematical primitive to render a different feeling.",
+  openGraph: {
+    title: "All Series — Geometry of Feeling",
+    description:
+      "Twenty-six series exploring the intersection of mathematics and human emotion. Each series uses a different mathematical primitive to render a different feeling.",
+    images: [{ url: "/prints/cycles/cycles_loom.jpg", width: 1680, height: 1155 }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    images: ["/prints/cycles/cycles_loom.jpg"],
+  },
 };
 
 export default function SeriesPage() {
