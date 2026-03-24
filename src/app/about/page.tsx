@@ -1,3 +1,4 @@
+import Image from "next/image";
 import ProcessStats from "@/components/ProcessStats";
 import type { Metadata } from "next";
 
@@ -15,12 +16,13 @@ export default function AboutPage() {
           {/* About the Artist */}
           <section className="mb-20">
             <div className="mb-10">
-              {/* Add your photo: save as /public/david-mccoy.jpg (square, ~400x400px)
-                  then uncomment the img tag below and remove the placeholder div */}
-              <div className="w-28 h-28 bg-surface border border-border mb-6 flex items-center justify-center">
-                <span className="text-muted text-caption">Photo</span>
-              </div>
-              {/* <img src="/david-mccoy.jpg" alt="David McCoy" className="w-28 h-28 object-cover border border-border mb-6" /> */}
+              <Image
+                src="/david-mccoy.jpg"
+                alt="David McCoy"
+                width={112}
+                height={112}
+                className="w-28 h-28 object-cover border border-border mb-6"
+              />
               <h1 className="text-2xl font-mono font-light text-primary mb-1">
                 David McCoy, Ph.D.
               </h1>
