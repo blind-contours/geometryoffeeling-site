@@ -134,6 +134,17 @@ export default function PiecePage({ params }: Props) {
           {/* Buy options */}
           <BuySection pieceId={piece.id} />
 
+          {/* Shipping + framing link */}
+          <p className="text-caption text-muted mb-8">
+            Free shipping — 5-10 business days &nbsp;&middot;&nbsp;{" "}
+            <Link
+              href="/printing"
+              className="underline hover:text-secondary transition-colors duration-500"
+            >
+              Framing guide
+            </Link>
+          </p>
+
           {/* Custom piece CTA */}
           <div className="border border-border px-6 py-4 mb-8">
             <p className="text-body text-secondary">
