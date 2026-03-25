@@ -48,7 +48,7 @@ export async function createOrder(
           merchantReference,
           sku,
           copies: 1,
-          sizing: "fitPrintArea",
+          sizing: "fillPrintArea",
           assets: [
             {
               printArea: "default",

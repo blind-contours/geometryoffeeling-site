@@ -53,6 +53,7 @@ async function main() {
       const blob = await put(blobPath, content, {
         access: "private",
         addRandomSuffix: false,
+        allowOverwrite: true,
       });
 
       console.log(`  ✓ ${blob.url}`);

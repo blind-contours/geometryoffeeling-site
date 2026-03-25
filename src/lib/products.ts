@@ -8,25 +8,25 @@ export interface PrintSize {
 
 export const PRINT_SIZES: PrintSize[] = [
   {
-    id: "10x8",
-    label: '10" × 8"',
-    dimensions: "10x8",
+    id: "12x8",
+    label: '12" × 8"',
+    dimensions: "12x8",
     priceCents: 4500,
-    prodigiSku: "GLOBAL-HPR-8X10",
+    prodigiSku: "GLOBAL-HGE-8X12",
   },
   {
-    id: "20x16",
-    label: '20" × 16"',
-    dimensions: "20x16",
-    priceCents: 9500,
-    prodigiSku: "GLOBAL-HPR-16X20",
+    id: "24x16",
+    label: '24" × 16"',
+    dimensions: "24x16",
+    priceCents: 10000,
+    prodigiSku: "GLOBAL-HGE-16X24",
   },
   {
     id: "36x24",
     label: '36" × 24"',
     dimensions: "36x24",
     priceCents: 17500,
-    prodigiSku: "GLOBAL-HPR-24X36",
+    prodigiSku: "GLOBAL-HGE-24X36",
   },
 ];
 

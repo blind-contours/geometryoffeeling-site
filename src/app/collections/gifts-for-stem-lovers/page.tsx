@@ -86,11 +86,11 @@ export default function GiftsForStemPage() {
         </p>
         <p className="text-caption text-muted mb-4">
           Museum-quality giclée on Hahnemühle German Etching 310gsm. Three
-          sizes: 10&times;8&quot; ($45), 20&times;16&quot; ($95),
+          sizes: 12&times;8&quot; ($45), 24&times;16&quot; ($100),
           36&times;24&quot; ($175). Free shipping.
         </p>
         <p className="text-caption text-muted mb-12">
-          Not sure which piece? The 10&times;8&quot; size at $45 is the perfect
+          Not sure which piece? The 12&times;8&quot; size at $45 is the perfect
           entry point — museum-grade paper, real equation, ready to frame.
         </p>
 
