@@ -92,8 +92,8 @@ export default function MathematicalArtPage() {
         </p>
         <p className="text-caption text-muted mb-12">
           Museum-quality giclée on Hahnemühle German Etching 310gsm. Three
-          sizes: 8&times;10&quot; ($45), 16&times;20&quot; ($95),
-          24&times;36&quot; ($175). Free shipping.
+          sizes: 10&times;8&quot; ($45), 20&times;16&quot; ($95),
+          36&times;24&quot; ($175). Free shipping.
         </p>
 
         {featuredSeries.map((s) => (

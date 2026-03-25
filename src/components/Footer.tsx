@@ -107,7 +107,7 @@ export default function Footer() {
             Built by hand. Rendered in Python. Grounded in mathematics.
           </p>
           <p className="text-caption text-muted">
-            &copy; {new Date().getFullYear()} Mathematical Affect
+            &copy; {new Date().getFullYear()} Geometry of Feeling
           </p>
         </div>
       </div>

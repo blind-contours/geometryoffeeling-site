@@ -2,10 +2,10 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "License — Geometry of Feeling",
-  description: "Personal use license terms for Mathematical Affect digital downloads.",
+  description: "Personal use license terms for Geometry of Feeling fine art prints.",
   openGraph: {
     title: "License — Geometry of Feeling",
-    description: "Personal use license terms for Mathematical Affect digital downloads.",
+    description: "Personal use license terms for Geometry of Feeling fine art prints.",
   },
   twitter: {
     card: "summary_large_image",
@@ -26,9 +26,9 @@ export default function LicensePage() {
               Personal Use License
             </h2>
             <p className="text-body text-secondary mb-6">
-              Every purchase from Mathematical Affect includes a Personal Use
+              Every purchase from Geometry of Feeling includes a Personal Use
               License. This license is granted automatically upon purchase and
-              applies to all digital downloads.
+              applies to all fine art prints.
             </p>
           </section>
 
@@ -39,8 +39,7 @@ export default function LicensePage() {
             <ul className="space-y-3 text-body text-secondary">
               <li className="flex gap-3">
                 <span className="text-primary">+</span>
-                Print for personal use, unlimited times, at any size up to 24x16
-                inches
+                Display your print for personal use in any setting
               </li>
               <li className="flex gap-3">
                 <span className="text-primary">+</span>
@@ -77,7 +76,7 @@ export default function LicensePage() {
               </li>
               <li className="flex gap-3">
                 <span className="text-muted">&minus;</span>
-                Sharing or distributing the digital PDF files
+                Reproducing or scanning prints for distribution
               </li>
               <li className="flex gap-3">
                 <span className="text-muted">&minus;</span>
