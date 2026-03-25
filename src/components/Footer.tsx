@@ -65,6 +65,12 @@ export default function Footer() {
               >
                 About
               </Link>
+              <Link
+                href="/printing"
+                className="text-body text-secondary hover:text-primary transition-colors duration-500"
+              >
+                Framing Guide
+              </Link>
             </div>
           </div>
 
