@@ -2,10 +2,10 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Printing Guide — Geometry of Feeling",
-  description: "How to print your Mathematical Affect digital downloads for the best results.",
+  description: "Museum-grade fine art prints on Hahnemühle German Etching 310gsm — printing and framing guide.",
   openGraph: {
     title: "Printing Guide — Geometry of Feeling",
-    description: "How to print your Mathematical Affect digital downloads for the best results.",
+    description: "Museum-grade fine art prints on Hahnemühle German Etching 310gsm — printing and framing guide.",
   },
   twitter: {
     card: "summary_large_image",
