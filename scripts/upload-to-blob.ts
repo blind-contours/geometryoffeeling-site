@@ -4,7 +4,7 @@
  * Usage:
  *   BLOB_READ_WRITE_TOKEN=vercel_blob_... npx tsx scripts/upload-to-blob.ts
  *
- * Expects high-res PDFs in mathematical_affect/*/final_series/
+ * Expects high-res PDFs in mathematical_affect/{series}/final_series/
  * Uploads each to Vercel Blob keyed by piece ID.
  */
 
@@ -51,7 +51,7 @@ async function main() {
 
       const content = readFileSync(filePath);
       const blob = await put(blobPath, content, {
-        access: "public",
+        access: "private",
         addRandomSuffix: false,
       });
 
