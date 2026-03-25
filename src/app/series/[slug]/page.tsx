@@ -1,4 +1,5 @@
 import { notFound } from "next/navigation";
+import Link from "next/link";
 import PrintCard from "@/components/PrintCard";
 import LicenseTerms from "@/components/LicenseTerms";
 import { series, getSeriesBySlug } from "@/data/series";
@@ -112,7 +113,13 @@ export default function SeriesPage({ params }: Props) {
             12&times;8&quot; — $45 &nbsp;|&nbsp; 24&times;16&quot; — $100 &nbsp;|&nbsp; 36&times;24&quot; — $175
           </p>
           <p className="text-caption text-muted mt-2">
-            Free shipping — 5-10 business days
+            Free shipping — 5-10 business days &nbsp;&middot;&nbsp;{" "}
+            <Link
+              href="/printing"
+              className="underline hover:text-secondary transition-colors duration-500"
+            >
+              Framing guide
+            </Link>
           </p>
         </div>
 

@@ -1,14 +1,101 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "Printing Guide — Geometry of Feeling",
-  description: "Museum-grade fine art prints on Hahnemühle German Etching 310gsm — printing and framing guide.",
+  title: "Framing Guide — Geometry of Feeling",
+  description:
+    "How to frame your Geometry of Feeling fine art print. Recommended frames for every size with direct links.",
   openGraph: {
-    title: "Printing Guide — Geometry of Feeling",
-    description: "Museum-grade fine art prints on Hahnemühle German Etching 310gsm — printing and framing guide.",
+    title: "Framing Guide — Geometry of Feeling",
+    description:
+      "How to frame your Geometry of Feeling fine art print. Recommended frames for every size with direct links.",
   },
   twitter: {
     card: "summary_large_image",
+  },
+};
+
+const frames = {
+  small: {
+    size: '12 \u00d7 8"',
+    prints: "Entry-level — desk, shelf, or small wall",
+    options: [
+      {
+        name: "Craig Frames 1WB3BK",
+        price: "$17",
+        note: "Clean contemporary profile, hand-crafted in Michigan. Our top pick.",
+        url: "https://www.amazon.com/Craig-Frames-1WB3BK-12-Inch-Picture/dp/B0046B5K18",
+        colors: "Black, White, Natural, Walnut",
+      },
+      {
+        name: "upsimples 8x12 Frame",
+        price: "$12",
+        note: "Best budget option. Shatter-resistant glass, clean lines.",
+        url: "https://www.amazon.com/upsimples-Picture-Display-Pictures-Without/dp/B0BQQZ2FCJ",
+        colors: "Black, Brown",
+      },
+      {
+        name: "Fkvat Aluminum Frame",
+        price: "$10/ea (4-pack)",
+        note: "Ultra-thin metal profile. Modern and minimal — great for sets.",
+        url: "https://www.amazon.com/Fkvat-Aluminum-Vertical-Horizontal-Tabletop/dp/B0C1TXYK6W",
+        colors: "Black, Brass, Gold, Silver",
+      },
+    ],
+  },
+  medium: {
+    size: '24 \u00d7 16"',
+    prints: "Wall piece — living room, office, bedroom",
+    options: [
+      {
+        name: "Craig Frames 1WB3BK",
+        price: "$28",
+        note: "Same series as the 12\u00d78 — consistent look across sizes.",
+        url: "https://www.amazon.com/Craig-Frames-1WB3BK-24-Inch-Smooth/dp/B0049OEQ4Y",
+        colors: "Black, White, Natural, Walnut",
+      },
+      {
+        name: "Homeforia Metal Frame",
+        price: "$40",
+        note: "Aluminum with tempered glass. Sharp, gallery feel.",
+        url: "https://www.amazon.com/16-24-POSTER-FRAME-BLACK/dp/B0BJBKNM7X",
+        colors: "Black, Silver, Gold, Natural Wood",
+      },
+      {
+        name: "Frame Amo Modern Frame",
+        price: "$22",
+        note: "5,000+ reviews. Clean MDF with acrylic face.",
+        url: "https://www.amazon.com/Frame-Amo-Modern-Picture-Poster/dp/B07PF5M1SY",
+        colors: "Black, White, Walnut Brown",
+      },
+    ],
+  },
+  large: {
+    size: '36 \u00d7 24"',
+    prints: "Statement piece — main wall, above sofa, entryway",
+    options: [
+      {
+        name: "IKEA R\u00d6DALM",
+        price: "$10",
+        note: "Unbeatable value. The 24\u00d736 is a perfect fit.",
+        url: "https://www.ikea.com/us/en/p/roedalm-frame-black-30548932/",
+        colors: "Black ($10), White ($10), Birch ($15), Oak ($40)",
+      },
+      {
+        name: "Craig Frames 1WB3BK",
+        price: "$35",
+        note: "Matches the smaller Craig Frames for a cohesive collection.",
+        url: "https://www.amazon.com/Craig-Frames-1WB3BK-36-Inch-Picture/dp/B0046B7NGI",
+        colors: "Black, White, Natural, Walnut",
+      },
+      {
+        name: "Homeforia Metal Frame",
+        price: "$60",
+        note: "Premium aluminum, tempered glass. Gallery quality.",
+        url: "https://www.amazon.com/24X36-POSTER-PICTURE-FRAME-BLACK/dp/B0D3MDVFTP",
+        colors: "Black, Silver, Rose Gold",
+      },
+    ],
   },
 };
 
@@ -18,100 +105,143 @@ export default function PrintingPage() {
       <div className="max-w-content mx-auto px-6">
         <div className="max-w-2xl">
           <h1 className="text-2xl font-mono font-light text-primary mb-4">
-            How to Print
+            Framing Guide
           </h1>
           <p className="text-body text-secondary mb-12">
-            Your files are 300 DPI print-ready PDFs. Here is everything you need
-            to get gallery-quality results.
+            Every print ships flat and unframed on Hahnem&uuml;hle German
+            Etching 310gsm — museum-grade matte paper with a warm, textured
+            finish. Here are frames we recommend for each size.
           </p>
 
+          {/* Your Print */}
           <section className="mb-12">
             <h2 className="text-headline uppercase tracking-widest text-primary mb-6">
-              Recommended Paper
+              Your Print
             </h2>
-            <p className="text-body text-secondary mb-4">
-              Fine art matte, 180&ndash;220gsm, acid-free. This is the paper used
-              in galleries. It produces deep blacks, subtle texture, and no glare.
-            </p>
-            <p className="text-body text-muted">
-              Do not use glossy photo paper. The art was designed for matte
-              surfaces.
-            </p>
-          </section>
-
-          <section className="mb-12">
-            <h2 className="text-headline uppercase tracking-widest text-primary mb-6">
-              Sizes That Work
-            </h2>
-            <p className="text-body text-secondary mb-4">
-              The files are 11&times;7.5 inches at 300 DPI (landscape orientation).
-            </p>
             <div className="border border-border divide-y divide-border">
-              {[
-                { size: '11 x 7.5"', note: "Exact file size — sharpest possible" },
-                { size: '14 x 10"', note: "Slight upscale, still sharp" },
-                { size: '18 x 12"', note: "Ideal wall size — my recommendation" },
-                { size: '24 x 16"', note: "Large statement piece — maximum recommended size" },
-              ].map((row) => (
-                <div key={row.size} className="flex justify-between px-4 py-3">
-                  <span className="text-body text-primary font-medium">
-                    {row.size}
-                  </span>
-                  <span className="text-body text-secondary">{row.note}</span>
-                </div>
-              ))}
+              <div className="flex justify-between px-4 py-3">
+                <span className="text-body text-primary">Paper</span>
+                <span className="text-body text-secondary">
+                  Hahnem&uuml;hle German Etching 310gsm
+                </span>
+              </div>
+              <div className="flex justify-between px-4 py-3">
+                <span className="text-body text-primary">Finish</span>
+                <span className="text-body text-secondary">
+                  Warm white, velvety matte texture
+                </span>
+              </div>
+              <div className="flex justify-between px-4 py-3">
+                <span className="text-body text-primary">Orientation</span>
+                <span className="text-body text-secondary">
+                  Landscape (wider than tall)
+                </span>
+              </div>
+              <div className="flex justify-between px-4 py-3">
+                <span className="text-body text-primary">Sizes</span>
+                <span className="text-body text-secondary">
+                  12&times;8&quot; &nbsp;|&nbsp; 24&times;16&quot; &nbsp;|&nbsp;
+                  36&times;24&quot;
+                </span>
+              </div>
             </div>
-            <p className="text-caption text-muted mt-3">
-              Do not exceed 24&times;16&quot; for digital downloads — resolution will
-              degrade.
-            </p>
           </section>
 
+          {/* Frame Recommendations */}
+          {(
+            Object.entries(frames) as [
+              string,
+              (typeof frames)[keyof typeof frames],
+            ][]
+          ).map(([key, section]) => (
+            <section key={key} className="mb-12">
+              <h2 className="text-headline uppercase tracking-widest text-primary mb-2">
+                {section.size}
+              </h2>
+              <p className="text-caption text-muted mb-6">{section.prints}</p>
+              <div className="space-y-6">
+                {section.options.map((frame) => (
+                  <div key={frame.name} className="border border-border p-5">
+                    <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2 mb-2">
+                      <a
+                        href={frame.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-body text-primary hover:opacity-70 transition-opacity duration-500"
+                      >
+                        {frame.name} &rarr;
+                      </a>
+                      <span className="text-body text-primary font-medium">
+                        {frame.price}
+                      </span>
+                    </div>
+                    <p className="text-caption text-secondary mb-1">
+                      {frame.note}
+                    </p>
+                    <p className="text-caption text-muted">{frame.colors}</p>
+                  </div>
+                ))}
+              </div>
+            </section>
+          ))}
+
+          {/* Tips */}
           <section className="mb-12">
             <h2 className="text-headline uppercase tracking-widest text-primary mb-6">
-              Where to Print
+              Framing Tips
             </h2>
-            <div className="space-y-4 text-body text-secondary">
-              <div>
-                <p className="text-primary">Online (recommended)</p>
-                <ul className="list-disc list-inside text-caption mt-1 space-y-1">
-                  <li>Mpix.com — best quality, fine art paper options</li>
-                  <li>Nations Photo Lab — professional results</li>
-                  <li>Printingforless.com — bulk orders</li>
-                </ul>
-              </div>
-              <div>
-                <p className="text-primary">Local</p>
-                <ul className="list-disc list-inside text-caption mt-1 space-y-1">
-                  <li>
-                    FedEx Office — request fine art paper (not standard glossy)
-                  </li>
-                  <li>Local print shop — best option if available</li>
-                </ul>
-              </div>
-            </div>
+            <ul className="space-y-3 text-body text-secondary">
+              <li className="flex gap-3">
+                <span className="text-primary shrink-0">+</span>
+                Use the frame without a mat for the cleanest look — the print
+                fills the full frame edge to edge.
+              </li>
+              <li className="flex gap-3">
+                <span className="text-primary shrink-0">+</span>
+                Black or natural wood frames complement the warm paper tone
+                best.
+              </li>
+              <li className="flex gap-3">
+                <span className="text-primary shrink-0">+</span>
+                For UV protection, choose frames with acrylic or UV glass —
+                especially in sunlit rooms.
+              </li>
+              <li className="flex gap-3">
+                <span className="text-primary shrink-0">+</span>
+                Hang at eye level (center of the piece at roughly 57 inches from
+                the floor — the gallery standard).
+              </li>
+            </ul>
           </section>
 
-          <section className="mb-12">
-            <h2 className="text-headline uppercase tracking-widest text-primary mb-6">
-              Framing
+          {/* Matching Set */}
+          <section className="border border-primary p-6 mb-12">
+            <h2 className="text-headline text-primary mb-3">
+              Want a matching set?
             </h2>
             <p className="text-body text-secondary mb-4">
-              Simple black or natural wood frame, white mat. The art is minimal —
-              the frame should be too.
+              The Craig Frames 1WB3BK comes in all three sizes with the same
+              clean profile. Order all three for a cohesive gallery wall — about
+              $80 total.
             </p>
-            <p className="text-body text-secondary">
-              IKEA RIBBA fits 18&times;12&quot; with matting. For custom framing,
-              request UV-protective glass and acid-free mat board.
-            </p>
+            <Link
+              href="/shop"
+              className="text-caption uppercase tracking-widest text-primary hover:opacity-70 transition-opacity duration-500"
+            >
+              Browse prints &rarr;
+            </Link>
           </section>
 
+          {/* Color Note */}
           <section className="border border-border p-6">
-            <h2 className="text-headline text-primary mb-3">Color Note</h2>
+            <h2 className="text-headline text-primary mb-3">
+              A Note on Color
+            </h2>
             <p className="text-body text-secondary">
-              Files are RGB. Colors may shift slightly in print — this is normal
-              for any digital-to-print workflow. For critical color accuracy,
-              request an ICC profile preview at a professional lab.
+              German Etching paper has a warm white tone that gives each piece a
+              subtle warmth you won&apos;t see on screen. This is intentional —
+              the prints feel richer and more tactile in person than they appear
+              digitally.
             </p>
           </section>
         </div>
