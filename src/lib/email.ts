@@ -61,6 +61,20 @@ export async function sendOrderConfirmation({
 
     <hr style="border:none;border-top:1px solid #E0DDD8;margin:32px 0;" />
 
+    <h2 style="font-size:14px;letter-spacing:0.1em;text-transform:uppercase;color:#1A1A18;margin-bottom:12px;">
+      Frame it before it arrives
+    </h2>
+    <p style="font-size:14px;color:#555;line-height:1.6;margin-bottom:16px;">
+      Your print ships in 5–10 days. Order a frame now so it's ready when your piece arrives.
+      We recommend simple black or natural wood — the art is minimal, the frame should be too.
+    </p>
+    <a href="https://www.geometryoffeeling.com/printing"
+       style="display:inline-block;font-size:13px;letter-spacing:0.1em;text-transform:uppercase;color:#1A1A18;border:1px solid #1A1A18;padding:10px 20px;text-decoration:none;margin-bottom:32px;">
+      View framing guide &rarr;
+    </a>
+
+    <hr style="border:none;border-top:1px solid #E0DDD8;margin:32px 0;" />
+
     <p style="font-size:13px;color:#888;line-height:1.6;">
       Every piece begins with a human emotion and asks: what mathematical function
       has the same shape as this feeling? The equation isn't decoration — it's the
