@@ -201,82 +201,91 @@ OUTPUT_DIR = os.path.join(SCRIPT_DIR, '..', '..', 'output')
 # =============================================================================
 def render():
     fig, ax = make_fig()
-    np.random.seed(999)
+    np.random.seed(42)
 
-    n_flights = 40
-    n_steps = 600
     alpha_levy = 1.5  # Levy exponent (1 < alpha < 2 for heavy tails)
 
-    for fi in range(n_flights):
-        # Start near center with slight scatter
-        x_f = cx + np.random.uniform(-PW * 0.05, PW * 0.05)
-        y_f = cy + np.random.uniform(-PH * 0.05, PH * 0.05)
+    # --- Multiple epicenters scattered across canvas ---
+    # Each epicenter spawns flights that explore outward
+    epicenters = [
+        (cx,                cy),                 # center
+        (PAD_L + PW * 0.18, PAD_B + PH * 0.75), # top-left
+        (PAD_L + PW * 0.82, PAD_B + PH * 0.80), # top-right
+        (PAD_L + PW * 0.25, PAD_B + PH * 0.25), # bottom-left
+        (PAD_L + PW * 0.78, PAD_B + PH * 0.30), # bottom-right
+        (PAD_L + PW * 0.50, PAD_B + PH * 0.85), # top-center
+        (PAD_L + PW * 0.50, PAD_B + PH * 0.15), # bottom-center
+        (PAD_L + PW * 0.12, PAD_B + PH * 0.50), # left
+        (PAD_L + PW * 0.88, PAD_B + PH * 0.50), # right
+    ]
 
-        xs_path = [x_f]
-        ys_path = [y_f]
+    flights_per_epicenter = 8
+    n_steps = 800
 
-        for step in range(n_steps):
-            # Levy-distributed step length via inverse CDF of Pareto
-            # L = min_step / U^(1/alpha) where U ~ Uniform(0,1)
-            u = np.random.uniform(0.01, 1.0)
-            step_len = 0.015 / (u ** (1.0 / alpha_levy))
-            step_len = min(step_len, PW * 0.25)  # cap extreme jumps
+    for ei, (ex, ey) in enumerate(epicenters):
+        for fi in range(flights_per_epicenter):
+            # Start near this epicenter
+            x_f = ex + np.random.uniform(-PW * 0.06, PW * 0.06)
+            y_f = ey + np.random.uniform(-PH * 0.06, PH * 0.06)
 
-            # Random direction with slight bias away from center
-            angle = np.random.uniform(0, 2 * np.pi)
-            # subtle radial bias
-            dx_from_center = x_f - cx
-            dy_from_center = y_f - cy
-            r_from_center = np.sqrt(dx_from_center**2 + dy_from_center**2)
-            if r_from_center > 0.1:
-                radial_angle = np.arctan2(dy_from_center, dx_from_center)
-                angle = angle * 0.7 + radial_angle * 0.3
+            xs_path = [x_f]
+            ys_path = [y_f]
 
-            x_f += step_len * np.cos(angle)
-            y_f += step_len * np.sin(angle)
-            xs_path.append(x_f)
-            ys_path.append(y_f)
+            for step in range(n_steps):
+                # Levy-distributed step length via inverse CDF of Pareto
+                u = np.random.uniform(0.01, 1.0)
+                step_len = 0.012 / (u ** (1.0 / alpha_levy))
+                step_len = min(step_len, PW * 0.18)  # cap extreme jumps
 
-        xs_arr = np.array(xs_path)
-        ys_arr = np.array(ys_path)
+                # Pure random direction — no radial bias so they explore freely
+                angle = np.random.uniform(0, 2 * np.pi)
 
-        mask = ((xs_arr > PAD_L) & (xs_arr < PAD_L + PW) &
-                (ys_arr > PAD_B) & (ys_arr < PAD_B + PH))
+                x_f += step_len * np.cos(angle)
+                y_f += step_len * np.sin(angle)
+                xs_path.append(x_f)
+                ys_path.append(y_f)
 
-        col = COLS[fi % len(COLS)]
+            xs_arr = np.array(xs_path)
+            ys_arr = np.array(ys_path)
 
-        for seg_xs, seg_ys in split_segments(xs_arr, ys_arr, mask):
-            if len(seg_xs) < 3:
-                continue
-            pts = np.array([seg_xs, seg_ys]).T.reshape(-1, 1, 2)
-            segs = np.concatenate([pts[:-1], pts[1:]], axis=1)
-            n_s = len(segs)
+            mask = ((xs_arr > PAD_L) & (xs_arr < PAD_L + PW) &
+                    (ys_arr > PAD_B) & (ys_arr < PAD_B + PH))
 
-            # Compute step lengths for alpha/linewidth variation
-            seg_dx = np.diff(seg_xs)
-            seg_dy = np.diff(seg_ys)
-            seg_lens = np.sqrt(seg_dx**2 + seg_dy**2)
-            max_len = seg_lens.max() if seg_lens.max() > 0 else 1
+            gfi = ei * flights_per_epicenter + fi
+            col = COLS[gfi % len(COLS)]
 
-            # Longer jumps = brighter and thicker
-            alphas = 0.15 + 0.50 * (seg_lens / max_len)
-            lws = 0.4 + 2.0 * (seg_lens / max_len)
+            for seg_xs, seg_ys in split_segments(xs_arr, ys_arr, mask):
+                if len(seg_xs) < 3:
+                    continue
+                pts = np.array([seg_xs, seg_ys]).T.reshape(-1, 1, 2)
+                segs = np.concatenate([pts[:-1], pts[1:]], axis=1)
 
-            colors = [rgba(col, float(a)) for a in alphas]
-            lc = mc.LineCollection(segs, linewidths=lws, colors=colors,
-                                   capstyle='round', zorder=3 + fi % 6)
-            ax.add_collection(lc)
+                # Compute step lengths for alpha/linewidth variation
+                seg_dx = np.diff(seg_xs)
+                seg_dy = np.diff(seg_ys)
+                seg_lens = np.sqrt(seg_dx**2 + seg_dy**2)
+                max_len = seg_lens.max() if seg_lens.max() > 0 else 1
 
-    # Additional layer: 120 tiny Brownian micro-walks for visual density
-    for mi in range(120):
-        mx = cx + np.random.uniform(-PW * 0.35, PW * 0.35)
-        my = cy + np.random.uniform(-PH * 0.35, PH * 0.35)
-        micro_n = 80
+                # Longer jumps = brighter and thicker
+                alphas = 0.18 + 0.55 * (seg_lens / max_len)
+                lws = 0.5 + 2.5 * (seg_lens / max_len)
+
+                colors = [rgba(col, float(a)) for a in alphas]
+                lc = mc.LineCollection(segs, linewidths=lws, colors=colors,
+                                       capstyle='round', zorder=3 + gfi % 6)
+                ax.add_collection(lc)
+
+    # --- Brownian micro-walks scattered across FULL canvas for texture ---
+    np.random.seed(123)
+    for mi in range(200):
+        mx = PAD_L + np.random.uniform(0.02, 0.98) * PW
+        my = PAD_B + np.random.uniform(0.02, 0.98) * PH
+        micro_n = 100
         micro_xs = [mx]
         micro_ys = [my]
         for _ in range(micro_n):
-            mx += np.random.randn() * 0.02
-            my += np.random.randn() * 0.02
+            mx += np.random.randn() * 0.025
+            my += np.random.randn() * 0.025
             micro_xs.append(mx)
             micro_ys.append(my)
         micro_xs = np.array(micro_xs)
@@ -289,12 +298,18 @@ def render():
         for seg_xs, seg_ys in split_segments(micro_xs, micro_ys, mask_m):
             if len(seg_xs) < 3:
                 continue
-            draw_lc(ax, seg_xs, seg_ys, col_m, lw=0.2, alpha=0.10, zo=2)
+            draw_lc(ax, seg_xs, seg_ys, col_m, lw=0.25, alpha=0.12, zo=2)
 
-    # Bright center cluster
-    for r_c, a in [(0.25, 0.04), (0.12, 0.10), (0.05, 0.25), (0.02, 0.55)]:
+    # --- Glow points at each epicenter ---
+    for ex, ey in epicenters:
+        for r_c, a in [(0.15, 0.03), (0.07, 0.08), (0.03, 0.20)]:
+            ax.add_patch(Circle((ex, ey), radius=r_c,
+                        facecolor=rgba("#FFFFFF", a), edgecolor='none', zorder=8))
+
+    # Brighter center glow
+    for r_c, a in [(0.30, 0.04), (0.15, 0.10), (0.06, 0.25), (0.025, 0.55)]:
         ax.add_patch(Circle((cx, cy), radius=r_c,
-                    facecolor=rgba("#FFFFFF", a), edgecolor='none', zorder=8))
+                    facecolor=rgba("#FFFFFF", a), edgecolor='none', zorder=9))
 
     label(ax,
           "L ~ x\u207b\u1d45 (Pareto),  X\u2099\u208a\u2081=X\u2099+L\u2099\u00b7e^{i\u03b8}")
