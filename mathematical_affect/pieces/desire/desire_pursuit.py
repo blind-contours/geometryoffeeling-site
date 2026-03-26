@@ -28,7 +28,7 @@ import os
 
 
 DPI = 300; FIG_W = 12; FIG_H = 8
-BG = "#2A2018"
+BG = "#E8D8D0"
 
 # Palette: deep crimson, heated gold, burgundy, dark rose, flame
 CRIMSON   = "#9A2030"; HEATED  = "#C88030"; BURGUNDY = "#6A2038"
@@ -58,7 +58,7 @@ def make_fig():
 
 def label(ax, eq):
     ax.text(0.75,0.75,eq,fontfamily='monospace',fontsize=10,
-            color=(0.85,0.75,0.65,0.50),transform=ax.transData)
+            color=(0.55,0.40,0.35,0.40),transform=ax.transData)
 def split_segments(xs, ys, mask):
     segments = []; in_seg = False; start = 0
     for j in range(len(mask)):
