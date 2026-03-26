@@ -129,110 +129,148 @@ def trace_field_line(x, y, poles, step=0.012, max_steps=2000, direction=1):
 def render():
     fig, ax = make_fig()
     np.random.seed(42)
+    from matplotlib.patches import Circle
 
-    # Two poles: N (source) on the left, S (sink) on the right
-    # This gives classic bar magnet field lines flowing left to right
-    n_x = cx - PW * 0.20  # North pole (left, larger)
+    # Two poles — left larger, right smaller
+    n_x = cx - PW * 0.18
     n_y = cy + PH * 0.06
-    s_x = cx + PW * 0.25  # South pole (right, smaller)
+    s_x = cx + PW * 0.26
     s_y = n_y
-
-    poles = [
-        (n_x, n_y, +1.5),   # N pole (source, stronger = larger appearance)
-        (s_x, s_y, -1.5),   # S pole (sink)
-    ]
+    pole_dist = s_x - n_x
+    mid_x = (n_x + s_x) / 2
 
     gold_cols = [GOLD, AMBER, PALE_GOLD, COPPER, BRONZE]
 
-    # --- Field lines emanating from N pole ---
-    # Trace from various angles around the N pole
-    n_lines = 22
-    angles = np.linspace(0.0, 2*np.pi, n_lines, endpoint=False)
+    # --- A) CONNECTING ARCS: parametric arcs from N to S pole ---
+    # Fan out from poles rather than converging to a point
+    t = np.linspace(0, 1, 800)
+    n_arcs = 18
+    for i in range(n_arcs):
+        frac = i / (n_arcs - 1)
+        arc_h = PH * (0.06 + frac * 0.50)
+        for sign in [1, -1]:
+            # Start/end offset from pole — larger arcs start further from center
+            start_offset = 0.15 + frac * 0.12
+            end_offset = 0.10 + frac * 0.06
+            start_angle = sign * (0.3 + frac * 0.8)  # fan angle from N pole
+            end_angle = sign * (0.2 + frac * 0.5)    # fan angle into S pole
+            x_start = n_x + start_offset * np.cos(start_angle)
+            y_start = n_y + start_offset * np.sin(start_angle)
+            x_end = s_x + end_offset * np.cos(np.pi - end_angle)
+            y_end = s_y + end_offset * np.sin(np.pi - end_angle)
+            xs_a = x_start + (x_end - x_start) * t
+            bulge = 0.55 + 0.25 * frac
+            arc_shape = np.sin(np.pi * t**bulge)
+            ys_a = y_start + (y_end - y_start) * t + sign * arc_h * arc_shape
+            wobble = 0.006 * np.sin(7 * np.pi * t + i * 1.3)
+            ys_a += wobble
 
-    for i, angle in enumerate(angles):
-        r_start = 0.18
-        x0 = n_x + r_start * np.cos(angle)
-        y0 = n_y + r_start * np.sin(angle)
+            mask = ((xs_a > PAD_L - 0.3) & (xs_a < PAD_L + PW + 0.3) &
+                    (ys_a > PAD_B - 0.3) & (ys_a < PAD_B + PH + 0.3))
+            col = gold_cols[i % len(gold_cols)]
+            alpha = 0.50 - 0.20 * frac
+            lw = 0.85 - 0.30 * frac
+            if alpha < 0.15: alpha = 0.15
+            if lw < 0.30: lw = 0.30
+            for seg_xs, seg_ys in split_segments(xs_a, ys_a, mask):
+                if len(seg_xs) < 5: continue
+                draw_lc(ax, seg_xs, seg_ys, col, lw=lw, alpha=alpha, zo=4, smooth=1)
 
-        xs_f, ys_f = trace_field_line(x0, y0, poles, step=0.012,
-                                       max_steps=2000, direction=1)
-        mask = ((xs_f > PAD_L - 0.3) & (xs_f < PAD_L + PW + 0.3) &
-                (ys_f > PAD_B - 0.3) & (ys_f < PAD_B + PH + 0.3))
+    # --- B) ESCAPE LINES: field lines that shoot off from N pole ---
+    # Lines at angles not pointing toward S pole — sweep off edges
+    escape_angles = [
+        # Upper-left fan
+        np.pi * 0.55, np.pi * 0.62, np.pi * 0.70, np.pi * 0.78,
+        np.pi * 0.85, np.pi * 0.92, np.pi * 1.00,
+        # Lower-left fan
+        np.pi * 1.08, np.pi * 1.15, np.pi * 1.22, np.pi * 1.30,
+        np.pi * 1.38, np.pi * 1.45,
+    ]
+    for i, angle in enumerate(escape_angles):
+        ray_len = PW * (0.35 + 0.25 * abs(np.sin(angle)))
+        t_r = np.linspace(0, 1, 500)
+        r_vals = 0.15 + ray_len * t_r
+        # Slight curve toward the field
+        curve = 0.15 * np.sin(np.pi * t_r) * np.cos(angle - np.pi)
+        xs_e = n_x + r_vals * np.cos(angle + curve)
+        ys_e = n_y + r_vals * np.sin(angle + curve)
+        mask = ((xs_e > PAD_L - 0.3) & (xs_e < PAD_L + PW + 0.3) &
+                (ys_e > PAD_B - 0.3) & (ys_e < PAD_B + PH + 0.3))
         col = gold_cols[i % len(gold_cols)]
-
-        # Bolder lines - varying by angle for visual interest
-        lw = 1.0 + 0.8 * abs(np.sin(angle))
-        alpha = 0.55 + 0.20 * abs(np.cos(angle))
-
-        for seg_xs, seg_ys in split_segments(xs_f, ys_f, mask):
+        for seg_xs, seg_ys in split_segments(xs_e, ys_e, mask):
             if len(seg_xs) < 5: continue
-            draw_lc(ax, seg_xs, seg_ys, col, lw=lw, alpha=alpha, zo=4, smooth=1)
+            draw_lc(ax, seg_xs, seg_ys, col, lw=0.7, alpha=0.45, zo=3, smooth=1)
 
-    # --- Concentric orbits around N pole (left, larger) ---
-    n_orbits_left = 12
+    # --- C) Dense concentric spiral orbits around N pole (LEFT, LARGER) ---
+    n_orbits_left = 35
     for i in range(n_orbits_left):
-        r = 0.15 + i * 0.08
-        n_pts = 500
-        theta = np.linspace(0, 2*np.pi, n_pts)
-        # Slight spiral
-        r_vals = r + 0.003 * theta
-        aspect = 0.85
-        xs_o = n_x + r_vals * np.cos(theta + i * 0.15)
-        ys_o = n_y + r_vals * np.sin(theta + i * 0.15) * aspect
-        mask = ((xs_o > PAD_L) & (xs_o < PAD_L + PW) &
-                (ys_o > PAD_B) & (ys_o < PAD_B + PH))
+        r = 0.08 + i * 0.04
+        n_pts = 900
+        n_turns = 1.1 + 0.25 * np.sin(i * 0.4)
+        theta = np.linspace(0, 2*np.pi * n_turns, n_pts)
+        r_vals = r + 0.004 * theta
+        aspect = 0.68 + 0.06 * np.sin(i * 0.5)  # wider horizontally
+        rot = i * 0.09
+        xs_o = n_x + r_vals * np.cos(theta + rot)
+        ys_o = n_y + r_vals * np.sin(theta + rot) * aspect
+        mask = ((xs_o > PAD_L - 0.3) & (xs_o < PAD_L + PW + 0.3) &
+                (ys_o > PAD_B - 0.3) & (ys_o < PAD_B + PH + 0.3))
         col = gold_cols[i % len(gold_cols)]
-        alpha = 0.55 - i * 0.03
-        lw = 0.9 - i * 0.04
-        if alpha < 0.15: alpha = 0.15
-        if lw < 0.3: lw = 0.3
+        frac = i / n_orbits_left
+        alpha = 0.55 * (1.0 - 0.5 * frac)
+        lw = 0.85 * (1.0 - 0.4 * frac)
+        if alpha < 0.10: alpha = 0.10
+        if lw < 0.20: lw = 0.20
         for seg_xs, seg_ys in split_segments(xs_o, ys_o, mask):
             if len(seg_xs) < 5: continue
             draw_lc(ax, seg_xs, seg_ys, col, lw=lw, alpha=alpha, zo=5, smooth=1)
 
-    # --- Concentric orbits around S pole (right, smaller) ---
-    n_orbits_right = 8
+    # --- D) Concentric orbits around S pole (RIGHT, SMALLER, TIGHTER) ---
+    n_orbits_right = 14
     for i in range(n_orbits_right):
-        r = 0.12 + i * 0.06
-        n_pts = 500
-        theta = np.linspace(0, 2*np.pi, n_pts)
+        r = 0.05 + i * 0.025
+        n_pts = 600
+        n_turns = 1.1 + 0.15 * np.sin(i * 0.6)
+        theta = np.linspace(0, 2*np.pi * n_turns, n_pts)
         r_vals = r + 0.002 * theta
-        aspect = 0.80
-        xs_o = s_x + r_vals * np.cos(theta + i * 0.2)
-        ys_o = s_y + r_vals * np.sin(theta + i * 0.2) * aspect
-        mask = ((xs_o > PAD_L) & (xs_o < PAD_L + PW) &
-                (ys_o > PAD_B) & (ys_o < PAD_B + PH))
+        aspect = 0.65 + 0.05 * np.sin(i * 0.7)
+        rot = i * 0.12
+        xs_o = s_x + r_vals * np.cos(theta + rot)
+        ys_o = s_y + r_vals * np.sin(theta + rot) * aspect
+        mask = ((xs_o > PAD_L - 0.1) & (xs_o < PAD_L + PW + 0.1) &
+                (ys_o > PAD_B - 0.1) & (ys_o < PAD_B + PH + 0.1))
         col = gold_cols[(i + 2) % len(gold_cols)]
-        alpha = 0.50 - i * 0.04
-        lw = 0.8 - i * 0.05
-        if alpha < 0.15: alpha = 0.15
-        if lw < 0.3: lw = 0.3
+        frac = i / n_orbits_right
+        alpha = 0.50 * (1.0 - 0.4 * frac)
+        lw = 0.75 * (1.0 - 0.35 * frac)
+        if alpha < 0.10: alpha = 0.10
+        if lw < 0.20: lw = 0.20
         for seg_xs, seg_ys in split_segments(xs_o, ys_o, mask):
             if len(seg_xs) < 5: continue
             draw_lc(ax, seg_xs, seg_ys, col, lw=lw, alpha=alpha, zo=5, smooth=1)
 
-    # --- Glowing pole centers ---
-    # Left pole (larger, more prominent)
-    ax.plot(n_x, n_y, 'o', color=rgba(GOLD, 0.05), markersize=45,
-            markeredgewidth=0, zorder=7)
-    ax.plot(n_x, n_y, 'o', color=rgba(WARM_WHITE, 0.14), markersize=20,
-            markeredgewidth=0, zorder=8)
-    ax.plot(n_x, n_y, 'o', color=rgba(WARM_WHITE, 0.35), markersize=9,
-            markeredgewidth=0, zorder=9)
-    ax.plot(n_x, n_y, 'o', color=rgba(WARM_WHITE, 0.60), markersize=4,
-            markeredgewidth=0, zorder=10)
+    # --- E) Glowing pole centers ---
+    # Left pole — dark core with gold glow
+    ax.add_patch(Circle((n_x, n_y), radius=0.15,
+                 facecolor=rgba(BG, 0.95), edgecolor='none', zorder=7))
+    for r_c, a in [(0.50, 0.03), (0.30, 0.06), (0.18, 0.12),
+                    (0.12, 0.20), (0.07, 0.35), (0.035, 0.55)]:
+        ax.add_patch(Circle((n_x, n_y), radius=r_c,
+                     facecolor=rgba(GOLD, a), edgecolor='none', zorder=8))
+    ax.add_patch(Circle((n_x, n_y), radius=0.020,
+                 facecolor=rgba(WARM_WHITE, 0.70), edgecolor='none', zorder=9))
 
-    # Right pole (smaller)
-    ax.plot(s_x, s_y, 'o', color=rgba(GOLD, 0.04), markersize=35,
-            markeredgewidth=0, zorder=7)
-    ax.plot(s_x, s_y, 'o', color=rgba(WARM_WHITE, 0.12), markersize=14,
-            markeredgewidth=0, zorder=8)
-    ax.plot(s_x, s_y, 'o', color=rgba(WARM_WHITE, 0.28), markersize=7,
-            markeredgewidth=0, zorder=9)
-    ax.plot(s_x, s_y, 'o', color=rgba(WARM_WHITE, 0.52), markersize=3,
-            markeredgewidth=0, zorder=10)
+    # Right pole — dark core with gold glow (smaller)
+    ax.add_patch(Circle((s_x, s_y), radius=0.10,
+                 facecolor=rgba(BG, 0.95), edgecolor='none', zorder=7))
+    for r_c, a in [(0.30, 0.03), (0.18, 0.05), (0.12, 0.10),
+                    (0.07, 0.18), (0.04, 0.30), (0.020, 0.50)]:
+        ax.add_patch(Circle((s_x, s_y), radius=r_c,
+                     facecolor=rgba(GOLD, a), edgecolor='none', zorder=8))
+    ax.add_patch(Circle((s_x, s_y), radius=0.015,
+                 facecolor=rgba(WARM_WHITE, 0.65), edgecolor='none', zorder=9))
 
-    label(ax, "B = B\u2081 + B\u2082, \u2207\u00d7B = \u03bcJ   \u2014   magnetic: field lines connecting two poles")
+    label(ax, "B = B\u2081 + B\u2082, \u2207\u00d7B = \u03bcJ")
     save(fig, "connection_magnetic.pdf")
 
 
