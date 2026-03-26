@@ -144,6 +144,10 @@ def render():
     draw_lc_gradient(ax, xs1, ys1, ROSE_GOLD, 0.8, 2.0, 0.28, 0.58, zo=4, smooth=1)
     draw_lc_gradient(ax, xs2, ys2, GOLD, 0.8, 2.0, 0.28, 0.58, zo=5, smooth=1)
 
+    # Dots at the start of each line
+    head(ax, xs1[0], ys1[0])
+    head(ax, xs2[0], ys2[0])
+
     # Richer connecting lines — curved arcs instead of straight lines
     n_links = 35
     link_idx = np.linspace(100, len(t)-100, n_links, dtype=int)

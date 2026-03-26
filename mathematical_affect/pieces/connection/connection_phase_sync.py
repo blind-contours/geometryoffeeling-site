@@ -131,8 +131,9 @@ def render():
     all_phases = np.zeros((n_osc, n_steps))
     for step in range(n_steps):
         all_phases[:, step] = phases
-        # Coupling grows from 0 to 2.5 over time — sync more slowly left to right
-        K = 2.5 * (step / n_steps)**1.5
+        # Coupling is zero for first 45%, then ramps up — sync starts just past halfway
+        progress = step / n_steps
+        K = 2.5 * max(0, (progress - 0.45) / 0.55)**1.5
         for i in range(n_osc):
             coupling = sum(np.sin(phases[j]-phases[i]) for j in range(n_osc))
             phases[i] += (natural_freqs[i] + K/n_osc*coupling)*dt
@@ -145,7 +146,7 @@ def render():
         frac = i/(n_osc-1)
         y_base = PAD_B + PH*(0.04 + frac*0.92)
         xs = PAD_L + PW*t_arr/t_arr[-1]
-        ys = y_base + PH*0.016*np.sin(all_phases[i])
+        ys = y_base + PH*0.020*np.sin(all_phases[i])
         draw_lc(ax, xs, ys, cols[i], lw=1.4, alpha=0.62, zo=3+i%4, smooth=2)
     label(ax, "d\u03b8/dt = \u03c9 + (K/N)\u03a3sin(\u03b8_j-\u03b8_i)")
     save(fig, "connection_phase_sync.pdf")
