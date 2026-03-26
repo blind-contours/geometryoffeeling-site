@@ -32,7 +32,9 @@ yarn-error.log*
 .vercel
 
 # source art files (PDFs are large - only JPG previews are committed)
-/mathematical_affect/
+/mathematical_affect/*
+# BUT track the Python source scripts — these are the source of truth
+!/mathematical_affect/pieces/
 
 # typescript
 *.tsbuildinfo
