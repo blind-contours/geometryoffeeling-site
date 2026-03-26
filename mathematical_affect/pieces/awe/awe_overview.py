@@ -141,34 +141,34 @@ def render():
     fig, ax = make_fig()
     rng = np.random.RandomState(42)
     # Large arc representing Earth's limb near bottom of canvas
-    earth_r = PW * 2.5  # very large radius — nearly flat curve
+    earth_r = PW * 1.6  # smaller radius — more visible curvature
     earth_cx = cx
-    earth_cy = PAD_B - earth_r + PH * 0.25
+    earth_cy = PAD_B - earth_r + PH * 0.30
 
-    theta_range = np.linspace(-0.20, 0.20, 1000)
+    theta_range = np.linspace(-0.38, 0.38, 1000)
 
-    # --- 1. Primary atmosphere layers: 12 distinct arcs forming thick band ---
-    #     Inner (0-3): teal/green tones
-    #     Core  (4-7): bright cyan/azure — brightest
-    #     Upper (8-11): deeper cosmic/blue — fading out
-    #     Dimmed overall so individual lines are visible
+    # --- 1. Primary atmosphere layers: distinct arcs with clear separation ---
+    #     Inner: teal/green tones
+    #     Core:  bright cyan/azure — brightest
+    #     Upper: deeper cosmic/blue — fading out
     primary_layers = [
         # offset_frac,  color,   alpha, lw
-        # Inner layers — TEAL greens
-        (0.001, TEAL,   0.28, 1.5),
-        (0.004, TEAL,   0.30, 1.6),
-        (0.007, TEAL,   0.32, 1.8),
-        (0.010, TEAL,   0.30, 1.6),
-        # Core layers — bright CYAN / AZURE
-        (0.013, CYAN,   0.40, 2.0),
-        (0.016, AZURE,  0.45, 2.5),
-        (0.019, CYAN,   0.43, 2.5),
-        (0.022, AZURE,  0.40, 2.0),
+        # Inner layers — TEAL greens, well separated
+        (0.002, TEAL,   0.45, 1.2),
+        (0.008, TEAL,   0.50, 1.4),
+        (0.015, TEAL,   0.55, 1.6),
+        (0.022, TEAL,   0.50, 1.4),
+        # Core layers — bright CYAN / AZURE, prominent
+        (0.030, CYAN,   0.65, 2.2),
+        (0.038, AZURE,  0.75, 2.8),
+        (0.044, CYAN,   0.80, 3.0),
+        (0.050, AZURE,  0.75, 2.8),
+        (0.056, CYAN,   0.65, 2.2),
         # Upper layers — deeper COSMIC / DEEP blue
-        (0.026, COSMIC, 0.22, 1.3),
-        (0.031, DEEP,   0.16, 1.0),
-        (0.037, COSMIC, 0.12, 0.8),
-        (0.044, DEEP,   0.08, 0.5),
+        (0.064, COSMIC, 0.35, 1.4),
+        (0.074, DEEP,   0.25, 1.0),
+        (0.086, COSMIC, 0.15, 0.8),
+        (0.100, DEEP,   0.08, 0.5),
     ]
     for off, col, alpha, lw in primary_layers:
         r_ = earth_r + PW * off
@@ -182,7 +182,7 @@ def render():
             draw_lc(ax, seg_xs, seg_ys, col, lw=lw, alpha=alpha, zo=4)
 
     # --- 2. Subtle atmospheric glow lines (dimmed for line visibility) ---
-    n_atm = 40
+    n_atm = 15
     glow_colors = [TEAL, CYAN, AZURE, COSMIC]
     for i in range(n_atm):
         r_atm = earth_r + PW * (0.001 + i / n_atm * 0.06)
