@@ -71,7 +71,7 @@ def render():
     # ---- ridgeline configuration ----
     n_ridges = 10
     # base_y goes from bottom (front) to top (back)
-    base_ys = np.linspace(0.15, 0.85, n_ridges)
+    base_ys = np.linspace(0.22, 0.82, n_ridges)
 
     # color palette: front (deep navy) -> middle (blue-grey) -> back (pale mauve)
     color_anchors_t = np.array([0.0, 0.25, 0.5, 0.7, 0.85, 1.0])
@@ -84,8 +84,8 @@ def render():
         [0xB0, 0xA0, 0xA8],   # faint lilac
     ], dtype=float) / 255.0
 
-    x_left = 0.02
-    x_right = 0.98
+    x_left = 0.07
+    x_right = 0.93
 
     H = 0.6  # Hurst exponent
 
@@ -130,7 +130,7 @@ def render():
 
         # ---- draw filled region below ridgeline ----
         # fill down to the bottom of the canvas
-        ax.fill_between(xs, ys, 0, color=fill_color, zorder=2 + i,
+        ax.fill_between(xs, ys, 0.10, color=fill_color, zorder=2 + i,
                         linewidth=0)
 
         # ---- draw ridgeline ----
