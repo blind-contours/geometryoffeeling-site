@@ -1,6 +1,5 @@
 """
-Geometry of Feeling — Fractured: Catastrophe Fold
-Reconceived as "Diffusion Cliff Retreat":
+Geometry of Feeling — Fractured: Erosion
 Family of cliff profiles based on the diffusion equation solution.
 A sharp cliff face erodes over time — each profile shows the surface
 at a different moment, softening from a sharp step into a gentle S-curve.
@@ -203,7 +202,7 @@ def render():
     # Save
     fig.subplots_adjust(left=0, right=1, top=1, bottom=0)
     os.makedirs(OUTPUT_DIR, exist_ok=True)
-    pdf_path = os.path.join(OUTPUT_DIR, "fractured_catastrophe_fold.pdf")
+    pdf_path = os.path.join(OUTPUT_DIR, "fractured_erosion.pdf")
     fig.savefig(pdf_path, format='pdf', facecolor=BG)
     plt.close(fig)
     print(f"saved {pdf_path}")
