@@ -47,7 +47,7 @@ import os
 
 
 DPI = 300; FIG_W = 12; FIG_H = 8
-BG = "#0A0A10"
+BG = "#1E2030"
 
 # Palette: cosmic vast
 COSMIC = "#2A3A8A"; NEBULA_P = "#5A3A8A"; STARLIGHT = "#C8C8D0"
