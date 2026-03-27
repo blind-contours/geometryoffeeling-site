@@ -23,11 +23,16 @@ import os
 DPI=300; FIG_W=12; FIG_H=8
 BG="#F0E8DA"
 
-# Palette: seasonal color rotation
-SPRING="#5A9A50"; SUMMER="#C8A030"; AUTUMN="#B85A30"; WINTER="#4A6A90"
-BLOSSOM="#C87898"; HARVEST="#9A7020"; FROST="#7A90A8"; EARTH="#6A5A40"
-RENEWAL="#70B060"; DUSK="#8A6A50"; SAGE="#7A9A70"; AMBER="#D0A020"
-DEEP_WINTER="#2A4A6A"; MOSS="#4A6A3A"
+# Warm palette for light background
+SUN_CORE   = "#D4A020"
+SUN_GLOW   = "#C88A18"
+WARM_GOLD  = "#B8860B"
+WARM_AMBER = "#A07020"
+TEAL       = "#2A7A70"
+CYAN       = "#3A6A80"
+COOL_BLUE  = "#3A5A8A"
+VIOLET     = "#5A4A7A"
+PALE_BLUE  = "#6A7A9A"
 
 def hex_to_rgb(h):
     h=h.lstrip('#')
@@ -51,7 +56,7 @@ cx=PAD_L+PW/2; cy=PAD_B+PH/2
 
 def label(ax,eq):
     ax.text(0.75,0.75,eq,fontfamily='monospace',fontsize=10,
-            color=(0.15,0.15,0.20,0.25),transform=ax.transData)
+            color=(0.3,0.3,0.35,0.25),transform=ax.transData)
 def split_segments(xs, ys, mask):
     segments = []
     in_seg = False; start = 0
@@ -104,29 +109,161 @@ OUTPUT_DIR = os.path.join(SCRIPT_DIR, '..', '..', 'output')
 
 
 # ═══════════════════════════════════════════════════════════════
-# 2. ORBIT — precessing ellipses, bigger
+# 2. ORBIT — Perihelion: Keplerian orbits with beauty
 # ═══════════════════════════════════════════════════════════════
 def render():
     fig,ax=make_fig()
-    n_orbits=18
-    for i in range(n_orbits):
-        frac=i/(n_orbits-1)
-        theta=np.linspace(0,2*np.pi*7,7000)
-        a=PW*(0.14+frac*0.36)
-        b=PH*(0.12+frac*0.34)
-        precession=0.03+frac*0.08
-        xs_o=cx+a*np.cos(theta+precession*theta/(2*np.pi))
-        ys_o=cy+b*np.sin(theta)
-        if frac<0.25: col=WINTER
-        elif frac<0.50: col=SPRING
-        elif frac<0.75: col=SUMMER
-        else: col=AUTUMN
-        alpha=0.12+0.71*(1-abs(frac-0.5)*1.3)
-        lw=0.49+1.4*(1-abs(frac-0.5))
-        draw_lc_xy(ax,xs_o,ys_o,col,lw=lw,alpha=alpha,zo=3)
-    for r,a in [(0.12,0.10),(0.05,0.25)]:
-        ax.add_patch(Circle((cx,cy),radius=r,
-                    facecolor=rgba(SUMMER,a),edgecolor='none',zorder=6))
+    rng = np.random.default_rng(42)
+
+    # Sun position — slightly off-center (at one focus of ellipses)
+    sun_x = cx - 0.6
+    sun_y = cy + 0.15
+
+    # --- Draw sun glow ---
+    # Layered concentric circles for a warm glow effect
+    glow_layers = [
+        (1.8,  SUN_GLOW, 0.02),
+        (1.3,  SUN_GLOW, 0.04),
+        (0.9,  SUN_GLOW, 0.06),
+        (0.60, SUN_GLOW, 0.10),
+        (0.40, SUN_CORE, 0.15),
+        (0.25, SUN_CORE, 0.25),
+        (0.16, SUN_CORE, 0.40),
+        (0.10, SUN_CORE, 0.60),
+        (0.06, "#D4A840", 0.80),
+        (0.035,"#E8C060", 0.95),
+    ]
+    for r, col, a in glow_layers:
+        ax.add_patch(Circle((sun_x, sun_y), radius=r,
+                    facecolor=rgba(col, a), edgecolor='none', zorder=6))
+
+    # --- Define orbits ---
+    # Each orbit: (semi_major, eccentricity, tilt_angle_deg, phase_offset)
+    # Orbits increase in size; eccentricities vary for visual interest
+    orbits = [
+        # (a_scale, eccentricity, tilt_deg, body_phase, color)
+        (0.32, 0.35, -12,  0.7,  WARM_GOLD),
+        (0.48, 0.50,  25,  2.1,  WARM_AMBER),
+        (0.62, 0.30, -35,  4.3,  WARM_AMBER),
+        (0.80, 0.55,   8,  1.0,  TEAL),
+        (1.00, 0.40, -20,  3.5,  TEAL),
+        (1.18, 0.45,  40,  5.2,  CYAN),
+        (1.40, 0.50, -15,  0.4,  COOL_BLUE),
+        (1.65, 0.38,  30,  2.8,  VIOLET),
+    ]
+
+    n_pts = 1200  # points per orbit for smoothness
+    theta = np.linspace(0, 2*np.pi, n_pts, endpoint=False)
+
+    for idx, (a_scale, ecc, tilt_deg, body_phase, color) in enumerate(orbits):
+        tilt = np.radians(tilt_deg)
+
+        # Semi-major axis scaled to fill ~80% of canvas
+        a = a_scale * PW * 0.36
+        b = a * np.sqrt(1 - ecc**2)  # semi-minor from eccentricity
+
+        # Ellipse in local frame (focus at origin)
+        # r(theta) = a(1-e^2)/(1+e*cos(theta))  — polar form
+        # But for drawing, parametric is smoother:
+        # Center of ellipse is offset from focus by (a*e, 0)
+        ex = a * np.cos(theta)  # center-based parametric
+        ey = b * np.sin(theta)
+
+        # Shift so that the sun is at one focus (focus offset = a*e along major axis)
+        ex = ex - a * ecc  # shift so focus is at origin
+
+        # Rotate by tilt angle
+        rx = ex * np.cos(tilt) - ey * np.sin(tilt)
+        ry = ex * np.sin(tilt) + ey * np.cos(tilt)
+
+        # Translate to sun position
+        rx += sun_x
+        ry += sun_y
+
+        # --- Compute distance from sun for each point (for thickness/alpha variation) ---
+        dx = rx - sun_x
+        dy = ry - sun_y
+        dist = np.sqrt(dx**2 + dy**2)
+        min_dist = dist.min()
+        max_dist = dist.max()
+        # Normalized: 0 at perihelion, 1 at aphelion
+        dist_norm = (dist - min_dist) / (max_dist - min_dist + 1e-9)
+
+        # --- Draw orbit with variable thickness and alpha ---
+        # Thicker and brighter at perihelion (close), thinner and dimmer at aphelion
+        base_lw = 0.4 + 0.7 * (1.0 - idx / len(orbits))  # outer orbits slightly thinner
+        lw_arr = base_lw + 1.6 * (1.0 - dist_norm)  # thick at perihelion
+
+        base_alpha = 0.15 + 0.35 * (1.0 - idx / len(orbits))
+        alpha_arr = base_alpha + 0.35 * (1.0 - dist_norm)  # brighter at perihelion
+
+        # Build segments with per-segment color/width
+        pts = np.array([rx, ry]).T.reshape(-1, 1, 2)
+        segs = np.concatenate([pts[:-1], pts[1:]], axis=1)
+        # Close the loop
+        closing = np.array([[pts[-1, 0], pts[0, 0]]])
+        segs = np.concatenate([segs, closing], axis=0)
+
+        # Per-segment linewidths and colors
+        lw_segs = np.append(lw_arr[:-1], lw_arr[-1])
+        alpha_segs = np.append(alpha_arr[:-1], alpha_arr[-1])
+
+        rgb = hex_to_rgb(color)
+        colors = [(rgb[0], rgb[1], rgb[2], float(np.clip(al, 0, 1))) for al in alpha_segs]
+
+        lc = mc.LineCollection(segs, linewidths=lw_segs, colors=colors,
+                               capstyle='round', joinstyle='round', zorder=3)
+        ax.add_collection(lc)
+
+        # --- Draw a faint inner glow line for the brighter portions ---
+        glow_alpha = alpha_arr * 0.3
+        glow_colors = [(rgb[0], rgb[1], rgb[2], float(np.clip(ga, 0, 1))) for ga in glow_alpha]
+        glow_lw = lw_segs * 2.5
+        lc_glow = mc.LineCollection(segs, linewidths=glow_lw, colors=glow_colors,
+                                    capstyle='round', joinstyle='round', zorder=2)
+        ax.add_collection(lc_glow)
+
+        # --- Draw orbital body (small bright dot) ---
+        # Find position on orbit at the given phase
+        body_idx = int((body_phase / (2*np.pi)) * n_pts) % n_pts
+        bx, by = rx[body_idx], ry[body_idx]
+
+        # Only draw if within canvas bounds
+        if PAD_L < bx < PAD_L+PW and PAD_B < by < PAD_B+PH:
+            # Body glow
+            body_glow_layers = [
+                (0.14, color, 0.06),
+                (0.09, color, 0.12),
+                (0.05, color, 0.25),
+                (0.025, "#FFFFFF", 0.65),
+                (0.012, "#FFFFFF", 0.95),
+            ]
+            for r, col, a in body_glow_layers:
+                ax.add_patch(Circle((bx, by), radius=r,
+                            facecolor=rgba(col, a), edgecolor='none', zorder=8))
+
+            # --- Trailing tail showing motion direction ---
+            tail_len = 60  # number of points for tail
+            tail_indices = [(body_idx - j) % n_pts for j in range(tail_len)]
+            tail_x = rx[tail_indices]
+            tail_y = ry[tail_indices]
+
+            # Tail segments
+            tail_pts = np.array([tail_x, tail_y]).T.reshape(-1, 1, 2)
+            tail_segs = np.concatenate([tail_pts[:-1], tail_pts[1:]], axis=1)
+
+            # Fade out along tail
+            tail_alphas = np.linspace(0.55, 0.0, len(tail_segs))
+            tail_lws = np.linspace(1.8, 0.2, len(tail_segs))
+            tail_colors = [(rgb[0], rgb[1], rgb[2], float(np.clip(ta, 0, 1)))
+                          for ta in tail_alphas]
+
+            lc_tail = mc.LineCollection(tail_segs, linewidths=tail_lws, colors=tail_colors,
+                                        capstyle='round', joinstyle='round', zorder=7)
+            ax.add_collection(lc_tail)
+
+    # (Star field removed for light background)
+
     label(ax,"r(\u03b8)=a(1\u2212e\u00b2)/(1+e\u00b7cos\u03b8)")
     save(fig,"cycles_orbit")
 

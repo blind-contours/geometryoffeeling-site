@@ -1,84 +1,8 @@
 """
 Geometry of Feeling — Tension: Tension Interference
-Standalone render script
-"""
-
-"""
-Geometry of Feeling — Tension (Final Series)
-Five pieces: Fracture, Opposition, Buckling, Interference, Torsion
-
-CONCEPTUALIZATION — 20 CANDIDATES:
- 1. Fracture — Stress-strain curve pushed past yield, microcrack propagation
- 2. Opposition — Two mirrored attractors pulling apart, phase space tug-of-war
- 3. Buckling — Euler column buckling, sudden lateral deflection under axial load
- 4. Interference — Standing wave at max constructive/destructive overlap
- 5. Torsion — Twisted coordinate field, shear stress on cross-section
- 6. Catenary — Loaded chain sagging past elastic limit
- 7. Beat (exists) — Skip, already in original series
- 8. Stretch (exists) — Skip, already in original series
- 9. Resonance (exists) — Skip, already in original series
-10. Spring cascade — Coupled springs at resonance, chaotic amplitude
-11. Membrane — Drumhead vibration mode shapes at high excitation
-12. Hysteresis — Magnetization loop, irreversible path tension
-13. Elastic rebound — Compressed spring releasing, moment of maximum potential
-14. Phase lock — Two oscillators fighting synchronization
-15. Bifurcation — System at critical parameter, about to split
-16. Moiré — Overlapping gratings creating interference stress pattern
-17. Whiplash — Damped oscillation with violent initial amplitude
-18. Pressure vessel — Hoop stress reaching yield, circumferential tension
-19. Cantilever — Beam deflection under increasing point load
-20. Vortex pair — Counter-rotating vortices stretching fluid between them
-
-CRITIQUE & SELECTION:
-- Fracture (#1): Outstanding. The stress-strain curve is THE canonical tension
-  visualization. We can show the elastic region, yield, necking, and the moment
-  of fracture with microcrack lines radiating from the break point. Rich,
-  narrative, mathematically precise.
-
-- Opposition (#2): Strong. Two Lorenz-like attractors mirrored and pulling apart
-  creates visual tension through symmetry violation. The space BETWEEN them is
-  where tension lives. We render the gap as a taut void.
-
-- Buckling (#3): Excellent. Euler buckling is dramatic — a straight column
-  suddenly bowing under compressive load. We show the family of buckling modes
-  (n=1,2,3...) with the critical load curves, the moment of instability.
-  Mathematically: y(x) = A*sin(n*pi*x/L). The superposition of modes creates
-  visual complexity.
-
-- Interference (#5): Torsion is more visually unique than simple wave
-  interference. A twisted coordinate grid shows shear stress beautifully —
-  circles becoming ellipses, straight lines becoming spirals. The deformation
-  IS the tension.
-
-- Torsion (#5): Selected over Interference (#4) because it offers a completely
-  different visual vocabulary — rotational deformation vs. wave patterns.
-  Mathematical richness: Prandtl stress function, warping, the twist angle
-  gradient.
-
-REJECTED (with reasons):
-- #4 Interference: Too similar to Beat (wave superposition)
-- #6 Catenary: Visually too simple (just a curve)
-- #10 Spring cascade: Hard to make visually distinct from Beat
-- #11 Membrane: Requires 3D or complex mode visualization
-- #12 Hysteresis: Loop shape is too contained, doesn't fill canvas
-- #13 Elastic rebound: Hard to show "moment" without animation
-- #14 Phase lock: Too similar to Opposition
-- #15 Bifurcation: Better suited for "Confusion" series
-- #16 Moiré: Could be stunning but risks being decorative, not tense
-- #17 Whiplash: Too similar to damped oscillation (basic)
-- #18 Pressure vessel: Hard to show circumferential stress in 2D elegantly
-- #19 Cantilever: Visually too similar to Buckling
-- #20 Vortex pair: Better suited for "Desire" or fluid dynamics series
-
-FINAL FIVE:
-1. Fracture    — Stress-strain with microcrack propagation at yield
-2. Opposition  — Mirrored chaotic attractors pulling apart
-3. Buckling    — Euler column modes at critical load
-4. Interference— Standing waves at maximum constructive/destructive points
-5. Torsion     — Twisted coordinate field under shear
-
-Dependencies: matplotlib, numpy
-    pip install matplotlib numpy
+2D Interference Field — two point sources emitting concentric circular waves.
+Constructive interference zones are bright and bold; destructive zones fade away.
+Classic physics interference pattern evoking two forces in tension.
 """
 
 import numpy as np
@@ -86,7 +10,6 @@ import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import matplotlib.collections as mc
-from matplotlib.patches import Circle
 import os
 
 
@@ -94,13 +17,20 @@ DPI    = 300
 FIG_W  = 12
 FIG_H  = 8
 
-BG       = "#1A1A1A"
-ACID     = "#E8D820"
-DIM      = "#888810"
-HOT      = "#D04010"
-RED      = "#C03010"
-ELECTRIC = "#E0E020"
-ORANGE   = "#E87020"
+BG = "#0A0A12"
+
+# Warm constructive colors
+BRIGHT_RED   = "#E04030"
+AMBER        = "#E89030"
+HOT_WHITE    = "#F0D8C0"
+
+# Cool neutral / destructive colors
+TEAL         = "#206880"
+COOL_BLUE    = "#1A3050"
+
+# Source glow colors
+SOURCE_A_CLR = "#E04030"   # red-orange
+SOURCE_B_CLR = "#3080C0"   # contrasting blue
 
 PAD_L = 0.65; PAD_R = 0.55; PAD_T = 0.60; PAD_B = 0.85
 PW = FIG_W - PAD_L - PAD_R
@@ -132,39 +62,13 @@ def make_fig():
 
 
 def label(ax, eq):
-    ax.text(0.75,0.75,eq,fontfamily='monospace',fontsize=10,
-            color=(1,1,1,0.20),transform=ax.transData)
-def split_segments(xs, ys, mask):
-    """Split arrays into contiguous segments where mask is True."""
-    segments = []
-    in_seg = False
-    start = 0
-    for j in range(len(mask)):
-        if mask[j] and not in_seg:
-            start = j
-            in_seg = True
-        elif not mask[j] and in_seg:
-            if j - start >= 3:
-                segments.append((xs[start:j], ys[start:j]))
-            in_seg = False
-    if in_seg and len(mask) - start >= 3:
-        segments.append((xs[start:], ys[start:]))
-    return segments
-
-
-def draw_lc(ax, xs, ys, col, lw, alpha, zo=4):
-    pts  = np.array([xs, ys]).T.reshape(-1, 1, 2)
-    segs = np.concatenate([pts[:-1], pts[1:]], axis=1)
-    lc   = mc.LineCollection(segs, linewidths=lw,
-                             colors=[rgba(col, alpha)],
-                             capstyle='round', joinstyle='round', zorder=zo)
-    ax.add_collection(lc)
+    ax.text(0.75, 0.75, eq, fontfamily='monospace', fontsize=10,
+            color=(1, 1, 1, 0.20), transform=ax.transData)
 
 
 def save(fig, name):
     fig.subplots_adjust(left=0, right=1, top=1, bottom=0)
     os.makedirs(OUTPUT_DIR, exist_ok=True)
-    # Ensure name ends with .pdf
     if not name.endswith(".pdf"):
         name = name + ".pdf"
     fig.savefig(os.path.join(OUTPUT_DIR, name),
@@ -172,145 +76,175 @@ def save(fig, name):
     plt.close(fig)
     print(f"saved {name}")
 
+
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 OUTPUT_DIR = os.path.join(SCRIPT_DIR, '..', '..', 'output')
 
 
 # =============================================================================
-# 4. INTERFERENCE — Standing waves at maximum constructive/destructive overlap
-#    y(x,t) = sum_k A_k * sin(k*pi*x/L) * cos(omega_k*t + phi_k)
-#    Multiple harmonics frozen at the moment of maximum interference
+# INTERFERENCE — 2D interference field from two point sources
+#   amplitude(x,y) = sin(k * d1) + sin(k * d2)
+#   where d1, d2 are distances from each source
 # =============================================================================
 def render():
     fig, ax = make_fig()
-    Y_MIN = PAD_B + 0.02
-    Y_MAX = PAD_B + PH - 0.02
 
-    N = 5000
-    x = np.linspace(0, 1, N)
-    xs = PAD_L + PW * x
+    # --- Source positions: horizontally separated, centered vertically ---
+    separation = PW * 0.40
+    src_a = (cx - separation / 2, cy)
+    src_b = (cx + separation / 2, cy)
 
-    acid_rgb = hex_to_rgb(ACID)
-    elec_rgb = hex_to_rgb(ELECTRIC)
-    hot_rgb  = hex_to_rgb(HOT)
-    red_rgb  = hex_to_rgb(RED)
-    dim_rgb  = hex_to_rgb(DIM)
+    # Wave parameters
+    wavelength = 0.55            # spatial wavelength in figure units
+    k = 2 * np.pi / wavelength   # wave number
+    n_scan_lines = 70            # horizontal scan lines
+    n_pts = 2000                 # points per scan line
 
-    # --- Two wave systems traveling in opposite directions ---
-    # Wave 1: rightward packet
-    # Wave 2: leftward packet (reflected)
-    # Their superposition creates standing wave patterns
+    # Precompute color arrays
+    bright_red_rgb = np.array(hex_to_rgb(BRIGHT_RED))
+    amber_rgb      = np.array(hex_to_rgb(AMBER))
+    hot_white_rgb  = np.array(hex_to_rgb(HOT_WHITE))
+    teal_rgb       = np.array(hex_to_rgb(TEAL))
+    cool_blue_rgb  = np.array(hex_to_rgb(COOL_BLUE))
 
-    n_harmonics = 7
-    freqs = [3, 5, 7, 11, 13, 17, 19]  # prime harmonics for complex pattern
-    amps  = [1.0, 0.7, 0.5, 0.35, 0.25, 0.18, 0.12]
+    # --- Vertical extent: fill the canvas well ---
+    y_margin = 0.25
+    y_min = PAD_B + y_margin
+    y_max = PAD_B + PH - y_margin
+    x_min = PAD_L + 0.10
+    x_max = PAD_L + PW - 0.10
 
-    # Total amplitude for normalization
-    total_amp = sum(amps)
+    y_lines = np.linspace(y_min, y_max, n_scan_lines)
 
-    # --- Draw individual harmonics as ghost layers ---
-    for h_idx, (freq, amp) in enumerate(zip(freqs, amps)):
-        y_h = amp * np.sin(2 * np.pi * freq * x)
-        y_scaled = cy + (PH * 0.40 / total_amp) * y_h
-        y_clipped = np.clip(y_scaled, Y_MIN, Y_MAX)
+    for y_val in y_lines:
+        x_arr = np.linspace(x_min, x_max, n_pts)
 
-        t_h = h_idx / max(len(freqs) - 1, 1)
-        alpha = 0.08 + 0.06 * (1 - t_h)
-        col = DIM
-        draw_lc(ax, xs, y_clipped, col, 0.5 + 0.3 * (1 - t_h), alpha, zo=2)
+        # Distances from each source
+        d1 = np.sqrt((x_arr - src_a[0])**2 + (y_val - src_a[1])**2)
+        d2 = np.sqrt((x_arr - src_b[0])**2 + (y_val - src_b[1])**2)
 
-    # --- Constructive interference: all harmonics in phase ---
-    y_constructive = np.zeros(N)
-    for freq, amp in zip(freqs, amps):
-        y_constructive += amp * np.sin(2 * np.pi * freq * x)
-    y_c_scaled = cy + (PH * 0.40 / total_amp) * y_constructive
-    y_c_scaled = np.clip(y_c_scaled, Y_MIN, Y_MAX)
+        # Wave amplitudes from each source (with 1/sqrt(r) decay)
+        decay1 = 1.0 / np.sqrt(np.maximum(d1, 0.05))
+        decay2 = 1.0 / np.sqrt(np.maximum(d2, 0.05))
+        wave1 = decay1 * np.sin(k * d1)
+        wave2 = decay2 * np.sin(k * d2)
 
-    # --- Destructive interference: alternating phase offsets ---
-    y_destructive = np.zeros(N)
-    for i, (freq, amp) in enumerate(zip(freqs, amps)):
-        phase = np.pi * (i % 2)  # alternating 0 and pi
-        y_destructive += amp * np.sin(2 * np.pi * freq * x + phase)
-    y_d_scaled = cy + (PH * 0.40 / total_amp) * y_destructive
-    y_d_scaled = np.clip(y_d_scaled, Y_MIN, Y_MAX)
+        # Combined interference amplitude
+        combined = wave1 + wave2
 
-    # --- Fill between constructive and destructive: the tension zone ---
-    for i in range(0, N - 1, 3):
-        y_top = max(y_c_scaled[i], y_d_scaled[i])
-        y_bot = min(y_c_scaled[i], y_d_scaled[i])
-        span = y_top - y_bot
-        max_span = PH * 0.5
-        intensity = np.clip(span / max_span, 0, 1)
-        a = 0.03 + 0.15 * intensity
-        ax.fill([xs[i], xs[i+1], xs[i+1], xs[i]],
-                [y_bot, min(y_c_scaled[i+1], y_d_scaled[i+1]),
-                 max(y_c_scaled[i+1], y_d_scaled[i+1]), y_top],
-                color=rgba(ACID, a), linewidth=0, zorder=1)
+        # Normalize to [-1, 1] range for color/alpha mapping
+        max_possible = np.max(np.abs(combined))
+        if max_possible > 0:
+            norm_combined = combined / max_possible
+        else:
+            norm_combined = combined
 
-    # --- Draw constructive wave (bright, acid) ---
-    pts_c = np.array([xs, y_c_scaled]).T.reshape(-1, 1, 2)
-    segs_c = np.concatenate([pts_c[:-1], pts_c[1:]], axis=1)
-    colors_c = []
-    for i in range(len(segs_c)):
-        # Color based on amplitude — peaks are hotter
-        amp_norm = abs(y_c_scaled[i] - cy) / (PH * 0.42)
-        amp_norm = np.clip(amp_norm, 0, 1)
-        r = acid_rgb[0] * (1 - amp_norm*0.4) + elec_rgb[0] * amp_norm * 0.4
-        g = acid_rgb[1] * (1 - amp_norm*0.4) + elec_rgb[1] * amp_norm * 0.4
-        b = acid_rgb[2] * (1 - amp_norm*0.4) + elec_rgb[2] * amp_norm * 0.4
-        colors_c.append((r, g, b, 0.85))
-    lc_c = mc.LineCollection(segs_c, linewidths=1.8, colors=colors_c,
-                             capstyle='round', zorder=5)
-    ax.add_collection(lc_c)
+        # --- Build per-segment colors and linewidths ---
+        # Constructive (|amplitude| high) -> bright warm colors, thick lines
+        # Destructive (|amplitude| low) -> faint cool colors, thin lines
+        intensity = np.abs(norm_combined)  # 0 = destructive, 1 = constructive
 
-    # --- Draw destructive wave (hot, opposing) ---
-    pts_d = np.array([xs, y_d_scaled]).T.reshape(-1, 1, 2)
-    segs_d = np.concatenate([pts_d[:-1], pts_d[1:]], axis=1)
-    colors_d = []
-    for i in range(len(segs_d)):
-        amp_norm = abs(y_d_scaled[i] - cy) / (PH * 0.42)
-        amp_norm = np.clip(amp_norm, 0, 1)
-        r = hot_rgb[0] * (1 - amp_norm*0.3) + red_rgb[0] * amp_norm * 0.3
-        g = hot_rgb[1] * (1 - amp_norm*0.3) + red_rgb[1] * amp_norm * 0.3
-        b = hot_rgb[2] * (1 - amp_norm*0.3) + red_rgb[2] * amp_norm * 0.3
-        colors_d.append((r, g, b, 0.80))
-    lc_d = mc.LineCollection(segs_d, linewidths=1.6, colors=colors_d,
-                             capstyle='round', zorder=4)
-    ax.add_collection(lc_d)
+        # Smooth the intensity slightly for aesthetic transitions
+        kernel_size = 15
+        kernel = np.ones(kernel_size) / kernel_size
+        intensity_smooth = np.convolve(intensity, kernel, mode='same')
 
-    # --- Nodes: where both curves cross the center line ---
-    # Find approximate crossing points of constructive wave
-    crossings = []
-    for i in range(N - 1):
-        if (y_c_scaled[i] - cy) * (y_c_scaled[i+1] - cy) < 0:
-            # Linear interpolation for crossing point
-            t_cross = (cy - y_c_scaled[i]) / (y_c_scaled[i+1] - y_c_scaled[i])
-            x_cross = xs[i] + t_cross * (xs[i+1] - xs[i])
-            crossings.append(x_cross)
+        # Color mapping: interpolate between cool (destructive) and warm (constructive)
+        # Also encode sign: positive combined -> red/amber, negative -> slightly shifted
+        n_segs = n_pts - 1
+        colors = np.zeros((n_segs, 4))
+        widths = np.zeros(n_segs)
 
-    for xc in crossings:
-        ax.plot(xc, cy, 'o', color=rgba(DIM, 0.35),
-                markersize=2.5, markeredgewidth=0, zorder=7)
+        for i in range(n_segs):
+            t = intensity_smooth[i]  # 0..1
+            t = np.clip(t, 0, 1)
 
-    # --- Maximum constructive point marker ---
-    max_c_idx = np.argmax(np.abs(y_c_scaled - cy))
-    ax.plot(xs[max_c_idx], y_c_scaled[max_c_idx], 'o',
-            color=rgba(ELECTRIC, 0.80), markersize=5, markeredgewidth=0, zorder=8)
+            # Sign gives warm vs slightly cooler warm
+            sign_val = norm_combined[i]
 
-    # Vertical tension line at max point
-    ax.plot([xs[max_c_idx], xs[max_c_idx]],
-            [y_d_scaled[max_c_idx], y_c_scaled[max_c_idx]],
-            color=rgba(RED, 0.50), linewidth=1.5, zorder=7)
-    for y_dot in [y_d_scaled[max_c_idx], y_c_scaled[max_c_idx]]:
-        ax.plot(xs[max_c_idx], y_dot, 'o', color=rgba(RED, 0.70),
-                markersize=3.5, markeredgewidth=0, zorder=8)
+            if t < 0.25:
+                # Destructive zone: cool blue/teal, very faint
+                base_color = cool_blue_rgb * (1 - t*2) + teal_rgb * (t*2)
+                alpha = 0.03 + 0.08 * t
+                lw = 0.3 + 0.4 * t
+            elif t < 0.55:
+                # Transition zone: teal to warm
+                u = (t - 0.25) / 0.30
+                base_color = teal_rgb * (1 - u) + bright_red_rgb * u
+                alpha = 0.10 + 0.30 * u
+                lw = 0.6 + 0.8 * u
+            else:
+                # Constructive zone: bright warm, bold
+                u = (t - 0.55) / 0.45
+                u = np.clip(u, 0, 1)
+                if sign_val > 0:
+                    base_color = bright_red_rgb * (1 - u*0.5) + amber_rgb * (u*0.5)
+                else:
+                    base_color = bright_red_rgb * (1 - u*0.4) + hot_white_rgb * (u*0.4)
+                alpha = 0.40 + 0.50 * u
+                lw = 1.2 + 1.5 * u
 
-    # --- Center equilibrium line ---
-    ax.plot([PAD_L, PAD_L + PW], [cy, cy],
-            color=rgba(DIM, 0.12), linewidth=0.5, linestyle='-', zorder=1)
+            colors[i, :3] = np.clip(base_color, 0, 1)
+            colors[i, 3] = np.clip(alpha, 0, 1)
+            widths[i] = lw
 
-    label(ax, "y(x) = \u03a3 A_k\u00b7sin(2\u03c0f_k\u00b7x+\u03c6_k)")
-    save(fig, "tension_interference.pdf")
+        # Build line segments
+        pts = np.column_stack([x_arr, np.full_like(x_arr, y_val)])
+        pts = pts.reshape(-1, 1, 2)
+        segs = np.concatenate([pts[:-1], pts[1:]], axis=1)
+
+        lc = mc.LineCollection(segs, linewidths=widths, colors=colors,
+                               capstyle='round', joinstyle='round', zorder=3)
+        ax.add_collection(lc)
+
+    # --- Draw concentric ring hints from each source ---
+    # Faint concentric circles to reinforce the wave-source concept
+    max_radius = np.sqrt(PW**2 + PH**2)
+    n_rings = int(max_radius / wavelength) + 1
+
+    for src, clr in [(src_a, SOURCE_A_CLR), (src_b, SOURCE_B_CLR)]:
+        for ring_i in range(1, n_rings):
+            r = ring_i * wavelength
+            theta = np.linspace(0, 2 * np.pi, 300)
+            rx = src[0] + r * np.cos(theta)
+            ry = src[1] + r * np.sin(theta)
+
+            # Clip to visible area
+            visible = (rx >= x_min) & (rx <= x_max) & (ry >= y_min) & (ry <= y_max)
+            if not np.any(visible):
+                continue
+
+            # Alpha fades with distance
+            alpha = 0.06 * np.exp(-0.15 * ring_i)
+            if alpha < 0.005:
+                continue
+
+            # Draw only visible segments
+            pts_r = np.column_stack([rx, ry]).reshape(-1, 1, 2)
+            segs_r = np.concatenate([pts_r[:-1], pts_r[1:]], axis=1)
+
+            # Mask for visible segments
+            vis_segs = visible[:-1] & visible[1:]
+            if np.any(vis_segs):
+                lc_r = mc.LineCollection(segs_r[vis_segs],
+                                         linewidths=0.4,
+                                         colors=[rgba(clr, alpha)],
+                                         capstyle='round', zorder=2)
+                ax.add_collection(lc_r)
+
+    # --- Source point glows ---
+    for src, clr in [(src_a, SOURCE_A_CLR), (src_b, SOURCE_B_CLR)]:
+        # Layered glow effect
+        for r, a in [(0.25, 0.04), (0.15, 0.08), (0.08, 0.15), (0.04, 0.30)]:
+            circle = plt.Circle(src, r, color=rgba(clr, a),
+                                linewidth=0, zorder=9)
+            ax.add_patch(circle)
+        # Bright center dot
+        ax.plot(src[0], src[1], 'o', color=rgba(clr, 0.90),
+                markersize=4, markeredgewidth=0, zorder=10)
+
+    label(ax, "A(x,y) = sin(k\u00b7d\u2081) + sin(k\u00b7d\u2082)")
+    save(fig, "tension_interference")
 
 
 if __name__ == '__main__':

@@ -82,160 +82,217 @@ SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 OUTPUT_DIR = os.path.join(SCRIPT_DIR, '..', '..', 'output')
 
 
-def draw_person(ax, px, py, n_rings, max_r, has_gold_center=False,
-                ring_alpha_base=0.35, ring_lw_base=0.8, zo_base=4):
-    """Draw a 'person' as concentric circles (like a water droplet ripple)."""
-    theta = np.linspace(0, 2*np.pi, 500)
+def draw_ripple_droplet(ax, px, py, n_rings, max_r, wavelength=None,
+                        color_func=None, alpha_base=0.35, lw_base=0.8,
+                        center_color=None, center_radius=0.0, zo_base=4):
+    """Draw a physics-based water droplet ripple — perfect concentric circles.
+
+    Physics model:
+    - Rings are evenly spaced (constant wavelength, like real water waves)
+    - Alpha decreases with 1/sqrt(r) (energy conservation in 2D circular waves)
+    - Linewidth also decreases with distance from center
+    - No wobble — viewed from above, water ripples are perfect circles
+    """
+    theta = np.linspace(0, 2*np.pi, 600)
+
+    # Constant wavelength: evenly spaced rings
+    if wavelength is None:
+        wavelength = max_r / max(n_rings, 1)
+
     for i in range(n_rings):
-        frac = i / max(n_rings - 1, 1)
-        r = max_r * (0.04 + frac * 0.96)
+        r = wavelength * (i + 1)
+        if r > max_r:
+            break
 
-        # Slight wobble for organic feel
-        wobble = 1 + 0.006 * np.sin(5*theta + i*1.7)
-        xs = px + r * wobble * np.cos(theta)
-        ys = py + r * wobble * np.sin(theta)
+        # Physics: amplitude ~ 1/sqrt(r) for 2D circular waves
+        r_frac = r / max_r
+        decay = 1.0 / np.sqrt(1.0 + 4.0 * r_frac)
 
-        # Inverse falloff
-        intensity = 1.0 / (1 + 2.5 * frac**1.2)
-        alpha = ring_alpha_base * intensity
-        lw = ring_lw_base * intensity
+        alpha = alpha_base * decay
+        lw = lw_base * decay
 
-        if has_gold_center and frac < 0.20:
-            col = LONE_GOLD
-            alpha = min(alpha * 1.8, 0.75)
-            lw = lw * 1.3
-        elif has_gold_center and frac < 0.35:
-            col = WARM_ACCENT
-            alpha = alpha * 1.2
-        elif frac < 0.5:
-            col = DEEP_GREY
-        elif frac < 0.75:
-            col = SLATE
+        # Get color from color function
+        if color_func is not None:
+            col = color_func(r_frac)
         else:
-            col = MIST
+            col = "#3A6A9A"
 
-        draw_lc(ax, xs, ys, col, lw=max(lw, 0.15), alpha=max(alpha, 0.03),
-                zo=zo_base + int((1-frac)*3))
+        # Perfect circles — no wobble
+        xs = px + r * np.cos(theta)
+        ys = py + r * np.sin(theta)
+
+        draw_lc(ax, xs, ys, col, lw=max(lw, 0.12), alpha=max(alpha, 0.02),
+                zo=zo_base + max(0, int((1 - r_frac) * 3)))
 
     # Center dot
-    if has_gold_center:
-        for r_g, a_g in [(0.06, 0.55), (0.12, 0.25), (0.20, 0.10)]:
-            ax.add_patch(Circle((px, py), radius=r_g * max_r / 1.5,
-                        facecolor=rgba(LONE_GOLD, a_g), edgecolor='none',
-                        zorder=zo_base+5))
+    if center_color is not None and center_radius > 0:
+        ax.add_patch(Circle((px, py), radius=center_radius,
+                    facecolor=center_color, edgecolor='none',
+                    zorder=zo_base + 5))
+
+
+def beacon_color(frac):
+    """Color function for the beacon droplet: gold -> warm -> blue -> grey mist."""
+    if frac < 0.08:
+        return "#D4A840"    # gold center
+    elif frac < 0.15:
+        return "#C8963A"    # warm accent
+    elif frac < 0.20:
+        return "#B08030"    # transition warm-to-blue
+    elif frac < 0.50:
+        return "#3A6A9A"    # bold blue
+    elif frac < 0.65:
+        return "#4A7AAA"    # medium blue
+    elif frac < 0.80:
+        return "#8A9AA8"    # grey mist
     else:
-        # Small dark center dot for crowd members
-        ax.add_patch(Circle((px, py), radius=max_r * 0.04,
-                    facecolor=rgba(DEEP_GREY, 0.35), edgecolor='none',
-                    zorder=zo_base+3))
+        return "#BAC8D4"    # light grey mist
+
+
+def crowd_color(frac):
+    """Color function for crowd droplets: blue tones throughout, darker for contrast."""
+    if frac < 0.30:
+        return "#2A5A8A"    # deep blue (darker for inner rings)
+    elif frac < 0.60:
+        return "#3A6A9A"    # bold blue
+    else:
+        return "#4A7AAA"    # medium blue
 
 
 def render():
-    fig,ax=make_fig()
+    fig, ax = make_fig()
     np.random.seed(42)
 
-    # === THE BEACON: isolated person at top-right ===
+    # ================================================================
+    # THE BEACON — one large, prominent droplet at top-right
+    # ================================================================
     beacon_x = cx + PW * 0.28
     beacon_y = cy + PH * 0.22
     beacon_max_r = min(PW, PH) * 0.32
+    beacon_n_rings = 28
 
-    draw_person(ax, beacon_x, beacon_y, n_rings=30, max_r=beacon_max_r,
-                has_gold_center=True, ring_alpha_base=0.45, ring_lw_base=1.2,
-                zo_base=5)
+    # Beacon: gold center glow (layered circles for soft gradient)
+    beacon_center_r = beacon_max_r * 0.035
+    for r_g, a_g in [(beacon_center_r * 3.0, 0.08),
+                     (beacon_center_r * 2.0, 0.18),
+                     (beacon_center_r * 1.2, 0.40),
+                     (beacon_center_r, 0.65)]:
+        ax.add_patch(Circle((beacon_x, beacon_y), radius=r_g,
+                    facecolor=rgba("#D4A840", a_g), edgecolor='none',
+                    zorder=8))
 
-    # === THE CROWD: many small people clustered at bottom-left ===
-    # Positions clustered in bottom-left quadrant
-    crowd_cx = cx - PW * 0.20
-    crowd_cy = cy - PH * 0.15
+    # Beacon ripple rings — physics-based
+    # Inner gold rings (2-3), then blue rings (5-6 bold), then grey fade
+    beacon_wavelength = beacon_max_r / beacon_n_rings
 
-    n_crowd = 35
+    def beacon_alpha(frac):
+        """Higher contrast for beacon: strong inner, fading outer."""
+        if frac < 0.15:
+            return 0.65     # gold rings: very visible
+        elif frac < 0.50:
+            return 0.40     # blue rings: bold
+        else:
+            # Fade from 0.25 down to 0.04
+            t = (frac - 0.50) / 0.50
+            return 0.25 * (1 - t) + 0.04 * t
+
+    theta = np.linspace(0, 2*np.pi, 600)
+    for i in range(beacon_n_rings):
+        r = beacon_wavelength * (i + 1)
+        if r > beacon_max_r:
+            break
+        frac = r / beacon_max_r
+        col = beacon_color(frac)
+
+        # Physics: 1/sqrt(r) decay for linewidth
+        decay_lw = 1.0 / np.sqrt(1.0 + 3.5 * frac)
+        lw = 1.4 * decay_lw
+        alpha = beacon_alpha(frac)
+
+        xs = beacon_x + r * np.cos(theta)
+        ys = beacon_y + r * np.sin(theta)
+
+        draw_lc(ax, xs, ys, col, lw=max(lw, 0.15), alpha=max(alpha, 0.02),
+                zo=5 + max(0, int((1 - frac) * 3)))
+
+    # ================================================================
+    # THE CROWD — 14 smaller droplets scattered across bottom-left
+    # ================================================================
+    # Wide spatial distribution; each creates independent ripples
+    crowd_center_x = cx - PW * 0.22
+    crowd_center_y = cy - PH * 0.18
+
+    n_crowd = 14
+
+    # Pre-defined spread: use uniform random in a wide region
+    # rather than exponential from a center, to get better spread
     crowd_positions = []
+    rng = np.random.RandomState(42)
 
-    # Generate clustered positions — more people, bigger
     for i in range(n_crowd):
-        angle = np.random.uniform(0, 2*np.pi)
-        dist = np.random.exponential(0.30) * min(PW, PH) * 0.20
-        px = crowd_cx + dist * np.cos(angle)
-        py = crowd_cy + dist * np.sin(angle) * 0.8
-        # Keep within bounds
-        px = np.clip(px, PAD_L + 0.3, PAD_L + PW * 0.60)
-        py = np.clip(py, PAD_B + 0.2, cy + PH * 0.10)
+        # Spread across the bottom-left quadrant with wide distribution
+        px = crowd_center_x + rng.uniform(-PW * 0.32, PW * 0.28)
+        py = crowd_center_y + rng.uniform(-PH * 0.28, PH * 0.32)
+
+        # Keep within canvas bounds, biased toward bottom-left
+        px = np.clip(px, PAD_L + 0.4, cx + PW * 0.08)
+        py = np.clip(py, PAD_B + 0.3, cy + PH * 0.12)
         crowd_positions.append((px, py))
 
-    # Draw crowd members - larger, more visible
-    for i, (px, py) in enumerate(crowd_positions):
-        size = np.random.uniform(0.35, 0.70) * min(PW, PH) * 0.12
-        n_rings = np.random.randint(8, 16)
-        draw_person(ax, px, py, n_rings=n_rings, max_r=size,
-                    has_gold_center=False, ring_alpha_base=0.35,
-                    ring_lw_base=0.7, zo_base=3)
-
-    # === CONCENTRIC RIPPLES FROM CROWD CENTER ===
-    # Like droplets of water radiating outward from the crowd cluster
-    theta = np.linspace(0, 2*np.pi, 1000)
-    n_ripples = 40
-    for i in range(n_ripples):
-        frac = i / (n_ripples - 1)
-        r = min(PW, PH) * (0.08 + frac * 0.65)
-
-        # Slight wobble for organic feel
-        wobble = 1 + 0.008 * np.sin(7*theta + i*2.3) + 0.005 * np.cos(11*theta + i*1.1)
-        xs = crowd_cx + r * wobble * np.cos(theta)
-        ys = crowd_cy + r * wobble * np.sin(theta) * 0.85
-
-        # Clip to canvas
-        mask = ((xs > PAD_L - 0.3) & (xs < PAD_L + PW + 0.3) &
-                (ys > PAD_B - 0.3) & (ys < PAD_B + PH + 0.3))
-        if mask.sum() < 10:
-            continue
-
-        # Inverse-distance falloff from center
-        intensity = 1.0 / (1 + 3.0 * frac**1.2)
-        alpha = 0.25 * intensity
-        lw = 0.8 * intensity
-        col = [DEEP_GREY, SLATE, MIST][i % 3]
-
-        # Draw only visible segments
-        in_seg = False; start = 0; segments = []
-        for j in range(len(mask)):
-            if mask[j] and not in_seg:
-                start = j; in_seg = True
-            elif not mask[j] and in_seg:
-                if j - start >= 5:
-                    segments.append((xs[start:j], ys[start:j]))
-                in_seg = False
-        if in_seg and len(mask) - start >= 5:
-            segments.append((xs[start:], ys[start:]))
-
-        for seg_xs, seg_ys in segments:
-            draw_lc(ax, seg_xs, seg_ys, col, lw=max(lw, 0.1), alpha=max(alpha, 0.02), zo=2)
-
-    # === SPRINKLED CLUSTERS above the main crowd ===
-    # A few small droplet clusters scattered above and around
-    np.random.seed(99)
-    sprinkle_centers = [
-        (crowd_cx - PW*0.08, crowd_cy + PH*0.25),
-        (crowd_cx + PW*0.12, crowd_cy + PH*0.32),
-        (crowd_cx - PW*0.18, crowd_cy + PH*0.18),
-        (crowd_cx + PW*0.22, crowd_cy + PH*0.15),
-        (crowd_cx + PW*0.05, crowd_cy + PH*0.40),
-        (crowd_cx - PW*0.12, crowd_cy + PH*0.35),
+    # Assign varied sizes: some tiny (3 rings), some medium (6-8 rings)
+    crowd_ring_counts = [
+        3, 6, 4, 8, 3, 5, 7, 4, 3, 6, 5, 8, 3, 4
     ]
-    for sp_x, sp_y in sprinkle_centers:
-        # 2-4 tiny people per sprinkle
-        n_sp = np.random.randint(2, 5)
-        for _ in range(n_sp):
-            sx = sp_x + np.random.uniform(-0.4, 0.4)
-            sy = sp_y + np.random.uniform(-0.3, 0.3)
-            if PAD_L + 0.3 < sx < PAD_L + PW - 0.3 and PAD_B + 0.3 < sy < PAD_B + PH - 0.3:
-                sz = np.random.uniform(0.20, 0.40) * min(PW, PH) * 0.10
-                nr = np.random.randint(4, 10)
-                draw_person(ax, sx, sy, n_rings=nr, max_r=sz,
-                            has_gold_center=False, ring_alpha_base=0.25,
-                            ring_lw_base=0.5, zo_base=3)
+    crowd_sizes = [
+        0.30, 0.55, 0.38, 0.65, 0.25, 0.45, 0.60, 0.35,
+        0.28, 0.50, 0.42, 0.62, 0.26, 0.38
+    ]
 
-    label(ax,"A(r)=A\u2080/r\u00b2")
-    save(fig,"solitude_beacon")
+    blue_colors = ["#3A6A9A", "#4A7AAA", "#5A8ABB"]
+
+    for i, (px, py) in enumerate(crowd_positions):
+        n_rings = crowd_ring_counts[i % len(crowd_ring_counts)]
+        size_factor = crowd_sizes[i % len(crowd_sizes)]
+        max_r = size_factor * min(PW, PH) * 0.12
+
+        wavelength = max_r / max(n_rings, 1)
+
+        # Draw ripple rings — blue, high contrast
+        for j in range(n_rings):
+            r = wavelength * (j + 1)
+            if r > max_r:
+                break
+            frac = r / max_r
+
+            # Physics: 1/sqrt(r) energy decay — gentler falloff
+            decay = 1.0 / np.sqrt(1.0 + 1.5 * frac)
+
+            # High contrast: inner rings 0.55, outer fade to 0.10
+            alpha = 0.55 * decay
+            if frac > 0.6:
+                alpha *= (1.0 - 0.5 * (frac - 0.6) / 0.4)
+            alpha = max(alpha, 0.10)
+
+            lw = 1.0 * decay
+            col = crowd_color(frac)
+
+            xs = px + r * np.cos(theta)
+            ys = py + r * np.sin(theta)
+
+            draw_lc(ax, xs, ys, col, lw=max(lw, 0.20),
+                    alpha=max(alpha, 0.06), zo=3)
+
+        # Small dark center dot for each crowd droplet
+        dot_r = max_r * 0.07
+        ax.add_patch(Circle((px, py), radius=max(dot_r, 0.03),
+                    facecolor=rgba("#2A3A4A", 0.55), edgecolor='none',
+                    zorder=6))
+
+    # ================================================================
+    # EQUATION LABEL
+    # ================================================================
+    label(ax, "A(r)=A\u2080/r\u00b2")
+    save(fig, "solitude_beacon")
 
 
 if __name__ == '__main__':

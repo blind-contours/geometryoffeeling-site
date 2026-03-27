@@ -225,29 +225,50 @@ def render():
             if len(seg_xs) < 5: continue
             draw_lc(ax, seg_xs, seg_ys, col, lw=lw, alpha=alpha, zo=5, smooth=1)
 
-    # --- D) Concentric orbits around S pole (RIGHT, SMALLER, TIGHTER) ---
-    n_orbits_right = 14
+    # --- D) Concentric orbits around S pole (RIGHT, similar size to left) ---
+    n_orbits_right = 28
     for i in range(n_orbits_right):
-        r = 0.05 + i * 0.025
-        n_pts = 600
-        n_turns = 1.1 + 0.15 * np.sin(i * 0.6)
+        r = 0.06 + i * 0.035
+        n_pts = 800
+        n_turns = 1.1 + 0.20 * np.sin(i * 0.5)
         theta = np.linspace(0, 2*np.pi * n_turns, n_pts)
-        r_vals = r + 0.002 * theta
-        aspect = 0.65 + 0.05 * np.sin(i * 0.7)
-        rot = i * 0.12
+        r_vals = r + 0.003 * theta
+        aspect = 0.68 + 0.06 * np.sin(i * 0.6)
+        rot = i * 0.10
         xs_o = s_x + r_vals * np.cos(theta + rot)
         ys_o = s_y + r_vals * np.sin(theta + rot) * aspect
-        mask = ((xs_o > PAD_L - 0.1) & (xs_o < PAD_L + PW + 0.1) &
-                (ys_o > PAD_B - 0.1) & (ys_o < PAD_B + PH + 0.1))
+        mask = ((xs_o > PAD_L - 0.3) & (xs_o < PAD_L + PW + 0.3) &
+                (ys_o > PAD_B - 0.3) & (ys_o < PAD_B + PH + 0.3))
         col = gold_cols[(i + 2) % len(gold_cols)]
         frac = i / n_orbits_right
-        alpha = 0.50 * (1.0 - 0.4 * frac)
-        lw = 0.75 * (1.0 - 0.35 * frac)
+        alpha = 0.50 * (1.0 - 0.45 * frac)
+        lw = 0.80 * (1.0 - 0.40 * frac)
         if alpha < 0.10: alpha = 0.10
         if lw < 0.20: lw = 0.20
         for seg_xs, seg_ys in split_segments(xs_o, ys_o, mask):
             if len(seg_xs) < 5: continue
             draw_lc(ax, seg_xs, seg_ys, col, lw=lw, alpha=alpha, zo=5, smooth=1)
+
+    # --- D2) Escape lines from S pole (right side) ---
+    escape_angles_r = [
+        0.0, np.pi * 0.08, np.pi * 0.16,
+        -np.pi * 0.08, -np.pi * 0.16, -np.pi * 0.24,
+        np.pi * 0.24, np.pi * 0.32, np.pi * 0.40,
+        -np.pi * 0.32, -np.pi * 0.40, -np.pi * 0.48,
+    ]
+    for i, angle in enumerate(escape_angles_r):
+        ray_len = PW * (0.30 + 0.20 * abs(np.sin(angle)))
+        t_r = np.linspace(0, 1, 500)
+        r_vals = 0.12 + ray_len * t_r
+        curve = 0.12 * np.sin(np.pi * t_r) * np.cos(angle)
+        xs_e = s_x + r_vals * np.cos(angle + curve)
+        ys_e = s_y + r_vals * np.sin(angle + curve)
+        mask = ((xs_e > PAD_L - 0.3) & (xs_e < PAD_L + PW + 0.3) &
+                (ys_e > PAD_B - 0.3) & (ys_e < PAD_B + PH + 0.3))
+        col = gold_cols[i % len(gold_cols)]
+        for seg_xs, seg_ys in split_segments(xs_e, ys_e, mask):
+            if len(seg_xs) < 5: continue
+            draw_lc(ax, seg_xs, seg_ys, col, lw=0.65, alpha=0.40, zo=3, smooth=1)
 
     # --- E) Glowing pole centers ---
     # Left pole — dark core with gold glow

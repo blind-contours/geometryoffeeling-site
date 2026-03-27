@@ -11,7 +11,7 @@ Mathematical primitives: calligraphic parametric sweeps, narrow Gaussian spires,
 power-law unfurling, golden-spiral/phi-rectangle nesting, crowned peaked curves
 
 Background: deep dark purple-black (#1A1420) — the regal darkness
-Palette: royal purple, gold, rich burgundy, strong blue
+Palette: LGBTQ pride rainbow — vivid, celebratory, unapologetic
 
 Dependencies: matplotlib, numpy, scipy
     pip install matplotlib numpy scipy
@@ -30,10 +30,13 @@ import os
 DPI=300; FIG_W=12; FIG_H=8
 BG="#1A1420"
 
-# Palette: regal — the colors of earned dignity
-ROYAL="#5A2A8A"; GOLD="#D4A830"; BURGUNDY="#7A2040"; NAVY="#2A3A6A"
-CROWN="#C8A020"; REGAL="#6A3090"; BANNER="#3A4A80"; CREST="#8A6020"
-VELVET="#5A2060"
+# Palette: LGBTQ Pride rainbow — vivid, celebratory, unapologetic
+# Classic 6-stripe pride flag
+RED="#E40303"; ORANGE="#FF8C00"; YELLOW="#FFED00"
+GREEN="#008026"; BLUE="#004DFF"; VIOLET="#750787"
+# Progress Pride additions
+LIGHT_BLUE="#5BCEFA"; PINK="#F5A9B8"; WHITE="#FFFFFF"
+BROWN="#613915"; BLACK="#000000"
 
 def hex_to_rgb(h):
     h=h.lstrip('#')
@@ -57,7 +60,7 @@ cx=PAD_L+PW/2; cy=PAD_B+PH/2
 
 def label(ax,eq):
     ax.text(0.75,0.75,eq,fontfamily='monospace',fontsize=10,
-            color=(0.85,0.78,0.65,0.55),transform=ax.transData)
+            color=(0.95,0.92,0.88,0.65),transform=ax.transData)
 def split_segments(xs, ys, mask):
     """Split masked arrays into contiguous segments to avoid straight-line jumps
     when a curve exits and re-enters the boundary."""
@@ -134,8 +137,10 @@ def render():
         mask=((xs_f>PAD_L)&(xs_f<PAD_L+PW)&
               (ys_f>PAD_B)&(ys_f<PAD_B+PH))
         if mask.sum()<3: continue
-        cols=[ROYAL,GOLD,BURGUNDY,REGAL,CROWN,NAVY,VELVET,CREST,
-              BANNER,ROYAL,GOLD,BURGUNDY,REGAL,CROWN,NAVY,VELVET]
+        # Pride rainbow cycle: classic 6 + progress additions
+        cols=[RED,ORANGE,YELLOW,GREEN,BLUE,VIOLET,
+              LIGHT_BLUE,PINK,WHITE,BROWN,
+              RED,ORANGE,YELLOW,GREEN,BLUE,VIOLET]
         col=cols[i%len(cols)]
         # variable width for calligraphic feel
         for seg_xs,seg_ys in split_segments(xs_f,ys_f,mask):
@@ -144,14 +149,14 @@ def render():
             n_s=len(segs_lc)
             # thick at middle, thin at ends (nib effect)
             t_seg=np.linspace(0,1,n_s)
-            lws=0.42+2.52*np.sin(np.pi*t_seg)*(0.5+frac*0.5)
-            base_a=0.17+0.76*(1-abs(frac-0.5)*1.2)
+            lws=0.8+3.8*np.sin(np.pi*t_seg)*(0.5+frac*0.5)
+            base_a=0.60+0.30*(1-abs(frac-0.5)*1.2)
             colors=[rgba(col,base_a) for _ in range(n_s)]
             lc=mc.LineCollection(segs_lc,linewidths=lws,colors=colors,
                                  capstyle='round',joinstyle='round',zorder=3+i)
             ax.add_collection(lc)
     label(ax,"x(t)=t+a\u00b7sin(2\u03c0t),  y(t)=H\u00b7sin(\u03c0t)^c")
-    save(fig,"pride_flourish.pdf")
+    save(fig,"pride_flourish")
 
 
 if __name__ == '__main__':

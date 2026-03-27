@@ -29,12 +29,18 @@ import os
 
 
 DPI=300; FIG_W=12; FIG_H=8
-BG="#888888"  # cool mid-grey -- heavier than grief's grey
+BG="#DDD9D2"  # warm parchment
 
-# Palette: slate blue, grey-mauve, faded green, desaturated cool tones
-SLATE="#6A7080"; LAVENDER="#7A7090"; PEWTER="#8A8A90"
-DUSK="#5A5A70"; PLUM="#6A5A78"; ASH="#9A9A98"
-RAIN="#6A7A88"; BRUISE="#5A5068"; DOVE="#A0A0A0"
+# Palette: muted melancholic blues and greys on warm parchment
+DUSTY_BLUE="#4A5A7A"
+SLATE="#6A7A8A"
+MAUVE="#7A6A8A"
+DEEP_BLUE="#3A4A6A"
+PALE_SLATE="#8A96A4"
+MIST="#A0AABA"
+DUSTY_ROSE="#8A6A72"
+FADED_INK="#5A5A6A"
+WARM_GREY="#7A7A78"
 
 def hex_to_rgb(h):
     h=h.lstrip('#')
@@ -54,42 +60,15 @@ def make_fig():
 
 PAD_L=0.72; PAD_R=0.60; PAD_T=0.65; PAD_B=0.88
 PW=FIG_W-PAD_L-PAD_R; PH=FIG_H-PAD_T-PAD_B
-cx=PAD_L+PW/2; cy=PAD_B+PH/2
+cx=PAD_L+PW/2; cy=FIG_H/2  # true vertical center; two-pass centering in render()
 
 def label(ax,eq):
     ax.text(0.75,0.75,eq,fontfamily='monospace',fontsize=10,
             color=(0.15,0.15,0.20,0.28),transform=ax.transData)
-def split_segments(xs, ys, mask):
-    """Split masked arrays into contiguous segments to avoid straight-line jumps
-    when a curve exits and re-enters the boundary."""
-    segments = []
-    in_seg = False
-    start = 0
-    for j in range(len(mask)):
-        if mask[j] and not in_seg:
-            start = j
-            in_seg = True
-        elif not mask[j] and in_seg:
-            if j - start >= 3:
-                segments.append((xs[start:j], ys[start:j]))
-            in_seg = False
-    if in_seg and len(mask) - start >= 3:
-        segments.append((xs[start:], ys[start:]))
-    return segments
-
-def draw_lc(ax,xs,ys,col,lw,alpha,zo=4,smooth=0):
-    if smooth>0:
-        ys=gaussian_filter1d(ys,smooth)
-    pts=np.array([xs,ys]).T.reshape(-1,1,2)
-    segs=np.concatenate([pts[:-1],pts[1:]],axis=1)
-    lc=mc.LineCollection(segs,linewidths=lw,colors=[rgba(col,alpha)],
-                         capstyle='round',joinstyle='round',zorder=zo)
-    ax.add_collection(lc)
 
 def save(fig, name):
     fig.subplots_adjust(left=0, right=1, top=1, bottom=0)
     os.makedirs(OUTPUT_DIR, exist_ok=True)
-    # Ensure name ends with .pdf
     if not name.endswith(".pdf"):
         name = name + ".pdf"
     fig.savefig(os.path.join(OUTPUT_DIR, name),
@@ -102,35 +81,141 @@ OUTPUT_DIR = os.path.join(SCRIPT_DIR, '..', '..', 'output')
 
 
 # =============================================================================
-# 1. ELEGY -- single strong curve surrounded by fading echoes
-#    echo_n(t) = A*e^(-lambda*n) * sin(omega*(t - n*tau))
-#    One voice surrounded by its own fading repetitions
+# 1. ELEGY -- "Last Note Held"
+#    y(t) = A * e^(-lambda*t) * sin(omega*t + phi)
+#    A series of damped sinusoids: rich harmonics on the left, fading
+#    into silence on the right. Like a single sustained note dissolving.
 # =============================================================================
+def _generate_curves(rng, t, convergence, center_y):
+    """Generate all curve data (harmonics + voices) relative to center_y.
+    Returns list of (ys_array, col, alpha_start, lw_start, lam, tail_fade_start, zorder) tuples."""
+    curves = []
+    n_points = len(t)
+
+    n_harmonics = 26
+    color_pool = [
+        DUSTY_BLUE, DEEP_BLUE, SLATE, MAUVE,
+        DUSTY_BLUE, SLATE, PALE_SLATE,
+        DEEP_BLUE, FADED_INK, MAUVE,
+        MIST, SLATE, WARM_GREY,
+        DUSTY_ROSE, PALE_SLATE, FADED_INK,
+        DUSTY_BLUE, DEEP_BLUE,
+    ]
+
+    for i in range(n_harmonics):
+        harmonic_rank = i / (n_harmonics - 1)
+        base_freq = 1.2 + harmonic_rank * 12.8
+        freq = base_freq * (1.0 + rng.uniform(-0.10, 0.10))
+        omega = 2 * np.pi * freq
+        phi = rng.uniform(0, 2 * np.pi)
+        max_spread = PH * 0.38
+        amp_base = max_spread * (1.0 - 0.65 * harmonic_rank)
+        amp_base *= rng.uniform(0.55, 1.0)
+        y_offset = PH * 0.02 * rng.uniform(-1, 1)
+        lam = 1.8 + harmonic_rank * 5.0
+        lam *= rng.uniform(0.80, 1.20)
+
+        envelope = amp_base * np.exp(-lam * t) * convergence
+        ys_clean = center_y + y_offset * convergence + envelope * np.sin(omega * t + phi)
+        wobble_amp = 0.02 * amp_base * np.exp(-lam * t * 0.4) * convergence
+        wobble = wobble_amp * gaussian_filter1d(rng.randn(n_points), sigma=50)
+        ys = ys_clean + wobble
+
+        alpha_start = 0.12 + 0.48 * (1.0 - harmonic_rank)
+        lw_start = 0.35 + 1.9 * (1.0 - harmonic_rank)
+        col = color_pool[i % len(color_pool)]
+        curves.append((ys, col, alpha_start, lw_start, lam, 0.70, 3 + i))
+
+    # Primary voice lines
+    for voice_i, (v_freq, v_phi, v_col, v_amp_mult, v_lam, v_alpha) in enumerate([
+        (2.0, 0.4, DUSTY_BLUE, 1.0, 1.0, 0.55),
+        (3.1, 1.9, DEEP_BLUE, 0.72, 1.4, 0.42),
+        (1.3, 4.0, DUSTY_ROSE, 0.48, 1.7, 0.32),
+    ]):
+        omega_v = 2 * np.pi * v_freq
+        amp_v = PH * 0.30 * v_amp_mult
+        envelope_v = amp_v * np.exp(-v_lam * t) * convergence
+        ys_v = center_y + envelope_v * np.sin(omega_v * t + v_phi)
+        wobble_v = 0.006 * amp_v * np.exp(-v_lam * t * 0.4) * convergence
+        wobble_v = wobble_v * gaussian_filter1d(rng.randn(n_points), sigma=70)
+        ys_v = ys_v + wobble_v
+
+        lw_start_v = 1.6 + 1.2 * v_amp_mult
+        curves.append((ys_v, v_col, v_alpha, lw_start_v, v_lam, 0.72, 40 + voice_i))
+
+    return curves
+
+
 def render():
-    fig,ax=make_fig()
-    t=np.linspace(0,1,3000); xs=PAD_L+PW*t
-    omega=5*np.pi
-    amp_main=PH*0.18
-    ys_main=cy+amp_main*np.sin(omega*t*2)
-    # echoes -- copies with decreasing amplitude and increasing phase shift
-    n_echoes=16
-    cols=[LAVENDER,DUSK,SLATE,RAIN,PEWTER,BRUISE,PLUM,ASH]
-    for i in range(n_echoes):
-        frac=(i+1)/(n_echoes+1)
-        decay=np.exp(-2.5*frac)
-        phase_shift=frac*1.5
-        amp_echo=amp_main*decay
-        # slight vertical spread
-        y_offset=PH*0.04*(i-n_echoes/2)/n_echoes
-        ys_echo=cy+y_offset+amp_echo*np.sin(omega*(t-phase_shift)*2)
-        col=cols[i%len(cols)]
-        alpha=0.06+0.25*decay
-        lw=0.2+0.8*decay
-        draw_lc(ax,xs,ys_echo,col,lw=lw,alpha=alpha,zo=3,smooth=3)
-    # the main curve -- strongest
-    draw_lc(ax,xs,ys_main,SLATE,lw=1.4,alpha=0.50,zo=5,smooth=3)
-    label(ax,"echo_n(t)=Ae^(\u2212\u03bbn)\u00b7sin(\u03c9(t\u2212n\u03c4))")
-    save(fig,"melancholy_elegy.pdf")
+    fig, ax = make_fig()
+    rng = np.random.RandomState(42)
+
+    n_points = 5000
+    t = np.linspace(0, 1, n_points)
+    # x spans left ~85% of printable area, leaving intentional silence on right
+    x_start = PAD_L + PW * 0.03
+    x_end = PAD_L + PW * 0.88
+    xs = x_start + (x_end - x_start) * t
+
+    # Vertical convergence: lines spread wide on the left, converge to cy on right
+    convergence = np.exp(-2.5 * t)
+
+    # --- Two-pass centering ---
+    # Pass 1: generate curves at cy=0 to find vertical bounding box
+    rng_copy = np.random.RandomState(42)
+    curves_probe = _generate_curves(rng_copy, t, convergence, center_y=0.0)
+    # Find the vertical midpoint of the bounding box (weighted toward the left
+    # where visual mass is greatest -- use first 30% of points)
+    left_slice = slice(0, n_points // 3)
+    all_ys_left = np.concatenate([c[0][left_slice] for c in curves_probe])
+    y_mid_bbox = (all_ys_left.max() + all_ys_left.min()) / 2.0
+    # The actual center_y should place this midpoint at canvas center
+    center_y = cy - y_mid_bbox
+
+    # Pass 2: generate final curves with corrected center
+    curves = _generate_curves(rng, t, convergence, center_y=center_y)
+
+    # --- Draw all curves ---
+    for curve_data in curves:
+        ys, col, alpha_start, lw_start, lam, tail_fade_start, zo = curve_data
+
+        # Determine chunk size based on whether this is a voice or harmonic
+        is_voice = zo >= 40
+        chunk_size = 28 if is_voice else 35
+        lw_decay_rate = 0.45 if is_voice else 0.55
+
+        n_chunks = n_points // chunk_size
+        for c_idx in range(n_chunks):
+            s = c_idx * chunk_size
+            e = min(s + chunk_size + 1, n_points)
+            if e - s < 3:
+                continue
+
+            t_mid = t[s + (e - s) // 2]
+            a_val = alpha_start * np.exp(-lam * t_mid)
+            if t_mid > tail_fade_start:
+                a_val *= max(0, 1.0 - (t_mid - tail_fade_start) / (1.0 - tail_fade_start))
+
+            if a_val < 0.006:
+                break
+
+            lw_val = lw_start * np.exp(-lam * t_mid * lw_decay_rate)
+            lw_val = max(lw_val, 0.08 if not is_voice else 0.12)
+
+            xs_chunk = xs[s:e]
+            ys_chunk = ys[s:e]
+
+            pts = np.array([xs_chunk, ys_chunk]).T.reshape(-1, 1, 2)
+            segs = np.concatenate([pts[:-1], pts[1:]], axis=1)
+            lc = mc.LineCollection(
+                segs, linewidths=lw_val,
+                colors=[rgba(col, a_val)],
+                capstyle='round', joinstyle='round', zorder=zo
+            )
+            ax.add_collection(lc)
+
+    label(ax, "y(t)=Ae^(\u2212\u03bbt)\u00b7sin(\u03c9t+\u03c6)")
+    save(fig, "melancholy_elegy")
 
 
 if __name__ == '__main__':
