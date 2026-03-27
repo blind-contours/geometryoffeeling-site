@@ -45,13 +45,23 @@ def rgba(h, a):
     return (c[0], c[1], c[2], float(np.clip(a, 0, 1)))
 
 def make_fig():
+    from matplotlib.patches import FancyBboxPatch, Rectangle
     fig = plt.figure(figsize=(FIG_W, FIG_H), dpi=DPI)
     ax = fig.add_subplot(111)
     fig.patch.set_facecolor(MARGIN_COLOR)
-    ax.set_facecolor(BG)
-    ax.set_position([0.07, 0.08, 0.86, 0.84])
+    ax.set_facecolor(MARGIN_COLOR)
+    fig.subplots_adjust(left=0, right=1, top=1, bottom=0)
     ax.set_xlim(0, FIG_W); ax.set_ylim(0, FIG_H)
     ax.set_aspect('equal'); ax.axis('off')
+    # Gold cream margin background
+    ax.add_patch(Rectangle((0, 0), FIG_W, FIG_H, facecolor=MARGIN_COLOR,
+                            edgecolor='none', zorder=-10))
+    # Black content rectangle inside margins
+    ml = FIG_W * 0.07; mr = FIG_W * 0.07
+    mb = FIG_H * 0.08; mt = FIG_H * 0.08
+    ax.add_patch(FancyBboxPatch((ml, mb), FIG_W - ml - mr, FIG_H - mb - mt,
+                                 boxstyle="square,pad=0",
+                                 facecolor=BG, edgecolor='none', zorder=0))
     return fig, ax
 
 PAD_L = 0.72; PAD_R = 0.60; PAD_T = 0.65; PAD_B = 0.88
