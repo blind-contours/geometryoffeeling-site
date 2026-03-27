@@ -65,6 +65,12 @@ def make_fig():
     ax.add_patch(FancyBboxPatch((ml, mb), FIG_W - ml - mr, FIG_H - mb - mt,
                                  boxstyle="square,pad=0",
                                  facecolor=BG, edgecolor='none', zorder=0))
+    # Margin masks — paint over any content that bleeds outside the content area
+    zo = 1000
+    ax.add_patch(Rectangle((0, 0), FIG_W, mb, facecolor=MARGIN_COLOR, edgecolor='none', zorder=zo))
+    ax.add_patch(Rectangle((0, FIG_H - mt), FIG_W, mt, facecolor=MARGIN_COLOR, edgecolor='none', zorder=zo))
+    ax.add_patch(Rectangle((0, 0), ml, FIG_H, facecolor=MARGIN_COLOR, edgecolor='none', zorder=zo))
+    ax.add_patch(Rectangle((FIG_W - mr, 0), mr, FIG_H, facecolor=MARGIN_COLOR, edgecolor='none', zorder=zo))
     return fig, ax
 
 PAD_L = 0.72; PAD_R = 0.60; PAD_T = 0.65; PAD_B = 0.88
