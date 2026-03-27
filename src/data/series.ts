@@ -677,11 +677,10 @@ export const featuredPieceIds = [
   "pride-waves",
   "connection-coupled-oscillators",
   "cycles-moebius",
-  "solitude-wanderer",
-  "awe-murmuration",
+  "awe-radiance",
   "peace-horizon",
-  "connection-orbit-pair",
-  "overwhelm-attractors",
+  "desire-pursuit",
+  "nostalgia-reaching",
 ];
 
 export function getSeriesBySlug(slug: string): Series | undefined {
