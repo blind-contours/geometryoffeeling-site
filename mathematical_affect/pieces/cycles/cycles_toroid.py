@@ -26,7 +26,7 @@ OUTPUT_DIR = os.path.join(SCRIPT_DIR, '..', '..', 'output')
 DPI = 300
 FIG_W = 12
 FIG_H = 8
-BG_COLOR = '#DDD9D2'
+BG_COLOR = '#F0E8DA'
 
 
 def render():
