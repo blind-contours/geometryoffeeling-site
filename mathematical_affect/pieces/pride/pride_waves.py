@@ -1,8 +1,8 @@
 """
 Geometry of Feeling — Pride: Waves
-Many Waves, One Sea — ocean surface lines in a softened Pride palette.
-72 perspective-projected wave lines moving through the classic rainbow,
-blended toward the warm paper background so it reads as art, not poster.
+Many Waves, One Sea — ocean surface lines in the full LGBTQ+ palette.
+78 perspective-projected wave lines weaving trans blue/pink/white through
+the classic rainbow, softened toward warm paper so it reads as art.
 """
 
 import os
@@ -53,12 +53,35 @@ def render():
 
     bg_rgb = hex_to_rgb01(BG_COLOR)
 
-    # Classic rainbow Pride palette, softened toward background
-    pride_hex = ["#E40303", "#FF8C00", "#FFED00", "#008026", "#24408E", "#732982"]
-    pride_rgb = [hex_to_rgb01(c) for c in pride_hex]
-    softened_pride = [blend(c, bg_rgb, 0.22) for c in pride_rgb]
+    # Full LGBTQ+ palette: trans blue/pink/white woven through classic rainbow
+    palette_hex = [
+        "#5BCEFA",  # trans blue
+        "#F5A9B8",  # trans pink
+        "#F8F8F8",  # white
+        "#F5A9B8",  # trans pink
+        "#5BCEFA",  # trans blue
+        "#E40303",  # red
+        "#FF8C00",  # orange
+        "#FFED00",  # yellow
+        "#008026",  # green
+        "#24408E",  # blue
+        "#732982",  # violet
+        "#5BCEFA",  # trans blue
+        "#F5A9B8",  # trans pink
+        "#F8F8F8",  # white
+    ]
+    palette_rgb = [hex_to_rgb01(c) for c in palette_hex]
 
-    z_min, z_max, n_lines = 0.34, 8.2, 72
+    # Soften toward linen background — premium wall-art feel
+    softened = []
+    for c in palette_rgb:
+        if np.mean(c) > 0.92:
+            c = blend(c, hex_to_rgb01("#d8dde4"), 0.26)
+            softened.append(blend(c, bg_rgb, 0.08))
+        else:
+            softened.append(blend(c, bg_rgb, 0.16))
+
+    z_min, z_max, n_lines = 0.34, 8.2, 78
     t = np.linspace(0, 1, n_lines)
     z_values = z_min + (t ** 1.75) * (z_max - z_min)
     z_values = z_values[::-1]
@@ -81,12 +104,13 @@ def render():
         y_screen = 0.665 - 0.585 / d + 0.39 * (h / d)
 
         depth_norm = (z - z_min) / (z_max - z_min)
-        alpha = 0.14 + 0.80 * (1 - depth_norm) ** 0.70
+        alpha = 0.16 + 0.80 * (1 - depth_norm) ** 0.70
         lw = 0.52 + 0.92 * (1 - depth_norm) ** 0.60
 
         u = idx / (n_lines - 1)
-        u = 0.06 + 0.88 * (0.5 - 0.5 * np.cos(np.pi * u))
-        line_rgb = interpolate_palette(softened_pride, u)
+        u = 0.03 + 0.94 * (0.5 - 0.5 * np.cos(np.pi * u))
+        u = u**0.92
+        line_rgb = interpolate_palette(softened, u)
 
         ax.plot(x_screen, y_screen, color=line_rgb, lw=lw, alpha=alpha,
                 solid_capstyle='round', clip_on=True)

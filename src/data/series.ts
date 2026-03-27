@@ -585,6 +585,7 @@ export const series: Series[] = [
     makingOf: "New series — building out.",
     pieces: [
       { id: "pride-shelter", title: "Shelter", series: "pride", equation: "y = h(1−|s|^p)", description: "Twenty-four nested superellipse arches, each one smaller and softer than the one outside it. Every arch is a person standing over someone so they don't have to stand alone.", emotionalNote: "Each arch protecting the one beneath it", background: "#f3eee7", imageUrl: "/prints/pride/pride_shelter.jpg", gumroadUrl: "https://gumroad.com/l/placeholder", price: 45 },
+      { id: "pride-waves", title: "Waves", series: "pride", equation: "h = ΣAᵢcos(kᵢx−ωᵢt)", description: "Seventy-eight ocean lines moving through the full LGBTQ+ spectrum — trans blue, pink, and white woven through the classic rainbow. Many waves, one sea. Every color present, none token.", emotionalNote: "Many waves, one sea", background: "#f3eee7", imageUrl: "/prints/pride/pride_waves.jpg", gumroadUrl: "https://gumroad.com/l/placeholder", price: 45 },
     ],
     bundleGumroadUrl: "https://gumroad.com/l/placeholder-pride-bundle",
     bundlePrice: 169,
