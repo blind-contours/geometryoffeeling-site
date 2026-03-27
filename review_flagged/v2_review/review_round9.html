@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Round 9 — Grief Void (Field-Push Approach)</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,sans-serif;background:#1a1a1a;color:#e0e0e0;padding:20px}
+h1{text-align:center;font-size:1.6em;margin-bottom:8px;color:#fff}
+.subtitle{text-align:center;color:#888;margin-bottom:20px;font-size:0.95em}
+.curated-ref{text-align:center;margin-bottom:30px}
+.curated-ref img{max-width:600px;border-radius:8px;cursor:pointer;border:2px solid #555}
+.curated-ref h3{font-size:0.85em;color:#888;margin-bottom:6px;text-transform:uppercase;letter-spacing:1px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:30px}
+.piece{background:#252525;border-radius:12px;padding:16px;border:1px solid #333}
+.piece.selected{border-color:#4a9a4a;box-shadow:0 0 12px rgba(80,200,80,0.2)}
+.piece-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.piece-name{font-size:1.05em;font-weight:600;color:#fff}
+.params{font-size:0.72em;color:#777;font-family:monospace;margin-bottom:8px;line-height:1.4}
+.img-container{text-align:center;margin-bottom:10px}
+.img-container img{width:100%;border-radius:8px;cursor:pointer;transition:transform 0.2s}
+.img-container img:hover{transform:scale(1.02)}
+.controls{display:flex;gap:8px;align-items:center}
+.btn{padding:8px 18px;border:none;border-radius:8px;font-size:0.85em;cursor:pointer;font-weight:600;transition:all 0.2s}
+.btn-pick{background:#2a5a2a;color:#8f8}
+.btn-pick:hover{background:#3a7a3a}
+.btn-pick.active{background:#4a9a4a;box-shadow:0 0 12px rgba(80,200,80,0.3)}
+textarea{flex:1;min-width:200px;height:50px;background:#1a1a1a;border:1px solid #444;border-radius:8px;padding:8px;color:#ddd;font-size:0.85em;resize:vertical}
+textarea:focus{outline:none;border-color:#7af}
+.export-btn{display:block;margin:20px auto;padding:12px 32px;background:#2a4a6a;color:#8cf;border:none;border-radius:8px;font-size:1em;cursor:pointer;font-weight:600}
+.export-btn:hover{background:#3a5a7a}
+.lightbox{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.92);z-index:1000;justify-content:center;align-items:center;cursor:pointer}
+.lightbox.active{display:flex}
+.lightbox img{max-width:95%;max-height:95%;border-radius:8px}
+</style>
+</head>
+<body>
+
+<h1>Round 9 — Grief Void (Field-Push Approach)</h1>
+<p class="subtitle">New approach: morph-based field push with clean line masking. No elliptical void mask. 10 variants.</p>
+
+<div class="curated-ref">
+  <h3>Curated Target (reference)</h3>
+  <img src="../../public/prints/grief/grief_void.jpg" onclick="openLightbox(this.src)">
+</div>
+
+<div class="grid">
+
+  <div class="piece" id="piece-01">
+    <div class="piece-header"><span class="piece-name">01: Baseline</span></div>
+    <div class="params">sx=.12 tip=.34 break=.048 stretch=.90 gamma=1.90 n_break=3</div>
+    <div class="img-container"><img src="renders/grief_void_r9_01.jpg" onclick="openLightbox(this.src)"></div>
+    <div class="controls">
+      <button class="btn btn-pick" onclick="pick('01',this)">Pick</button>
+      <textarea id="notes-01" placeholder="Notes..."></textarea>
+    </div>
+  </div>
+
+  <div class="piece" id="piece-02">
+    <div class="piece-header"><span class="piece-name">02: Wider field (sx=.15)</span></div>
+    <div class="params">sx=.15 tip=.34 break=.048 stretch=.90 gamma=1.90 n_break=3</div>
+    <div class="img-container"><img src="renders/grief_void_r9_02.jpg" onclick="openLightbox(this.src)"></div>
+    <div class="controls">
+      <button class="btn btn-pick" onclick="pick('02',this)">Pick</button>
+      <textarea id="notes-02" placeholder="Notes..."></textarea>
+    </div>
+  </div>
+
+  <div class="piece" id="piece-03">
+    <div class="piece-header"><span class="piece-name">03: Taller tip (.38)</span></div>
+    <div class="params">sx=.12 tip=.38 break=.048 stretch=.90 gamma=1.90 n_break=3</div>
+    <div class="img-container"><img src="renders/grief_void_r9_03.jpg" onclick="openLightbox(this.src)"></div>
+    <div class="controls">
+      <button class="btn btn-pick" onclick="pick('03',this)">Pick</button>
+      <textarea id="notes-03" placeholder="Notes..."></textarea>
+    </div>
+  </div>
+
+  <div class="piece" id="piece-04">
+    <div class="piece-header"><span class="piece-name">04: Shorter tip (.30) + wider field</span></div>
+    <div class="params">sx=.14 tip=.30 break=.048 stretch=.90 gamma=1.90 n_break=3</div>
+    <div class="img-container"><img src="renders/grief_void_r9_04.jpg" onclick="openLightbox(this.src)"></div>
+    <div class="controls">
+      <button class="btn btn-pick" onclick="pick('04',this)">Pick</button>
+      <textarea id="notes-04" placeholder="Notes..."></textarea>
+    </div>
+  </div>
+
+  <div class="piece" id="piece-05">
+    <div class="piece-header"><span class="piece-name">05: More stretch (1.10)</span></div>
+    <div class="params">sx=.12 tip=.34 break=.048 stretch=1.10 gamma=1.90 n_break=3</div>
+    <div class="img-container"><img src="renders/grief_void_r9_05.jpg" onclick="openLightbox(this.src)"></div>
+    <div class="controls">
+      <button class="btn btn-pick" onclick="pick('05',this)">Pick</button>
+      <textarea id="notes-05" placeholder="Notes..."></textarea>
+    </div>
+  </div>
+
+  <div class="piece" id="piece-06">
+    <div class="piece-header"><span class="piece-name">06: Less gamma (1.50 — rounder)</span></div>
+    <div class="params">sx=.12 tip=.34 break=.048 stretch=.90 gamma=1.50 n_break=3</div>
+    <div class="img-container"><img src="renders/grief_void_r9_06.jpg" onclick="openLightbox(this.src)"></div>
+    <div class="controls">
+      <button class="btn btn-pick" onclick="pick('06',this)">Pick</button>
+      <textarea id="notes-06" placeholder="Notes..."></textarea>
+    </div>
+  </div>
+
+  <div class="piece" id="piece-07">
+    <div class="piece-header"><span class="piece-name">07: Higher gamma (2.40 — sharper)</span></div>
+    <div class="params">sx=.12 tip=.34 break=.048 stretch=.90 gamma=2.40 n_break=3</div>
+    <div class="img-container"><img src="renders/grief_void_r9_07.jpg" onclick="openLightbox(this.src)"></div>
+    <div class="controls">
+      <button class="btn btn-pick" onclick="pick('07',this)">Pick</button>
+      <textarea id="notes-07" placeholder="Notes..."></textarea>
+    </div>
+  </div>
+
+  <div class="piece" id="piece-08">
+    <div class="piece-header"><span class="piece-name">08: Fewer breaks (n_break=2)</span></div>
+    <div class="params">sx=.12 tip=.34 break=.048 stretch=.90 gamma=1.90 n_break=2</div>
+    <div class="img-container"><img src="renders/grief_void_r9_08.jpg" onclick="openLightbox(this.src)"></div>
+    <div class="controls">
+      <button class="btn btn-pick" onclick="pick('08',this)">Pick</button>
+      <textarea id="notes-08" placeholder="Notes..."></textarea>
+    </div>
+  </div>
+
+  <div class="piece" id="piece-09">
+    <div class="piece-header"><span class="piece-name">09: Wider + taller + 2 breaks</span></div>
+    <div class="params">sx=.14 tip=.36 break=.040 stretch=1.00 gamma=1.90 n_break=2</div>
+    <div class="img-container"><img src="renders/grief_void_r9_09.jpg" onclick="openLightbox(this.src)"></div>
+    <div class="controls">
+      <button class="btn btn-pick" onclick="pick('09',this)">Pick</button>
+      <textarea id="notes-09" placeholder="Notes..."></textarea>
+    </div>
+  </div>
+
+  <div class="piece" id="piece-10">
+    <div class="piece-header"><span class="piece-name">10: Sweet spot</span></div>
+    <div class="params">sx=.13 tip=.35 break=.045 stretch=.95 gamma=2.00 n_break=2</div>
+    <div class="img-container"><img src="renders/grief_void_r9_10.jpg" onclick="openLightbox(this.src)"></div>
+    <div class="controls">
+      <button class="btn btn-pick" onclick="pick('10',this)">Pick</button>
+      <textarea id="notes-10" placeholder="Notes..."></textarea>
+    </div>
+  </div>
+
+</div>
+
+<button class="export-btn" onclick="exportResults()">Export Results</button>
+
+<div class="lightbox" id="lightbox" onclick="this.classList.remove('active')">
+  <img id="lightboxImg" src="">
+</div>
+
+<script>
+const STORAGE_KEY = 'round9_review';
+const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+const ids = ['01','02','03','04','05','06','07','08','09','10'];
+ids.forEach(id => {
+  const state = saved[id];
+  if (state?.picked) { const p = document.getElementById(`piece-${id}`); if(p){p.classList.add('selected');p.querySelector('.btn-pick').classList.add('active');}}
+  if (state?.notes) { const ta = document.getElementById(`notes-${id}`); if(ta) ta.value = state.notes; }
+});
+function pick(id, btn) {
+  const piece = btn.closest('.piece');
+  const isActive = btn.classList.contains('active');
+  btn.classList.toggle('active'); piece.classList.toggle('selected');
+  const data = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+  if (!data[id]) data[id] = {};
+  data[id].picked = !isActive;
+  data[id].notes = document.getElementById(`notes-${id}`).value;
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+}
+document.querySelectorAll('textarea').forEach(ta => {
+  ta.addEventListener('input', () => {
+    const id = ta.id.replace('notes-', '');
+    const data = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+    if (!data[id]) data[id] = {}; data[id].notes = ta.value;
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+  });
+});
+function openLightbox(src) { document.getElementById('lightboxImg').src = src; document.getElementById('lightbox').classList.add('active'); }
+function exportResults() {
+  const data = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+  let text = 'Round 9 Review Results\n' + '='.repeat(40) + '\n\n';
+  ids.forEach(id => { const s = data[id]||{}; text += `Variant ${id}: ${s.picked?'PICKED':'not picked'}\n`; if(s.notes) text += `  Notes: ${s.notes}\n`; text += '\n'; });
+  const blob = new Blob([text], {type:'text/plain'}); const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob); a.download = 'round9_review_results.txt'; a.click();
+}
+</script>
+</body>
+</html>

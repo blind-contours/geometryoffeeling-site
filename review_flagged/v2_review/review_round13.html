@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Round 13 — Grief Void (Straight Horizontal Stubs Behind Void)</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,sans-serif;background:#1a1a1a;color:#e0e0e0;padding:20px}
+h1{text-align:center;font-size:1.6em;margin-bottom:8px;color:#fff}
+.subtitle{text-align:center;color:#888;margin-bottom:20px;font-size:0.95em}
+.curated-ref{text-align:center;margin-bottom:30px}
+.curated-ref img{max-width:600px;border-radius:8px;cursor:pointer;border:2px solid #555}
+.curated-ref h3{font-size:0.85em;color:#888;margin-bottom:6px;text-transform:uppercase;letter-spacing:1px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:30px}
+.piece{background:#252525;border-radius:12px;padding:16px;border:1px solid #333}
+.piece.selected{border-color:#4a9a4a;box-shadow:0 0 12px rgba(80,200,80,0.2)}
+.piece-header{margin-bottom:8px}
+.piece-name{font-size:1.05em;font-weight:600;color:#fff}
+.params{font-size:0.72em;color:#777;font-family:monospace;margin-bottom:8px;line-height:1.4}
+.img-container{text-align:center;margin-bottom:10px}
+.img-container img{width:100%;border-radius:8px;cursor:pointer;transition:transform 0.2s}
+.img-container img:hover{transform:scale(1.02)}
+.controls{display:flex;gap:8px;align-items:center}
+.btn{padding:8px 18px;border:none;border-radius:8px;font-size:0.85em;cursor:pointer;font-weight:600;transition:all 0.2s}
+.btn-pick{background:#2a5a2a;color:#8f8}
+.btn-pick:hover{background:#3a7a3a}
+.btn-pick.active{background:#4a9a4a;box-shadow:0 0 12px rgba(80,200,80,0.3)}
+textarea{flex:1;min-width:200px;height:50px;background:#1a1a1a;border:1px solid #444;border-radius:8px;padding:8px;color:#ddd;font-size:0.85em;resize:vertical}
+textarea:focus{outline:none;border-color:#7af}
+.export-btn{display:block;margin:20px auto;padding:12px 32px;background:#2a4a6a;color:#8cf;border:none;border-radius:8px;font-size:1em;cursor:pointer;font-weight:600}
+.export-btn:hover{background:#3a5a7a}
+.lightbox{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.92);z-index:1000;justify-content:center;align-items:center;cursor:pointer}
+.lightbox.active{display:flex}
+.lightbox img{max-width:95%;max-height:95%;border-radius:8px}
+</style>
+</head>
+<body>
+
+<h1>Round 13 — Straight Horizontal Lines Behind Void</h1>
+<p class="subtitle">Flat horizontal lines at main-field spacing, clipped to void interior. Like looking through a window at the original field behind. 3D depth effect.</p>
+
+<div class="curated-ref">
+  <h3>Curated Target (reference)</h3>
+  <img src="../../public/prints/grief/grief_void.jpg" onclick="openLightbox(this.src)">
+</div>
+
+<div class="grid">
+  <div class="piece" id="piece-01">
+    <div class="piece-header"><span class="piece-name">01: Baseline</span></div>
+    <div class="params">9 lines, 3 full | gap=.015 alpha=.70 depth=.22</div>
+    <div class="img-container"><img src="renders/grief_void_r13_01.jpg" onclick="openLightbox(this.src)"></div>
+    <div class="controls"><button class="btn btn-pick" onclick="pick('01',this)">Pick</button><textarea id="notes-01" placeholder="Notes..."></textarea></div>
+  </div>
+
+  <div class="piece" id="piece-02">
+    <div class="piece-header"><span class="piece-name">02: Deeper (more lines, depth=.35)</span></div>
+    <div class="params">12 lines, 3 full | gap=.015 alpha=.70 depth=.35</div>
+    <div class="img-container"><img src="renders/grief_void_r13_02.jpg" onclick="openLightbox(this.src)"></div>
+    <div class="controls"><button class="btn btn-pick" onclick="pick('02',this)">Pick</button><textarea id="notes-02" placeholder="Notes..."></textarea></div>
+  </div>
+
+  <div class="piece" id="piece-03">
+    <div class="piece-header"><span class="piece-name">03: Shallower (near peak only, depth=.15)</span></div>
+    <div class="params">9 lines, 3 full | gap=.015 alpha=.70 depth=.15</div>
+    <div class="img-container"><img src="renders/grief_void_r13_03.jpg" onclick="openLightbox(this.src)"></div>
+    <div class="controls"><button class="btn btn-pick" onclick="pick('03',this)">Pick</button><textarea id="notes-03" placeholder="Notes..."></textarea></div>
+  </div>
+
+  <div class="piece" id="piece-04">
+    <div class="piece-header"><span class="piece-name">04: Bigger gap (breaks faster)</span></div>
+    <div class="params">9 lines, 3 full | gap=.025 alpha=.70 depth=.22</div>
+    <div class="img-container"><img src="renders/grief_void_r13_04.jpg" onclick="openLightbox(this.src)"></div>
+    <div class="controls"><button class="btn btn-pick" onclick="pick('04',this)">Pick</button><textarea id="notes-04" placeholder="Notes..."></textarea></div>
+  </div>
+
+  <div class="piece" id="piece-05">
+    <div class="piece-header"><span class="piece-name">05: Smaller gap (stays intact)</span></div>
+    <div class="params">9 lines, 3 full | gap=.008 alpha=.70 depth=.22</div>
+    <div class="img-container"><img src="renders/grief_void_r13_05.jpg" onclick="openLightbox(this.src)"></div>
+    <div class="controls"><button class="btn btn-pick" onclick="pick('05',this)">Pick</button><textarea id="notes-05" placeholder="Notes..."></textarea></div>
+  </div>
+
+  <div class="piece" id="piece-06">
+    <div class="piece-header"><span class="piece-name">06: Bolder + stronger color</span></div>
+    <div class="params">9 lines, 3 full | alpha=.80 lw=1.2 sat=2.2 color_boost=1.6</div>
+    <div class="img-container"><img src="renders/grief_void_r13_06.jpg" onclick="openLightbox(this.src)"></div>
+    <div class="controls"><button class="btn btn-pick" onclick="pick('06',this)">Pick</button><textarea id="notes-06" placeholder="Notes..."></textarea></div>
+  </div>
+
+  <div class="piece" id="piece-07">
+    <div class="piece-header"><span class="piece-name">07: 2 full lines only</span></div>
+    <div class="params">9 lines, 2 full | gap=.012 alpha=.70 depth=.22</div>
+    <div class="img-container"><img src="renders/grief_void_r13_07.jpg" onclick="openLightbox(this.src)"></div>
+    <div class="controls"><button class="btn btn-pick" onclick="pick('07',this)">Pick</button><textarea id="notes-07" placeholder="Notes..."></textarea></div>
+  </div>
+
+  <div class="piece" id="piece-08">
+    <div class="piece-header"><span class="piece-name">08: Sweet spot shape + bg</span></div>
+    <div class="params">sx=.13 tip=.35 stretch=.95 gamma=2.0 n_break=2 | 9 lines</div>
+    <div class="img-container"><img src="renders/grief_void_r13_08.jpg" onclick="openLightbox(this.src)"></div>
+    <div class="controls"><button class="btn btn-pick" onclick="pick('08',this)">Pick</button><textarea id="notes-08" placeholder="Notes..."></textarea></div>
+  </div>
+
+  <div class="piece" id="piece-09">
+    <div class="piece-header"><span class="piece-name">09: No bg lines (clean void)</span></div>
+    <div class="params">no bg stubs | sat=1.8 sx=.12 tip=.34 n_break=3</div>
+    <div class="img-container"><img src="renders/grief_void_r13_09.jpg" onclick="openLightbox(this.src)"></div>
+    <div class="controls"><button class="btn btn-pick" onclick="pick('09',this)">Pick</button><textarea id="notes-09" placeholder="Notes..."></textarea></div>
+  </div>
+
+  <div class="piece" id="piece-10">
+    <div class="piece-header"><span class="piece-name">10: Wider + taller + bg</span></div>
+    <div class="params">sx=.14 tip=.36 stretch=1.0 n_break=2 sat=2.0 | 9 lines</div>
+    <div class="img-container"><img src="renders/grief_void_r13_10.jpg" onclick="openLightbox(this.src)"></div>
+    <div class="controls"><button class="btn btn-pick" onclick="pick('10',this)">Pick</button><textarea id="notes-10" placeholder="Notes..."></textarea></div>
+  </div>
+</div>
+
+<button class="export-btn" onclick="exportResults()">Export Results</button>
+<div class="lightbox" id="lightbox" onclick="this.classList.remove('active')"><img id="lightboxImg" src=""></div>
+
+<script>
+const SK='round13_review',ids=['01','02','03','04','05','06','07','08','09','10'];
+const sv=JSON.parse(localStorage.getItem(SK)||'{}');
+ids.forEach(id=>{const s=sv[id];if(s?.picked){const p=document.getElementById(`piece-${id}`);if(p){p.classList.add('selected');p.querySelector('.btn-pick').classList.add('active')}}if(s?.notes){const t=document.getElementById(`notes-${id}`);if(t)t.value=s.notes}});
+function pick(id,btn){const p=btn.closest('.piece'),a=btn.classList.contains('active');btn.classList.toggle('active');p.classList.toggle('selected');const d=JSON.parse(localStorage.getItem(SK)||'{}');if(!d[id])d[id]={};d[id].picked=!a;d[id].notes=document.getElementById(`notes-${id}`).value;localStorage.setItem(SK,JSON.stringify(d))}
+document.querySelectorAll('textarea').forEach(t=>{t.addEventListener('input',()=>{const id=t.id.replace('notes-',''),d=JSON.parse(localStorage.getItem(SK)||'{}');if(!d[id])d[id]={};d[id].notes=t.value;localStorage.setItem(SK,JSON.stringify(d))})});
+function openLightbox(s){document.getElementById('lightboxImg').src=s;document.getElementById('lightbox').classList.add('active')}
+function exportResults(){const d=JSON.parse(localStorage.getItem(SK)||'{}');let t='Round 13 Review\n'+'='.repeat(40)+'\n\n';ids.forEach(id=>{const s=d[id]||{};t+=`${id}: ${s.picked?'PICKED':'-'}`;if(s.notes)t+=` | ${s.notes}`;t+='\n'});const b=new Blob([t],{type:'text/plain'}),a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='round13_results.txt';a.click()}
+</script>
+</body>
+</html>
