@@ -21,6 +21,8 @@ BG_COLOR = '#4f5d71'
 
 
 def render():
+    SERIES_BG = '#0A0A18'  # wonder series background (deep navy)
+
     blue = '#90a6cf'
     gold = '#d6b876'
     ring = '#efe2bf'
@@ -44,36 +46,57 @@ def render():
     ymin = min(y.min() for x, y in curves)
     ymax = max(y.max() for x, y in curves)
 
-    fig, ax = plt.subplots(figsize=(FIG_W, FIG_H), dpi=DPI, facecolor=BG_COLOR)
+    fig, ax = plt.subplots(figsize=(FIG_W, FIG_H), dpi=DPI, facecolor=SERIES_BG)
     fig.subplots_adjust(0, 0, 1, 1)
     ax.set_position([0, 0, 1, 1])
-    ax.set_facecolor(BG_COLOR)
+    ax.set_facecolor(SERIES_BG)
     ax.set_xlim(0, 1)
     ax.set_ylim(0, 1)
     ax.axis('off')
 
+    # Content area with piece background — matted inside series frame
+    margin_l, margin_r = 0.07, 0.07
+    margin_b, margin_t = 0.08, 0.08
+    from matplotlib.patches import FancyBboxPatch
+    content_rect = FancyBboxPatch(
+        (margin_l, margin_b),
+        1 - margin_l - margin_r,
+        1 - margin_b - margin_t,
+        boxstyle="square,pad=0",
+        facecolor=BG_COLOR, edgecolor='none', zorder=0)
+    ax.add_patch(content_rect)
+
+    # Map curves into the content area
+    cx0 = margin_l + 0.06
+    cx1 = 1 - margin_r - 0.06
+    cy0 = margin_b + 0.08
+    cy1 = 1 - margin_t - 0.08
+
     for i, (x, y) in enumerate(curves):
-        X = 0.12 + 0.76 * (x - xmin) / (xmax - xmin)
-        Y = 0.16 + 0.68 * (y - ymin) / (ymax - ymin)
+        X = cx0 + (cx1 - cx0) * (x - xmin) / (xmax - xmin)
+        Y = cy0 + (cy1 - cy0) * (y - ymin) / (ymax - ymin)
         col = gold if i % 2 == 0 else blue
         ax.plot(X, Y, color=col,
                 lw=0.72 if i % 2 == 0 else 0.68,
                 alpha=0.86 if i % 2 == 0 else 0.78,
-                solid_capstyle='round')
+                solid_capstyle='round', zorder=1)
 
+    # Center ring (the viewer)
+    center_x = cx0 + (cx1 - cx0) * (0.55 - 0.12) / 0.76  # preserve relative position
+    center_y = cy0 + (cy1 - cy0) * (0.50 - 0.16) / 0.68
     t = np.linspace(0, 2 * np.pi, 400)
     for rr, alpha in [(0.007, 0.88), (0.014, 0.22)]:
-        ax.plot(0.55 + rr * np.cos(t), 0.50 + rr * np.sin(t),
-                color=ring, lw=1.15, alpha=alpha)
+        ax.plot(center_x + rr * np.cos(t), center_y + rr * np.sin(t),
+                color=ring, lw=1.15, alpha=alpha, zorder=2)
 
     # Equation label
-    ax.text(0.06, 0.06, "w=z+a/(z\u2212z\u2080)",
+    ax.text(margin_l + 0.02, margin_b + 0.02, "w=z+a/(z\u2212z\u2080)",
             fontfamily='monospace', fontsize=8,
-            color=(0.85, 0.80, 0.75, 0.35), transform=ax.transAxes)
+            color=(0.85, 0.80, 0.75, 0.35), transform=ax.transData)
 
     os.makedirs(OUTPUT_DIR, exist_ok=True)
     pdf_path = os.path.join(OUTPUT_DIR, "wonder_transform.pdf")
-    fig.savefig(pdf_path, facecolor=BG_COLOR, dpi=DPI)
+    fig.savefig(pdf_path, facecolor=SERIES_BG, dpi=DPI)
     plt.close(fig)
     print(f"saved {pdf_path}")
     return pdf_path
