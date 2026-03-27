@@ -68,6 +68,11 @@ def render():
     ax.set_ylim(0, 1)
     ax.axis("off")
 
+    # Explicit full-canvas background to prevent edge bleeding in PDF→PNG
+    from matplotlib.patches import Rectangle
+    ax.add_patch(Rectangle((0, 0), 1, 1, facecolor=BG_COLOR,
+                            edgecolor='none', zorder=-10))
+
     # ---- ridgeline configuration ----
     n_ridges = 10
     # base_y goes from bottom (front) to top (back)

@@ -54,6 +54,11 @@ def render():
     ax.set_ylim(0, 1)
     ax.axis('off')
 
+    # Explicit full-canvas background to prevent edge bleeding in PDF→PNG
+    from matplotlib.patches import Rectangle
+    ax.add_patch(Rectangle((0, 0), 1, 1, facecolor=SERIES_BG,
+                            edgecolor='none', zorder=-10))
+
     # Content area with piece background — matted inside series frame
     margin_l, margin_r = 0.07, 0.07
     margin_b, margin_t = 0.08, 0.08

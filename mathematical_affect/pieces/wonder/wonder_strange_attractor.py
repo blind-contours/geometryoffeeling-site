@@ -118,6 +118,11 @@ def render():
     ax.set_xlim(0, 1); ax.set_ylim(0, 1)
     ax.axis('off')
 
+    # Explicit full-canvas background to prevent edge bleeding in PDF→PNG
+    from matplotlib.patches import Rectangle
+    ax.add_patch(Rectangle((0, 0), 1, 1, facecolor=MARGIN_COLOR,
+                            edgecolor='none', zorder=-10))
+
     # Content rectangle with deep navy background
     ml, mr, mb, mt = 0.07, 0.07, 0.08, 0.08
     rect = FancyBboxPatch((ml, mb), 1-ml-mr, 1-mb-mt,
