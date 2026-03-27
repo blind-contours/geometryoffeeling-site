@@ -1,173 +1,184 @@
 """
-Geometry of Feeling — Shame: Shame Veil
-Standalone render script
+Geometry of Feeling — Shame: Damped Radiance
+A bold warm radial pattern hidden behind a curtain of fine lines.
+
+The radiant self — concentric rose curves in crimson and blush —
+lives behind a dense screen of horizontal veil lines that almost
+hide it. The warmth bleeds through the gaps.
+
+Damped radiance: I(r,theta) = I_0 * exp(-gamma*r) * cos(n*theta + alpha*r)
+Modulated by line-screen transfer function T(y) = 0.5 + 0.5*sign(sin(2*pi*y/spacing))
 """
+import os
 
-"""
-Geometry of Feeling — Shame (Final Series)
-Five pieces: Shrink, Contraction, Fold, Crumple, Veil
-
-Mathematical primitives: logarithmic spirals collapsing inward,
-contraction mappings, lemniscate self-intersections,
-progressive frequency crumpling, semi-transparent layered obscuration
-
-Background: #3A3430 (warm dim — curtains drawn)
-Palette: muddy brown, dark grey, washed-out burgundy
-
-Dependencies: matplotlib, numpy, scipy
-    pip install matplotlib numpy scipy
-"""
-
-import numpy as np
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
-import matplotlib.collections as mc
-from scipy.ndimage import gaussian_filter1d
-import os
-
-
-DPI=300; FIG_W=12; FIG_H=8
-BG="#3A3430"
-
-# Palette: muddy brown, dark grey, washed-out burgundy
-UMBER="#5A4A38"; SHADOW="#3A3028"; FLUSH="#8A4A40"
-HIDE="#4A4038"; SMOKE="#6A6058"; EMBER="#7A5030"
-COPPER="#8A6A48"; DUST="#6A5A48"; VEIL_COL="#5A5048"
-BURGUNDY="#6A3838"; MUDDY="#5A5040"; ASHEN="#4A4A44"
-
-def hex_to_rgb(h):
-    h=h.lstrip('#')
-    return tuple(int(h[i:i+2],16)/255 for i in (0,2,4))
-
-def rgba(h,a):
-    c=hex_to_rgb(h)
-    return (c[0],c[1],c[2],float(np.clip(a,0,1)))
-
-def make_fig():
-    fig=plt.figure(figsize=(FIG_W,FIG_H),dpi=DPI)
-    ax=fig.add_subplot(111)
-    fig.patch.set_facecolor(BG); ax.set_facecolor(BG)
-    ax.set_xlim(0,FIG_W); ax.set_ylim(0,FIG_H)
-    ax.set_aspect('equal'); ax.axis('off')
-    return fig,ax
-
-PAD_L=0.72; PAD_R=0.60; PAD_T=0.65; PAD_B=0.88
-PW=FIG_W-PAD_L-PAD_R; PH=FIG_H-PAD_T-PAD_B
-cx=PAD_L+PW/2; cy=PAD_B+PH/2
-
-def label(ax,eq):
-    ax.text(0.75,0.75,eq,fontfamily='monospace',fontsize=10,
-            color=(0.85,0.78,0.68,0.40),transform=ax.transData)
-def split_segments(xs, ys, mask):
-    segments = []
-    in_seg = False
-    start = 0
-    for j in range(len(mask)):
-        if mask[j] and not in_seg:
-            start = j
-            in_seg = True
-        elif not mask[j] and in_seg:
-            if j - start >= 3:
-                segments.append((xs[start:j], ys[start:j]))
-            in_seg = False
-    if in_seg and len(mask) - start >= 3:
-        segments.append((xs[start:], ys[start:]))
-    return segments
-
-def draw_lc(ax,xs,ys,col,lw,alpha,zo=4,smooth=0):
-    if smooth>0:
-        ys=gaussian_filter1d(ys,smooth)
-    pts=np.array([xs,ys]).T.reshape(-1,1,2)
-    segs=np.concatenate([pts[:-1],pts[1:]],axis=1)
-    lc=mc.LineCollection(segs,linewidths=lw,colors=[rgba(col,alpha)],
-                         capstyle='round',joinstyle='round',zorder=zo)
-    ax.add_collection(lc)
-
-def draw_lc_gradient(ax,xs,ys,col,lw_start,lw_end,a_start,a_end,zo=4,smooth=0):
-    if smooth>0:
-        ys=gaussian_filter1d(ys,smooth)
-    pts=np.array([xs,ys]).T.reshape(-1,1,2)
-    segs=np.concatenate([pts[:-1],pts[1:]],axis=1)
-    n=len(segs)
-    alphas=np.linspace(a_start,a_end,n)
-    lws=np.linspace(lw_start,lw_end,n)
-    colors=[rgba(col,float(a)) for a in alphas]
-    lc=mc.LineCollection(segs,linewidths=lws,colors=colors,
-                         capstyle='round',joinstyle='round',zorder=zo)
-    ax.add_collection(lc)
-
-def save(fig, name):
-    fig.subplots_adjust(left=0, right=1, top=1, bottom=0)
-    os.makedirs(OUTPUT_DIR, exist_ok=True)
-    # Ensure name ends with .pdf
-    if not name.endswith(".pdf"):
-        name = name + ".pdf"
-    fig.savefig(os.path.join(OUTPUT_DIR, name),
-                format='pdf', facecolor=BG)
-    plt.close(fig)
-    print(f"saved {name}")
+import numpy as np
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 OUTPUT_DIR = os.path.join(SCRIPT_DIR, '..', '..', 'output')
 
+DPI = 300
+FIG_W = 12
+FIG_H = 8
+BG_COLOR = '#DDD9D2'
 
-# ===============================================================================
-# 5. VEIL — multiple translucent layers obscuring what's behind them
-#    overlapping semi-transparent curves creating a murky, hidden feeling
-#    like gauze layered over gauze — depth without clarity
-# ===============================================================================
+# Warm palette — the radiant self
+CRIMSON = '#8B2020'
+ROSE = '#9E5060'
+BLUSH = '#B87080'
+DUSTY_PINK = '#C08890'
+DEEP_ROSE = '#A03848'
+WARM_CORAL = '#B06068'
+
+# Veil color — close to BG but slightly darker/cooler
+VEIL_COLOR = '#C5C1BA'
+VEIL_DARK = '#BAB6AE'
+
+
+def hex_to_rgba(h, a):
+    h = h.lstrip('#')
+    r, g, b = (int(h[i:i+2], 16) / 255 for i in (0, 2, 4))
+    return (r, g, b, float(np.clip(a, 0, 1)))
+
+
 def render():
-    fig,ax=make_fig()
-    np.random.seed(21)
-    t=np.linspace(0,1,2000); xs=PAD_L+PW*t
+    np.random.seed(42)
 
-    # LAYER 1: the hidden thing — a few clear, warm curves buried beneath
-    for i in range(6):
-        y_base=cy+PH*(np.random.uniform(-0.15,0.15))
-        freq=2+i*0.8
-        amp=PH*0.04
-        ys=y_base+amp*np.sin(freq*np.pi*t+i*0.9)
-        draw_lc(ax,xs,ys,FLUSH,lw=1.12,alpha=0.17,zo=2,smooth=3)
+    fig, ax = plt.subplots(figsize=(FIG_W, FIG_H), dpi=DPI, facecolor=BG_COLOR)
+    fig.subplots_adjust(0, 0, 1, 1)
+    ax.set_position([0, 0, 1, 1])
+    ax.set_facecolor(BG_COLOR)
+    ax.set_xlim(0, 1)
+    ax.set_ylim(0, 1)
+    ax.axis("off")
 
-    # LAYER 2: the veiling — many translucent curves in progressively
-    # darker/murkier tones, each one hiding a little more
-    n_layers=65
-    for i in range(n_layers):
-        frac=i/(n_layers-1)
-        # each layer has slightly different vertical positioning
-        # concentrated in center to maximize obscuration
-        y_center=PAD_B+PH*(0.15+0.70*np.random.random())
-        # distance from absolute center affects density
-        dist_from_center=abs(y_center-cy)/PH
-        density=np.exp(-(dist_from_center**2)/(2*0.25**2))
+    cx, cy = 0.5, 0.5
 
-        # gentle undulating curves
-        freq=0.8+np.random.random()*4
-        amp=PH*(0.008+0.025*np.random.random())
-        phase=np.random.random()*2*np.pi
+    # ===================================================================
+    # LAYER 1: THE RADIANT SELF
+    # Concentric/spiral rose curves in warm crimson/blush/rose tones
+    # Bold, beautiful, alive — what shame tries to hide
+    # ===================================================================
 
-        # each veil layer has a slightly different vertical drift
-        drift=PH*0.01*np.sin(1.5*np.pi*t+np.random.random()*3)
-        ys=y_center+amp*np.sin(freq*np.pi*t+phase)+drift
-        ys=np.clip(ys,PAD_B+PH*0.02,PAD_B+PH*0.98)
+    warm_colors = [CRIMSON, DEEP_ROSE, ROSE, WARM_CORAL, BLUSH, DUSTY_PINK]
+    n_radial = 45  # number of concentric/spiral curves
 
-        # veil colors — progressively darker, murkier
-        cols=[VEIL_COL,HIDE,SHADOW,DUST,SMOKE,UMBER,ASHEN,MUDDY]
-        col=cols[i%len(cols)]
-        # alpha: very low individually, but accumulates
-        alpha=0.05+0.17*density+0.07*np.random.random()
-        lw=0.35+0.77*density+0.42*np.random.random()
-        draw_lc(ax,xs,ys,col,lw=lw,alpha=alpha,zo=3+int(frac*3),smooth=6)
+    for i in range(n_radial):
+        frac = i / (n_radial - 1)
 
-    # LAYER 3: faint horizontal bands — like fabric grain
-    for i in range(12):
-        y_pos=PAD_B+PH*(0.10+0.80*i/11)
-        ys_band=np.full_like(t,y_pos)+PH*0.002*np.sin(20*np.pi*t+i)
-        draw_lc(ax,xs,ys_band,SHADOW,lw=0.28,alpha=0.07,zo=5,smooth=0)
+        # Radius for this curve — from tight center to filling most of canvas
+        r_base = 0.02 + 0.42 * frac
 
-    label(ax,"\u03a3\u03b1_k\u00b7sin(\u03c9_k t+\u03c6_k),  \u03b1_k\u22480")
-    save(fig,"shame_veil.pdf")
+        # Rose curve parameters — vary petal count and spiral twist
+        n_petals = np.random.choice([3, 4, 5, 6, 7, 8])
+        alpha_twist = np.random.uniform(0.5, 3.0)  # spiral twist factor
+        phase = np.random.uniform(0, 2 * np.pi)
+
+        # Damped radiance equation: I(r,theta) = I_0 * exp(-gamma*r) * cos(n*theta + alpha*r)
+        gamma = np.random.uniform(0.8, 2.5)
+
+        theta = np.linspace(0, 2 * np.pi, 800)
+
+        # Rose-curve radius modulated by damped radiance
+        r_mod = r_base * np.exp(-gamma * frac) * (0.5 + 0.5 * np.cos(n_petals * theta + alpha_twist * r_base * 10))
+        # Add some baseline radius so curves don't collapse to zero
+        r = 0.03 + r_base * 0.6 + r_mod * 0.5
+
+        # Convert polar to cartesian (canvas is 0-1 on both axes)
+        x = cx + r * np.cos(theta + phase)
+        y = cy + r * np.sin(theta + phase)
+
+        # Color selection — inner curves more crimson, outer more blush
+        if frac < 0.25:
+            col_choices = [CRIMSON, DEEP_ROSE]
+        elif frac < 0.55:
+            col_choices = [DEEP_ROSE, ROSE, WARM_CORAL]
+        else:
+            col_choices = [BLUSH, DUSTY_PINK, WARM_CORAL]
+        col = col_choices[i % len(col_choices)]
+
+        # Line weight and alpha — bolder in the center, softer at edges
+        lw = 1.5 - 0.7 * frac  # 1.5 to 0.8
+        alpha = 0.80 - 0.30 * frac  # 0.80 to 0.50
+
+        ax.plot(x, y, color=hex_to_rgba(col, alpha), lw=lw,
+                solid_capstyle="round", zorder=2)
+
+    # Add some additional spiral arcs for richness
+    for i in range(15):
+        theta = np.linspace(0, np.pi * np.random.uniform(1.5, 4.0), 600)
+        r_start = np.random.uniform(0.03, 0.10)
+        r_growth = np.random.uniform(0.04, 0.10)
+        r = r_start + r_growth * theta / (2 * np.pi)
+        phase = np.random.uniform(0, 2 * np.pi)
+
+        x = cx + r * np.cos(theta + phase)
+        y = cy + r * np.sin(theta + phase)
+
+        col = np.random.choice(warm_colors)
+        alpha = np.random.uniform(0.45, 0.70)
+        lw = np.random.uniform(0.8, 1.3)
+
+        ax.plot(x, y, color=hex_to_rgba(col, alpha), lw=lw,
+                solid_capstyle="round", zorder=2)
+
+    # ===================================================================
+    # LAYER 2: THE VEIL
+    # Dense screen of fine horizontal lines — like a curtain or
+    # venetian blinds. Partially obscures the radiant pattern.
+    # The warmth bleeds through the gaps between lines.
+    # ===================================================================
+
+    n_veil_lines = 160
+    y_positions = np.linspace(0.0, 1.0, n_veil_lines)
+
+    for i, y_pos in enumerate(y_positions):
+        # Slight variation in y position for organic feel
+        y_jitter = np.random.uniform(-0.0008, 0.0008)
+        y_line = y_pos + y_jitter
+
+        x_line = np.array([0.0, 1.0])
+        y_line_arr = np.array([y_line, y_line])
+
+        # Veil line properties — thick enough to partially obscure
+        # Alternate slightly between two veil tones for texture
+        if i % 3 == 0:
+            col = VEIL_DARK
+        else:
+            col = VEIL_COLOR
+
+        # Alpha varies slightly — denser in center where radiance is strongest
+        dist_from_center = abs(y_pos - 0.5) / 0.5
+        center_boost = 0.08 * np.exp(-dist_from_center ** 2 / 0.3)
+        alpha = 0.58 + center_boost + np.random.uniform(-0.03, 0.03)
+        alpha = np.clip(alpha, 0.55, 0.70)
+
+        # Line weight — slightly thicker toward center
+        lw = 2.0 + 0.4 * np.exp(-dist_from_center ** 2 / 0.4)
+        lw += np.random.uniform(-0.15, 0.15)
+        lw = np.clip(lw, 1.5, 2.5)
+
+        ax.plot(x_line, y_line_arr, color=hex_to_rgba(col, alpha), lw=lw,
+                solid_capstyle="butt", zorder=3)
+
+    # ===================================================================
+    # Equation label
+    # ===================================================================
+    ax.text(0.06, 0.06, "I(r)=I\u2080\u00b7exp(\u2212\u03b3r)\u00b7T(y)",
+            fontfamily='monospace', fontsize=8,
+            color=(0.15, 0.15, 0.20, 0.25), transform=ax.transAxes)
+
+    # ===================================================================
+    # Save
+    # ===================================================================
+    os.makedirs(OUTPUT_DIR, exist_ok=True)
+    pdf_path = os.path.join(OUTPUT_DIR, "shame_veil.pdf")
+    fig.savefig(pdf_path, facecolor=BG_COLOR, dpi=DPI)
+    plt.close(fig)
+    print(f"saved {pdf_path}")
+    return pdf_path
 
 
 if __name__ == '__main__':

@@ -1,160 +1,156 @@
 """
-Geometry of Feeling — Wonder: Wonder Recursion
-Standalone render script
+Geometry of Feeling — Wonder: Fractal Horizon
+Recursive midpoint displacement rendered as landscape ridgelines
+receding into atmospheric depth.
 """
+import os
 
-"""
-Geometry of Feeling -- Wonder (Final Series)
-Five pieces: Recursion, Mandelbrot Orbit, Strange Attractor, Apollonian Gasket, Harmonograph
-
-Mathematical primitives: fractal self-similarity, Mandelbrot boundary orbits,
-Rossler strange attractor, Descartes circle packing, damped pendulum harmonics
-
-Dependencies: matplotlib, numpy, scipy
-    pip install matplotlib numpy scipy
-"""
-
-import numpy as np
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
-import matplotlib.collections as mc
-from scipy.ndimage import gaussian_filter1d
-from matplotlib.patches import Circle
-import os
-
-
-DPI = 300; FIG_W = 12; FIG_H = 8
-BG = "#0A0A14"
-
-# Palette: cosmic -- deep indigo, gold, pale violet, white accent
-INDIGO = "#2838A0"; DEEP_BLUE = "#182868"; GOLD = "#C8A030"
-PALE_VIOLET = "#8878C0"; COSMIC_TEAL = "#2888A0"; NEBULA = "#4838A0"
-STAR_WHITE = "#E8E4E0"; DIM_BLUE = "#384888"; AURORA = "#38A888"
-DEEP_VIOLET = "#3828A0"; WARM_GOLD = "#D8B840"; ICE = "#88A8D0"
-BRIGHT_GOLD = "#F0D060"; BRIGHT_VIOLET = "#A090E0"
-
-
-def hex_to_rgb(h):
-    h = h.lstrip('#')
-    return tuple(int(h[i:i+2], 16) / 255 for i in (0, 2, 4))
-
-
-def rgba(h, a):
-    c = hex_to_rgb(h)
-    return (c[0], c[1], c[2], float(np.clip(a, 0, 1)))
-
-
-def make_fig():
-    fig = plt.figure(figsize=(FIG_W, FIG_H), dpi=DPI)
-    ax = fig.add_subplot(111)
-    fig.patch.set_facecolor(BG); ax.set_facecolor(BG)
-    ax.set_xlim(0, FIG_W); ax.set_ylim(0, FIG_H)
-    ax.set_aspect('equal'); ax.axis('off')
-    return fig, ax
-
-
-PAD_L = 0.72; PAD_R = 0.60; PAD_T = 0.65; PAD_B = 0.88
-PW = FIG_W - PAD_L - PAD_R; PH = FIG_H - PAD_T - PAD_B
-cx = PAD_L + PW / 2; cy = PAD_B + PH / 2
-
-
-def label(ax, eq):
-    ax.text(0.75,0.75,eq,fontfamily='monospace',fontsize=10,
-            color=(0.85,0.80,0.75,0.55),transform=ax.transData)
-def split_segments(xs, ys, mask):
-    segments = []
-    in_seg = False
-    start = 0
-    for j in range(len(mask)):
-        if mask[j] and not in_seg:
-            start = j; in_seg = True
-        elif not mask[j] and in_seg:
-            if j - start >= 3:
-                segments.append((xs[start:j], ys[start:j]))
-            in_seg = False
-    if in_seg and len(mask) - start >= 3:
-        segments.append((xs[start:], ys[start:]))
-    return segments
-
-
-def draw_lc(ax, xs, ys, col, lw, alpha, zo=4, smooth=0):
-    if smooth > 0:
-        ys = gaussian_filter1d(ys, smooth)
-    pts = np.array([xs, ys]).T.reshape(-1, 1, 2)
-    segs = np.concatenate([pts[:-1], pts[1:]], axis=1)
-    lc = mc.LineCollection(segs, linewidths=lw, colors=[rgba(col, alpha)],
-                           capstyle='round', joinstyle='round', zorder=zo)
-    ax.add_collection(lc)
-
-
-def save(fig, name):
-    fig.subplots_adjust(left=0, right=1, top=1, bottom=0)
-    os.makedirs(OUTPUT_DIR, exist_ok=True)
-    # Ensure name ends with .pdf
-    if not name.endswith(".pdf"):
-        name = name + ".pdf"
-    fig.savefig(os.path.join(OUTPUT_DIR, name),
-                format='pdf', facecolor=BG)
-    plt.close(fig)
-    print(f"saved {name}")
+import numpy as np
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 OUTPUT_DIR = os.path.join(SCRIPT_DIR, '..', '..', 'output')
 
+DPI = 300
+FIG_W = 12
+FIG_H = 8
+BG_COLOR = '#DDD9D2'
 
-# =============================================================================
-# 1. RECURSION -- Koch snowflake recursive subdivision (KEEP AS IS from series)
-#    Koch: subdivide -> project -> repeat
-# =============================================================================
+
+def midpoint_displacement(x0, y0, x1, y1, depth, roughness, H, rng):
+    """Recursive midpoint displacement fractal.
+
+    Parameters
+    ----------
+    x0, y0 : float  — left endpoint
+    x1, y1 : float  — right endpoint
+    depth  : int     — recursion levels remaining
+    roughness : float — amplitude scaling factor
+    H : float        — Hurst exponent (0 < H < 1)
+    rng : np.random.Generator
+
+    Returns
+    -------
+    xs, ys : np.ndarray — sorted arrays of fractal points
+    """
+    if depth == 0:
+        return np.array([x0, x1]), np.array([y0, y1])
+
+    mx = (x0 + x1) / 2.0
+    seg_len = x1 - x0
+    # displacement scaled by roughness * segment_length^H
+    displacement = rng.uniform(-1, 1) * roughness * (seg_len ** H)
+    my = (y0 + y1) / 2.0 + displacement
+
+    # recurse on both halves
+    xs_left, ys_left = midpoint_displacement(x0, y0, mx, my, depth - 1,
+                                             roughness, H, rng)
+    xs_right, ys_right = midpoint_displacement(mx, my, x1, y1, depth - 1,
+                                               roughness, H, rng)
+
+    # merge (skip duplicate midpoint)
+    xs = np.concatenate([xs_left, xs_right[1:]])
+    ys = np.concatenate([ys_left, ys_right[1:]])
+    return xs, ys
+
+
 def render():
-    fig, ax = make_fig()
+    rng = np.random.default_rng(42)
 
-    def koch_points(p1, p2, depth):
-        if depth == 0:
-            return [p1]
-        dx = p2[0] - p1[0]; dy = p2[1] - p1[1]
-        a = (p1[0] + dx / 3, p1[1] + dy / 3)
-        b = (p1[0] + 2 * dx / 3, p1[1] + 2 * dy / 3)
-        # peak point
-        px = p1[0] + dx / 2 - dy * np.sqrt(3) / 6
-        py = p1[1] + dy / 2 + dx * np.sqrt(3) / 6
-        peak = (px, py)
-        pts = []
-        pts.extend(koch_points(p1, a, depth - 1))
-        pts.extend(koch_points(a, peak, depth - 1))
-        pts.extend(koch_points(peak, b, depth - 1))
-        pts.extend(koch_points(b, p2, depth - 1))
-        return pts
+    fig, ax = plt.subplots(figsize=(FIG_W, FIG_H), dpi=DPI,
+                           facecolor=BG_COLOR)
+    fig.subplots_adjust(0, 0, 1, 1)
+    ax.set_position([0, 0, 1, 1])
+    ax.set_facecolor(BG_COLOR)
+    ax.set_xlim(0, 1)
+    ax.set_ylim(0, 1)
+    ax.axis("off")
 
-    # draw Koch at multiple depths, each fainter
-    for depth in range(1, 6):
-        frac = (depth - 1) / 4
-        scale = PW * 0.40
-        # equilateral triangle vertices
-        cy_shifted = cy - PH * 0.08  # shift down so top isn't cut off
-        v1 = (cx - scale, cy_shifted - scale * np.sqrt(3) / 3)
-        v2 = (cx + scale, cy_shifted - scale * np.sqrt(3) / 3)
-        v3 = (cx, cy_shifted + scale * 2 * np.sqrt(3) / 3)
-        sides = [(v1, v2), (v2, v3), (v3, v1)]
-        for si, (p1, p2) in enumerate(sides):
-            pts = koch_points(p1, p2, depth)
-            pts.append(p2)
-            xs_k = np.array([p[0] for p in pts])
-            ys_k = np.array([p[1] for p in pts])
-            mask = ((xs_k > PAD_L) & (xs_k < PAD_L + PW) &
-                    (ys_k > PAD_B) & (ys_k < PAD_B + PH))
-            if mask.sum() < 3:
-                continue
-            cols = [DEEP_BLUE, INDIGO, PALE_VIOLET, GOLD, WARM_GOLD]
-            col = cols[depth - 1]
-            alpha = 0.80 * (1 - frac * 0.5)
-            lw = 2.8 * (1 - frac * 0.7) + 0.3
-            for seg_xs, seg_ys in split_segments(xs_k, ys_k, mask):
-                draw_lc(ax, seg_xs, seg_ys, col, lw=lw, alpha=alpha, zo=3 + depth)
+    # ---- ridgeline configuration ----
+    n_ridges = 10
+    # base_y goes from bottom (front) to top (back)
+    base_ys = np.linspace(0.15, 0.85, n_ridges)
 
-    label(ax, "Koch: subdivide \u2192 project \u2192 repeat")
-    save(fig, "wonder_recursion.pdf")
+    # color palette: front (deep navy) -> middle (blue-grey) -> back (pale mauve)
+    color_anchors_t = np.array([0.0, 0.25, 0.5, 0.7, 0.85, 1.0])
+    color_anchors_rgb = np.array([
+        [0x2E, 0x42, 0x5E],   # deep navy
+        [0x35, 0x4A, 0x65],   # dark steel
+        [0x55, 0x64, 0x78],   # blue-grey
+        [0x6A, 0x70, 0x88],   # mid grey-blue
+        [0x90, 0x7C, 0x8E],   # pale mauve
+        [0xB0, 0xA0, 0xA8],   # faint lilac
+    ], dtype=float) / 255.0
+
+    x_left = 0.02
+    x_right = 0.98
+
+    H = 0.6  # Hurst exponent
+
+    for i, base_y in enumerate(base_ys):
+        # t=0 is front (bottom), t=1 is back (top)
+        t = i / (n_ridges - 1)
+
+        # ---- recursion parameters ----
+        # front: 10 levels, back: 5 levels
+        depth = int(round(10 - 5 * t))
+        # roughness: front 0.55, back 0.35
+        roughness = 0.55 - 0.20 * t
+        # displacement amplitude: front large, back small
+        amplitude = 0.12 * (1.0 - 0.70 * t)
+
+        # ---- generate fractal ridgeline ----
+        xs, ys = midpoint_displacement(x_left, 0.0, x_right, 0.0,
+                                       depth, roughness, H, rng)
+        # scale displacements and shift to base height
+        ys = ys * (amplitude / max(abs(ys.max()), abs(ys.min()), 1e-9))
+        ys = ys + base_y
+
+        # ---- atmospheric attenuation ----
+        # alpha: front 0.92, back 0.18
+        alpha = 0.92 * np.exp(-2.2 * t)
+        alpha = max(alpha, 0.18)
+
+        # fill alpha: subtle layered depth
+        fill_alpha = 0.08 * (1.0 - 0.7 * t)
+        fill_alpha = max(fill_alpha, 0.03)
+
+        # ---- line weight ----
+        lw = 1.4 - 1.0 * t
+        lw = max(lw, 0.35)
+
+        # ---- color interpolation ----
+        r = np.interp(t, color_anchors_t, color_anchors_rgb[:, 0])
+        g = np.interp(t, color_anchors_t, color_anchors_rgb[:, 1])
+        b = np.interp(t, color_anchors_t, color_anchors_rgb[:, 2])
+        line_color = (r, g, b, alpha)
+        fill_color = (r, g, b, fill_alpha)
+
+        # ---- draw filled region below ridgeline ----
+        # fill down to the bottom of the canvas
+        ax.fill_between(xs, ys, 0, color=fill_color, zorder=2 + i,
+                        linewidth=0)
+
+        # ---- draw ridgeline ----
+        ax.plot(xs, ys, color=line_color, lw=lw, solid_capstyle="round",
+                zorder=12 + i)
+
+    # ---- equation label ----
+    ax.text(0.06, 0.06,
+            "H(x)=\u03A3\u03B4\u1D62\u00B72^(\u2212iH), H\u2208(0,1)",
+            fontfamily='monospace', fontsize=8,
+            color=(0.15, 0.15, 0.20, 0.25),
+            transform=ax.transAxes)
+
+    # ---- save ----
+    os.makedirs(OUTPUT_DIR, exist_ok=True)
+    pdf_path = os.path.join(OUTPUT_DIR, "wonder_recursion.pdf")
+    fig.savefig(pdf_path, facecolor=BG_COLOR, dpi=DPI)
+    plt.close(fig)
+    print(f"saved {pdf_path}")
+    return pdf_path
 
 
 if __name__ == '__main__':

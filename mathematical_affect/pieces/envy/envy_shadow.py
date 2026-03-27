@@ -1,168 +1,185 @@
 """
-Geometry of Feeling — Envy: Envy Shadow
-Standalone render script
+Geometry of Feeling -- Envy: Envy Shadow
+Reconceived as "Parasitic Resonance" (variant):
+Two coupled spiral-orbit bodies in vertical composition.
+Top body (the envied): warm gold/chartreuse, dense concentric spirals.
+Bottom body (the envier): same curves stretched downward, desaturated grey-olive,
+thinner lines -- overextending to match what it covets.
+Transfer filaments drip downward like gravitational drainage.
 """
+import os
 
-"""
-Geometry of Feeling -- Envy (Final Series)
-
-Curated target: Two waveforms spanning the full width, same general shape
-but slightly different. One always above (the one who has), one always
-below (the one who envies). The gap between them is the envy - filled
-with a subtle wash. Same color family (greens) for both.
-
-Background: mid-grey (#B0B0A8)
-Palette: envious greens, sickly yellows
-"""
-
-import numpy as np
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
-import matplotlib.collections as mc
-from scipy.ndimage import gaussian_filter1d
-from matplotlib.patches import Circle
-import os
-
-
-DPI=300; FIG_W=12; FIG_H=8
-BG="#B0B0A8"
-
-# Palette: envious greens, sickly yellows, bitter cold accents
-BILE="#7A8A30"; COVET="#3A5A30"; BITTER="#5A6A38"; ACID="#8A9A28"
-JEALOUS="#4A6A3A"; THORN="#5A5A28"; PALLID="#8A9A70"; VENOM="#4A5A20"
-SHADOW_COL="#4A4A40"
-
-def hex_to_rgb(h):
-    h=h.lstrip('#')
-    return tuple(int(h[i:i+2],16)/255 for i in (0,2,4))
-
-def rgba(h,a):
-    c=hex_to_rgb(h)
-    return (c[0],c[1],c[2],float(np.clip(a,0,1)))
-
-def make_fig():
-    fig=plt.figure(figsize=(FIG_W,FIG_H),dpi=DPI)
-    ax=fig.add_subplot(111)
-    fig.patch.set_facecolor(BG); ax.set_facecolor(BG)
-    ax.set_xlim(0,FIG_W); ax.set_ylim(0,FIG_H)
-    ax.set_aspect('equal'); ax.axis('off')
-    return fig,ax
-
-PAD_L=0.72; PAD_R=0.60; PAD_T=0.65; PAD_B=0.88
-PW=FIG_W-PAD_L-PAD_R; PH=FIG_H-PAD_T-PAD_B
-cx=PAD_L+PW/2; cy=PAD_B+PH/2
-
-def label(ax,eq):
-    ax.text(0.75,0.75,eq,fontfamily='monospace',fontsize=10,
-            color=(0.15,0.15,0.20,0.28),transform=ax.transData)
-
-def draw_lc(ax,xs,ys,col,lw,alpha,zo=4,smooth=0):
-    if smooth>0:
-        ys=gaussian_filter1d(ys,smooth)
-    pts=np.array([xs,ys]).T.reshape(-1,1,2)
-    segs=np.concatenate([pts[:-1],pts[1:]],axis=1)
-    lc=mc.LineCollection(segs,linewidths=lw,colors=[rgba(col,alpha)],
-                         capstyle='round',joinstyle='round',zorder=zo)
-    ax.add_collection(lc)
-
-def save(fig, name):
-    fig.subplots_adjust(left=0, right=1, top=1, bottom=0)
-    os.makedirs(OUTPUT_DIR, exist_ok=True)
-    if not name.endswith(".pdf"):
-        name = name + ".pdf"
-    fig.savefig(os.path.join(OUTPUT_DIR, name),
-                format='pdf', facecolor=BG)
-    plt.close(fig)
-    print(f"saved {name}")
+import numpy as np
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 OUTPUT_DIR = os.path.join(SCRIPT_DIR, '..', '..', 'output')
 
+DPI = 300
+FIG_W = 12
+FIG_H = 8
+BG_COLOR = '#DDD9D2'
 
-# =============================================================================
-# SHADOW -- two waveforms, same shape moved up and down,
-#    slightly different, gap between = the envy
-# =============================================================================
+# --- Palettes ---
+# Envied body: warm golds and chartreuse
+ENVIED_COLORS = ['#8A9A30', '#A0AA40', '#70882A', '#96A438', '#7E9228']
+# Envier body: grey-olive, desaturated
+ENVIER_COLORS = ['#7A7A68', '#8A8A78', '#6A6A58', '#757568', '#808070']
+
+
+def hex_to_rgba(h, a):
+    h = h.lstrip('#')
+    r, g, b = (int(h[i:i+2], 16) / 255.0 for i in (0, 2, 4))
+    return (r, g, b, float(np.clip(a, 0, 1)))
+
+
 def render():
-    fig,ax=make_fig()
-    np.random.seed(77)
+    np.random.seed(42)
 
-    n_pts = 3000
-    t = np.linspace(0, 4*np.pi, n_pts)
-    xs = PAD_L + PW * (t - t.min()) / (t.max() - t.min())
+    fig, ax = plt.subplots(figsize=(FIG_W, FIG_H), dpi=DPI, facecolor=BG_COLOR)
+    fig.subplots_adjust(0, 0, 1, 1)
+    ax.set_position([0, 0, 1, 1])
+    ax.set_facecolor(BG_COLOR)
+    ax.set_xlim(0, 1)
+    ax.set_ylim(0, 1)
+    ax.axis("off")
 
-    # Base waveform - rich, organic undulation
-    base_wave = (PH * 0.10 * np.sin(t * 0.8) +
-                 PH * 0.06 * np.sin(t * 1.7 + 0.5) +
-                 PH * 0.04 * np.cos(t * 2.9 + 1.2) +
-                 PH * 0.025 * np.sin(t * 4.1 + 2.0))
-    base_wave = gaussian_filter1d(base_wave, 15)
+    # --- Harmonic definition for coupled oscillator bodies ---
+    # Each body is built from a sum of harmonics: r(theta) = sum A_k * cos(n_k * theta + phi_k)
+    n_harmonics = 7
+    harmonic_n = np.array([1, 2, 3, 5, 7, 11, 13])
+    harmonic_A = np.array([0.10, 0.06, 0.045, 0.03, 0.02, 0.012, 0.008])
+    harmonic_phi = np.array([0.0, 0.8, 1.6, 2.4, 0.5, 3.1, 1.9])
 
-    # Center of the composition - upper portion of canvas
-    center_y = cy + PH * 0.12
+    n_points = 1200
+    theta = np.linspace(0, 2 * np.pi, n_points)
 
-    # Gap between the curves
-    gap = PH * 0.12
+    # --- Envied body (top, warm gold, dense) ---
+    envied_cx, envied_cy = 0.50, 0.72
+    n_envied_lines = 30
 
-    # --- Upper curve (the one who has everything) ---
-    # Slightly different shape - more elevated, confident undulation
-    upper_variation = (PH * 0.02 * np.sin(t * 3.2 + 1.0) +
-                       PH * 0.015 * np.cos(t * 5.1 + 0.3))
-    upper_variation = gaussian_filter1d(upper_variation, 10)
-    upper_y = center_y + gap/2 + base_wave + upper_variation
+    for i in range(n_envied_lines):
+        t_frac = i / (n_envied_lines - 1)
+        # Concentric spirals with slight radial growth per orbit
+        base_r = 0.04 + 0.14 * t_frac
+        # Phase offset per orbit for spiral effect
+        phase_shift = i * 0.21
 
-    # --- Lower curve (the one who envies) ---
-    # Same general shape but slightly different - it follows but never catches up
-    lower_variation = (PH * 0.025 * np.sin(t * 2.8 + 2.5) +
-                       PH * 0.018 * np.cos(t * 4.5 + 1.8))
-    lower_variation = gaussian_filter1d(lower_variation, 12)
-    lower_y = center_y - gap/2 + base_wave + lower_variation
+        r = np.ones_like(theta) * base_r
+        for k in range(n_harmonics):
+            # Amplitude decays slightly for outer orbits to keep density
+            amp = harmonic_A[k] * (1.0 - 0.3 * t_frac)
+            r += amp * np.cos(harmonic_n[k] * theta + harmonic_phi[k] + phase_shift)
 
-    # Ensure upper is always above lower
-    min_gap = PH * 0.04
-    for j in range(len(upper_y)):
-        if upper_y[j] - lower_y[j] < min_gap:
-            mid = (upper_y[j] + lower_y[j]) / 2
-            upper_y[j] = mid + min_gap/2
-            lower_y[j] = mid - min_gap/2
+        # Compact: no stretch, keep circular
+        x = envied_cx + r * np.cos(theta)
+        y = envied_cy + r * np.sin(theta)
 
-    # --- Fill the gap (the envy itself) ---
-    ax.fill_between(xs, lower_y, upper_y,
-                    color=rgba(JEALOUS, 0.08), linewidth=0, zorder=2)
+        # Line properties: full weight, higher alpha for inner
+        lw = 1.2 - 0.4 * t_frac
+        alpha = 0.65 - 0.25 * t_frac
+        col = ENVIED_COLORS[i % len(ENVIED_COLORS)]
 
-    # --- Vertical gap indicators ---
-    n_indicators = 50
-    idx_positions = np.linspace(30, n_pts-30, n_indicators).astype(int)
-    for idx in idx_positions:
-        gap_here = upper_y[idx] - lower_y[idx]
-        gap_norm = gap_here / (PH * 0.30)
-        ax.plot([xs[idx], xs[idx]],
-                [lower_y[idx], upper_y[idx]],
-                color=rgba(ACID, 0.04 + 0.06 * gap_norm),
-                linewidth=0.3, zorder=2)
+        ax.plot(x, y, color=hex_to_rgba(col, alpha), lw=lw,
+                solid_capstyle="round", zorder=5)
 
-    # --- Draw upper curve - vivid, in acid/olive green ---
-    draw_lc(ax, xs, upper_y, ACID, lw=1.8, alpha=0.60, zo=6, smooth=3)
+    # --- Envier body (bottom, grey-olive, stretched downward) ---
+    envier_cx, envier_cy = 0.50, 0.38
+    n_envier_lines = 32
 
-    # --- Draw lower curve - darker green, same weight ---
-    draw_lc(ax, xs, lower_y, COVET, lw=1.4, alpha=0.50, zo=5, smooth=3)
+    for i in range(n_envier_lines):
+        t_frac = i / (n_envier_lines - 1)
+        # Same harmonic structure but wider base -- overextending
+        base_r = 0.05 + 0.18 * t_frac
+        phase_shift = i * 0.21
 
-    # --- Underneath set: fainter echo lines below the lower curve ---
-    # These create depth — like the envy has layers beneath
-    for echo_i in range(5):
-        echo_offset = PH * (0.06 + echo_i * 0.04)
-        echo_variation = (PH * 0.015 * np.sin(t * (2.5 + echo_i * 0.6) + echo_i * 1.2) +
-                          PH * 0.01 * np.cos(t * (3.8 + echo_i * 0.4) + echo_i * 0.7))
-        echo_variation = gaussian_filter1d(echo_variation, 14)
-        echo_y = lower_y - echo_offset + echo_variation
-        echo_alpha = 0.30 - echo_i * 0.05
-        echo_lw = 1.0 - echo_i * 0.12
-        echo_col = SHADOW_COL if echo_i % 2 == 0 else BITTER
-        draw_lc(ax, xs, echo_y, echo_col, lw=echo_lw, alpha=echo_alpha, zo=4 - echo_i, smooth=4)
+        r = np.ones_like(theta) * base_r
+        for k in range(n_harmonics):
+            # Faster radial decay: harmonics die off more at outer orbits
+            amp = harmonic_A[k] * (1.0 - 0.55 * t_frac)
+            r += amp * np.cos(harmonic_n[k] * theta + harmonic_phi[k] + phase_shift)
 
-    label(ax,"d(t)=f(t)\u2212g(t)>0  \u2200t   \u2014   shadow:  one always above,  one always reaching,  the gap is the envy")
-    save(fig,"envy_shadow.pdf")
+        x = envier_cx + r * np.cos(theta)
+        # Vertical stretch downward: the bottom of each orbit sags
+        # Gravity-like asymmetry: stretches more in -y direction
+        stretch_down = 1.0 + 0.35 * t_frac  # grows with orbit number
+        y_raw = r * np.sin(theta)
+        # Apply asymmetric stretch: only stretch the bottom half
+        y_stretched = np.where(y_raw < 0, y_raw * stretch_down, y_raw * 0.85)
+        y = envier_cy + y_stretched
+
+        # Thinner lines, lower alpha -- hollower feel
+        lw = 0.85 - 0.3 * t_frac
+        alpha = 0.50 - 0.22 * t_frac
+        col = ENVIER_COLORS[i % len(ENVIER_COLORS)]
+
+        ax.plot(x, y, color=hex_to_rgba(col, alpha), lw=lw,
+                solid_capstyle="round", zorder=4)
+
+    # --- Transfer filaments: parabolic arcs dripping downward ---
+    n_filaments = 12
+    filament_angles = np.linspace(-0.55 * np.pi, 0.55 * np.pi, n_filaments)
+
+    # Source points on the bottom of the envied body
+    envied_bottom_r = 0.04 + 0.14 * 0.5  # mid-orbit radius
+    # Target points on the top of the envier body
+    envier_top_r = 0.05 + 0.18 * 0.5
+
+    for j, fa in enumerate(filament_angles):
+        # Source point: bottom edge of envied body
+        src_x = envied_cx + envied_bottom_r * 0.9 * np.cos(fa)
+        src_y = envied_cy - envied_bottom_r * 0.7
+
+        # Target point: top edge of envier body
+        dst_x = envier_cx + envier_top_r * 1.15 * np.cos(fa)
+        dst_y = envier_cy + envier_top_r * 0.6
+
+        # Parabolic drip path
+        n_fil_pts = 80
+        t_fil = np.linspace(0, 1, n_fil_pts)
+
+        # x interpolation with slight lateral drift
+        lateral_drift = 0.03 * np.sin(np.pi * t_fil) * np.cos(fa + j * 0.5)
+        fx = src_x + (dst_x - src_x) * t_fil + lateral_drift
+
+        # y follows a parabolic (gravitational) arc: faster at the end
+        # Dripping effect: slow departure, accelerating fall
+        fy = src_y + (dst_y - src_y) * (t_fil ** 1.6)
+
+        # Color gradient: gold at top fading to grey at bottom
+        for seg in range(n_fil_pts - 1):
+            seg_frac = seg / (n_fil_pts - 1)
+            # Interpolate from gold to grey-olive
+            r_start, g_start, b_start = 0.54, 0.60, 0.19  # ~#8A9A30
+            r_end, g_end, b_end = 0.48, 0.48, 0.41        # ~#7A7A68
+            rc = r_start + (r_end - r_start) * seg_frac
+            gc = g_start + (g_end - g_start) * seg_frac
+            bc = b_start + (b_end - b_start) * seg_frac
+
+            # Alpha: fade at endpoints, stronger in middle
+            a_fil = 0.30 * np.sin(np.pi * seg_frac) ** 0.6
+            # Thinner filaments near edges
+            edge_dist = min(j, n_filaments - 1 - j) / (n_filaments / 2)
+            lw_fil = 0.5 + 0.5 * edge_dist
+
+            ax.plot(fx[seg:seg+2], fy[seg:seg+2],
+                    color=(rc, gc, bc, a_fil), lw=lw_fil,
+                    solid_capstyle="round", zorder=3)
+
+    # --- Equation label ---
+    ax.text(0.06, 0.06, "dE/dt=\u2212\u03b3\u00b7E+\u03ba\u00b7(E*\u2212E)",
+            fontfamily='monospace', fontsize=8,
+            color=(0.15, 0.15, 0.20, 0.25), transform=ax.transAxes)
+
+    # --- Save ---
+    os.makedirs(OUTPUT_DIR, exist_ok=True)
+    pdf_path = os.path.join(OUTPUT_DIR, "envy_shadow.pdf")
+    fig.savefig(pdf_path, facecolor=BG_COLOR, dpi=DPI)
+    plt.close(fig)
+    print(f"saved {pdf_path}")
+    return pdf_path
 
 
 if __name__ == '__main__':

@@ -1,175 +1,234 @@
 """
-Geometry of Feeling — Envy: Envy Mirror
-Standalone render script
+Geometry of Feeling — Envy: Parasitic Resonance
+Two spiral bodies where one steals saturation from the other.
+LEFT body (source): vivid greens/gold-greens, full weight and alpha.
+RIGHT body (shadow): same curves but desaturated, thinner, hollower.
+Coupling filaments carry color from source to shadow.
 """
+import os
 
-"""
-Geometry of Feeling -- Envy (Final Series)
-Five pieces: Covet, Watch, Glass Ceiling, Shadow, Mirror
-
-Mathematical primitives: asymptotic approach, radial surveillance spirals,
-capped saturation curves, parametric reflection gap, diminished reflection
-
-Background: mid-grey (#B0B0A8) -- bile-tinged neutrality
-Palette: envious greens, sickly yellows, bitter cold accents
-Equation opacity 0.28, series label 0.18
-
-Dependencies: matplotlib, numpy, scipy
-    pip install matplotlib numpy scipy
-"""
-
-import numpy as np
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import matplotlib.collections as mc
-from scipy.ndimage import gaussian_filter1d
-from matplotlib.patches import Circle
-import os
-
-
-DPI=300; FIG_W=12; FIG_H=8
-BG="#B0B0A8"  # mid-grey
-
-# Palette: envious greens, sickly yellows, bitter cold accents
-BILE="#7A8A30"; COVET="#3A5A30"; BITTER="#5A6A38"; ACID="#8A9A28"
-JEALOUS="#4A6A3A"; THORN="#5A5A28"; PALLID="#8A9A70"; VENOM="#4A5A20"
-SHADOW_COL="#4A4A40"
-
-def hex_to_rgb(h):
-    h=h.lstrip('#')
-    return tuple(int(h[i:i+2],16)/255 for i in (0,2,4))
-
-def rgba(h,a):
-    c=hex_to_rgb(h)
-    return (c[0],c[1],c[2],float(np.clip(a,0,1)))
-
-def make_fig():
-    fig=plt.figure(figsize=(FIG_W,FIG_H),dpi=DPI)
-    ax=fig.add_subplot(111)
-    fig.patch.set_facecolor(BG); ax.set_facecolor(BG)
-    ax.set_xlim(0,FIG_W); ax.set_ylim(0,FIG_H)
-    ax.set_aspect('equal'); ax.axis('off')
-    return fig,ax
-
-PAD_L=0.72; PAD_R=0.60; PAD_T=0.65; PAD_B=0.88
-PW=FIG_W-PAD_L-PAD_R; PH=FIG_H-PAD_T-PAD_B
-cx=PAD_L+PW/2; cy=PAD_B+PH/2
-
-def label(ax,eq):
-    ax.text(0.75,0.75,eq,fontfamily='monospace',fontsize=10,
-            color=(0.15,0.15,0.20,0.28),transform=ax.transData)
-def split_segments(xs, ys, mask):
-    """Split masked arrays into contiguous segments."""
-    segments = []
-    in_seg = False
-    start = 0
-    for j in range(len(mask)):
-        if mask[j] and not in_seg:
-            start = j
-            in_seg = True
-        elif not mask[j] and in_seg:
-            if j - start >= 3:
-                segments.append((xs[start:j], ys[start:j]))
-            in_seg = False
-    if in_seg and len(mask) - start >= 3:
-        segments.append((xs[start:], ys[start:]))
-    return segments
-
-def draw_lc(ax,xs,ys,col,lw,alpha,zo=4,smooth=0):
-    if smooth>0:
-        ys=gaussian_filter1d(ys,smooth)
-    pts=np.array([xs,ys]).T.reshape(-1,1,2)
-    segs=np.concatenate([pts[:-1],pts[1:]],axis=1)
-    lc=mc.LineCollection(segs,linewidths=lw,colors=[rgba(col,alpha)],
-                         capstyle='round',joinstyle='round',zorder=zo)
-    ax.add_collection(lc)
-
-def draw_lc_gradient(ax,xs,ys,col,lw_start,lw_end,a_start,a_end,zo=4,smooth=0):
-    """Draw line collection with gradient alpha and linewidth."""
-    if smooth>0:
-        ys=gaussian_filter1d(ys,smooth)
-    pts=np.array([xs,ys]).T.reshape(-1,1,2)
-    segs=np.concatenate([pts[:-1],pts[1:]],axis=1)
-    n=len(segs)
-    alphas=np.linspace(a_start,a_end,n)
-    lws=np.linspace(lw_start,lw_end,n)
-    colors=[rgba(col,float(a)) for a in alphas]
-    lc=mc.LineCollection(segs,linewidths=lws,colors=colors,
-                         capstyle='round',joinstyle='round',zorder=zo)
-    ax.add_collection(lc)
-
-def save(fig, name):
-    fig.subplots_adjust(left=0, right=1, top=1, bottom=0)
-    os.makedirs(OUTPUT_DIR, exist_ok=True)
-    # Ensure name ends with .pdf
-    if not name.endswith(".pdf"):
-        name = name + ".pdf"
-    fig.savefig(os.path.join(OUTPUT_DIR, name),
-                format='pdf', facecolor=BG)
-    plt.close(fig)
-    print(f"saved {name}")
+import numpy as np
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 OUTPUT_DIR = os.path.join(SCRIPT_DIR, '..', '..', 'output')
 
+DPI = 300
+FIG_W = 12
+FIG_H = 8
+BG_COLOR = '#DDD9D2'
 
-# =============================================================================
-# 5. MIRROR -- a function reflected across an axis, but the reflection
-#    is slightly diminished/distorted -- always less than the original
-# =============================================================================
+np.random.seed(42)
+
+# ---------------------------------------------------------------------------
+# Palette
+# ---------------------------------------------------------------------------
+# Source body: vivid greens and gold-greens
+SOURCE_GREENS = [
+    '#4A8A30', '#3A7A28', '#5A9A38', '#4E8E34', '#3E7E2C',
+    '#48862E', '#528E36', '#447C2A', '#569240', '#3C7826',
+]
+# Shadow body: desaturated grey-greens
+SHADOW_GREYS = [
+    '#7A8A78', '#6A7A6A', '#8A9A88', '#748A72', '#7E8E7C',
+    '#708870', '#849684', '#6E7E6E', '#889888', '#768876',
+]
+# Core glow colours
+SOURCE_CORE = '#5CA040'
+SHADOW_CORE = '#7A8A78'
+
+
+def hex_to_rgba(h, a):
+    h = h.lstrip('#')
+    r, g, b = (int(h[i:i+2], 16) / 255.0 for i in (0, 2, 4))
+    return (r, g, b, float(np.clip(a, 0, 1)))
+
+
 def render():
-    fig,ax=make_fig()
-    t=np.linspace(0,1,2500); xs=PAD_L+PW*t
+    fig, ax = plt.subplots(figsize=(FIG_W, FIG_H), dpi=DPI, facecolor=BG_COLOR)
+    fig.subplots_adjust(0, 0, 1, 1)
+    ax.set_position([0, 0, 1, 1])
+    ax.set_facecolor(BG_COLOR)
+    ax.set_xlim(0, 1)
+    ax.set_ylim(0, 1)
+    ax.axis('off')
 
-    # Mirror axis
-    mirror_y = cy
-    ax.plot([PAD_L, PAD_L+PW], [mirror_y, mirror_y],
-            color=rgba(SHADOW_COL, 0.17), linewidth=0.7, linestyle=':', zorder=2)
+    # Centres — source left-of-centre, shadow right-of-centre
+    src_cx, src_cy = 0.33, 0.50
+    shd_cx, shd_cy = 0.68, 0.50
 
-    n_pairs = 14
-    for i in range(n_pairs):
-        frac = i / (n_pairs - 1)
-        omega = 2 + frac * 5
-        amp = PH * (0.04 + frac * 0.08)
-        phase = frac * 0.8
+    # ------------------------------------------------------------------
+    # Rose-curve orbital parameters
+    # ------------------------------------------------------------------
+    n_orbits = 36  # 30-40 range
+    k_values = [2, 3, 5, 7]  # petal counts for rose curves
 
-        # The original -- full amplitude above the mirror
-        wave = amp * np.sin(omega * np.pi * t + phase)
-        ys_orig = mirror_y + PH*0.04 + np.abs(wave) + PH*0.005*np.sin(3.7*omega*np.pi*t)
+    theta = np.linspace(0, 2 * np.pi * 3, 4000)  # 3 full wraps
 
-        # The reflection -- below the mirror, diminished
-        # Shrink factor varies per curve and along the curve (non-uniform distortion)
-        shrink_base = 0.35 + frac * 0.20  # always less than 1
-        # Add spatial distortion -- the reflection warps
-        distortion = 1 + 0.15 * np.sin(1.5 * np.pi * t + frac * 2.0)
-        shrink = shrink_base * distortion
+    # ------------------------------------------------------------------
+    # SOURCE BODY — vivid, full weight
+    # ------------------------------------------------------------------
+    for i in range(n_orbits):
+        frac = i / (n_orbits - 1)
 
-        ys_refl = mirror_y - PH*0.04 - np.abs(wave) * shrink - PH*0.003*np.sin(3.7*omega*np.pi*t)
+        # Pick k and phase to create varied petal structure
+        k = k_values[i % len(k_values)]
+        phi = frac * 1.6 + 0.3 * np.sin(i * 0.7)
 
-        # Original: vivid
-        if frac < 0.3: col_o = ACID; col_r = SHADOW_COL
-        elif frac < 0.6: col_o = BILE; col_r = BITTER
-        else: col_o = PALLID; col_r = COVET
+        # Radius envelope — concentric orbits growing outward
+        r_base = 0.03 + frac * 0.17
+        # Rose modulation
+        r_mod = r_base * (1.0 + 0.35 * np.cos(k * theta + phi))
+        # Add subtle spiral drift
+        spiral = 0.005 * theta / (2 * np.pi)
+        r = r_mod + spiral * (0.3 + 0.7 * frac)
 
-        draw_lc(ax, xs, ys_orig, col_o, lw=1.4+0.7*frac, alpha=0.65+0.20*frac, zo=5, smooth=3)
-        draw_lc(ax, xs, ys_refl, col_r, lw=0.6+0.4*frac, alpha=0.28+0.15*frac, zo=3, smooth=3)
+        xs = src_cx + r * np.cos(theta)
+        ys = src_cy + r * np.sin(theta)
 
-        # Faint fill between mirror and each curve to show the asymmetry
-        if i % 3 == 0:
-            ax.fill_between(xs, mirror_y, ys_orig,
-                            color=rgba(ACID, 0.022 + 0.008*frac), linewidth=0, zorder=1)
-            ax.fill_between(xs, ys_refl, mirror_y,
-                            color=rgba(COVET, 0.015 + 0.005*frac), linewidth=0, zorder=1)
+        # Colour, weight, alpha
+        col = SOURCE_GREENS[i % len(SOURCE_GREENS)]
+        lw = 0.6 + 0.6 * frac  # 0.6 to 1.2
+        alpha = 0.4 + 0.4 * (1.0 - frac)  # inner brighter, outer slightly less
 
-    # Label the asymmetry
-    ax.text(PAD_L + PW*0.02, mirror_y + PH*0.32, "f(t)",
-            fontfamily='monospace', fontsize=6, color=rgba(ACID, 0.25))
-    ax.text(PAD_L + PW*0.02, mirror_y - PH*0.25, "\u03b1\u00b7f(t)",
-            fontfamily='monospace', fontsize=6, color=rgba(COVET, 0.20))
+        pts = np.column_stack([xs, ys]).reshape(-1, 1, 2)
+        segs = np.concatenate([pts[:-1], pts[1:]], axis=1)
+        lc = mc.LineCollection(segs, linewidths=lw,
+                               colors=[hex_to_rgba(col, alpha)],
+                               capstyle='round', joinstyle='round', zorder=5)
+        ax.add_collection(lc)
 
-    label(ax,"g(t)=\u03b1(t)\u00b7f(t),  \u03b1<1")
-    save(fig,"envy_mirror.pdf")
+    # ------------------------------------------------------------------
+    # SHADOW BODY — same maths, diminished
+    # ------------------------------------------------------------------
+    for i in range(n_orbits):
+        frac = i / (n_orbits - 1)
+
+        k = k_values[i % len(k_values)]
+        phi = frac * 1.6 + 0.3 * np.sin(i * 0.7)
+
+        # Same base but slightly LARGER extent (1+epsilon) yet compressed amp
+        r_base = 0.03 + frac * 0.19  # 0.19 > 0.17 — larger envelope
+        # Rose modulation — amplitude compressed (the "drain")
+        r_mod = r_base * (1.0 + 0.20 * np.cos(k * theta + phi))  # 0.20 < 0.35
+        spiral = 0.005 * theta / (2 * np.pi)
+        r = r_mod + spiral * (0.3 + 0.7 * frac)
+
+        # Exponential decay factor — the delta in the equation
+        decay = np.exp(-0.08 * frac * 10)  # diminishes outer orbits more
+        r = r * (0.85 + 0.15 * decay)
+
+        xs = shd_cx + r * np.cos(theta)
+        ys = shd_cy + r * np.sin(theta)
+
+        # Desaturated colours, thinner, lower alpha
+        col = SHADOW_GREYS[i % len(SHADOW_GREYS)]
+        lw = 0.3 + 0.35 * frac  # thinner: 0.3 to 0.65
+        alpha = 0.18 + 0.22 * (1.0 - frac)  # much lower: 0.18 to 0.40
+
+        pts = np.column_stack([xs, ys]).reshape(-1, 1, 2)
+        segs = np.concatenate([pts[:-1], pts[1:]], axis=1)
+        lc = mc.LineCollection(segs, linewidths=lw,
+                               colors=[hex_to_rgba(col, alpha)],
+                               capstyle='round', joinstyle='round', zorder=3)
+        ax.add_collection(lc)
+
+    # ------------------------------------------------------------------
+    # GLOWING CORES
+    # ------------------------------------------------------------------
+    # Source core — layered circles fading outward
+    for j in range(8):
+        radius = 0.008 + j * 0.006
+        alpha_c = 0.50 - j * 0.055
+        circle = plt.Circle((src_cx, src_cy), radius,
+                             color=hex_to_rgba(SOURCE_CORE, max(alpha_c, 0.04)),
+                             fill=True, zorder=10)
+        ax.add_patch(circle)
+
+    # Shadow core — dimmer version
+    for j in range(6):
+        radius = 0.006 + j * 0.005
+        alpha_c = 0.22 - j * 0.030
+        circle = plt.Circle((shd_cx, shd_cy), radius,
+                             color=hex_to_rgba(SHADOW_CORE, max(alpha_c, 0.02)),
+                             fill=True, zorder=8)
+        ax.add_patch(circle)
+
+    # ------------------------------------------------------------------
+    # COUPLING FILAMENTS — 14 arcs carrying colour from source to shadow
+    # ------------------------------------------------------------------
+    n_arcs = 14
+    for i in range(n_arcs):
+        frac = i / (n_arcs - 1)
+        # Departure angle on source body
+        angle_src = 2 * np.pi * frac + 0.15 * np.sin(i * 1.3)
+        # Arrival angle on shadow body (slightly offset)
+        angle_shd = 2 * np.pi * frac + 0.4 * np.sin(i * 0.9 + 0.7)
+
+        # Radii at the edge of each body
+        r_src = 0.03 + 0.17 * (0.5 + 0.5 * np.cos(3 * angle_src))
+        r_shd = 0.03 + 0.19 * (0.5 + 0.5 * np.cos(3 * angle_shd))
+
+        # Start/end points
+        p_src = np.array([src_cx + r_src * np.cos(angle_src),
+                          src_cy + r_src * np.sin(angle_src)])
+        p_shd = np.array([shd_cx + r_shd * np.cos(angle_shd),
+                          shd_cy + r_shd * np.sin(angle_shd)])
+
+        # Control point for a gentle arc (slight vertical offset)
+        mid = 0.5 * (p_src + p_shd)
+        perp_offset = 0.04 * np.sin(frac * np.pi * 2 + 0.5) + 0.02
+        ctrl = mid + np.array([0.0, perp_offset])
+
+        # Quadratic Bezier arc: C(s) = (1-s)^2 * P0 + 2s(1-s) * ctrl + s^2 * P1
+        s = np.linspace(0, 1, 200)
+        arc_x = (1 - s)**2 * p_src[0] + 2 * s * (1 - s) * ctrl[0] + s**2 * p_shd[0]
+        arc_y = (1 - s)**2 * p_src[1] + 2 * s * (1 - s) * ctrl[1] + s**2 * p_shd[1]
+
+        pts = np.column_stack([arc_x, arc_y]).reshape(-1, 1, 2)
+        segs = np.concatenate([pts[:-1], pts[1:]], axis=1)
+        n_seg = len(segs)
+
+        # Gradient: vivid green near source -> grey-green near shadow
+        colors = []
+        lws = []
+        for j in range(n_seg):
+            t = j / (n_seg - 1)
+            # Interpolate from source green to shadow grey
+            c_src = hex_to_rgba(SOURCE_GREENS[i % len(SOURCE_GREENS)], 1.0)
+            c_shd = hex_to_rgba(SHADOW_GREYS[i % len(SHADOW_GREYS)], 1.0)
+            r = c_src[0] * (1 - t) + c_shd[0] * t
+            g = c_src[1] * (1 - t) + c_shd[1] * t
+            b = c_src[2] * (1 - t) + c_shd[2] * t
+            a = (0.38 * (1 - t) + 0.12 * t) * (0.7 + 0.3 * np.sin(frac * np.pi))
+            colors.append((r, g, b, a))
+            lws.append(0.5 * (1 - t) + 0.3 * t)  # thins toward shadow
+
+        lc = mc.LineCollection(segs, linewidths=lws, colors=colors,
+                               capstyle='round', joinstyle='round', zorder=4)
+        ax.add_collection(lc)
+
+    # ------------------------------------------------------------------
+    # Equation label
+    # ------------------------------------------------------------------
+    ax.text(0.06, 0.06,
+            "B(t)=(1+\u03b5)\u00b7A(t)\u00b7exp(\u2212\u03b4t), \u03b4>0",
+            fontfamily='monospace', fontsize=8,
+            color=(0.15, 0.15, 0.20, 0.25),
+            transform=ax.transAxes)
+
+    # ------------------------------------------------------------------
+    # Save
+    # ------------------------------------------------------------------
+    os.makedirs(OUTPUT_DIR, exist_ok=True)
+    pdf_path = os.path.join(OUTPUT_DIR, 'envy_mirror.pdf')
+    fig.savefig(pdf_path, facecolor=BG_COLOR, dpi=DPI)
+    plt.close(fig)
+    print(f"saved {pdf_path}")
+    return pdf_path
 
 
 if __name__ == '__main__':
