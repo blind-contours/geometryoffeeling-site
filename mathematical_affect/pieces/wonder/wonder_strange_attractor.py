@@ -25,7 +25,8 @@ import os
 
 
 DPI = 300; FIG_W = 12; FIG_H = 8
-BG = "#0A0A14"
+BG = "#2E425E"          # deep navy from wonder_recursion front ridgelines
+MARGIN_COLOR = "#DDD9D2" # warm grey matching recursion/transform margins
 
 # Palette: cosmic -- deep indigo, gold, pale violet, white accent
 INDIGO = "#2838A0"; DEEP_BLUE = "#182868"; GOLD = "#C8A030"
@@ -108,7 +109,22 @@ OUTPUT_DIR = os.path.join(SCRIPT_DIR, '..', '..', 'output')
 #    dx=-y-z, dy=x+ay, dz=b+z(x-c)  (opacity significantly increased)
 # =============================================================================
 def render():
-    fig, ax = make_fig()
+    from matplotlib.patches import FancyBboxPatch
+
+    fig, ax = plt.subplots(figsize=(FIG_W, FIG_H), dpi=DPI, facecolor=MARGIN_COLOR)
+    fig.subplots_adjust(0, 0, 1, 1)
+    ax.set_position([0, 0, 1, 1])
+    ax.set_facecolor(MARGIN_COLOR)
+    ax.set_xlim(0, 1); ax.set_ylim(0, 1)
+    ax.axis('off')
+
+    # Content rectangle with deep navy background
+    ml, mr, mb, mt = 0.07, 0.07, 0.08, 0.08
+    rect = FancyBboxPatch((ml, mb), 1-ml-mr, 1-mb-mt,
+                           boxstyle="square,pad=0",
+                           facecolor=BG, edgecolor='none', zorder=0)
+    ax.add_patch(rect)
+
     # Rossler attractor parameters
     a, b, c_param = 0.2, 0.2, 5.7
     dt = 0.005; n_steps = 40000
@@ -119,11 +135,15 @@ def render():
         x += dx * dt; y += dy * dt; z += dz * dt
         xs_a.append(x); ys_a.append(y)
     xs_a = np.array(xs_a); ys_a = np.array(ys_a)
-    # scale to canvas
+
+    # Map to content area with inner padding
+    cx0 = ml + 0.04; cx1 = 1 - mr - 0.04
+    cy0 = mb + 0.06; cy1 = 1 - mt - 0.06
     x_range = xs_a.max() - xs_a.min(); y_range = ys_a.max() - ys_a.min()
-    xs_m = PAD_L + PW * 0.08 + (xs_a - xs_a.min()) / x_range * PW * 0.84
-    ys_m = PAD_B + PH * 0.08 + (ys_a - ys_a.min()) / y_range * PH * 0.80
-    # draw with color gradient -- significantly increased opacity
+    xs_m = cx0 + (cx1 - cx0) * (xs_a - xs_a.min()) / x_range
+    ys_m = cy0 + (cy1 - cy0) * (ys_a - ys_a.min()) / y_range
+
+    # Draw with color gradient
     pts = np.array([xs_m, ys_m]).T.reshape(-1, 1, 2)
     segs = np.concatenate([pts[:-1], pts[1:]], axis=1)
     n_s = len(segs)
@@ -139,17 +159,24 @@ def render():
         else:
             col = GOLD
         rgb = hex_to_rgb(col)
-        # BOOSTED opacity: was 0.20+0.50*(...), now 0.35+0.60*(...)
         alpha = 0.35 + 0.60 * (0.5 + 0.5 * np.sin(frac * 20 * np.pi))
         colors.append((rgb[0], rgb[1], rgb[2], alpha))
-    # Thicker lines for visibility: was 0.7, now 1.0
+
     lws = np.full(n_s, 1.0)
     lc_obj = mc.LineCollection(segs, linewidths=lws, colors=colors,
                                capstyle='round', zorder=3)
     ax.add_collection(lc_obj)
 
-    label(ax, "dx=\u2212y\u2212z,  dy=x+ay,  dz=b+z(x\u2212c)")
-    save(fig, "wonder_strange_attractor.pdf")
+    ax.text(ml + 0.02, mb + 0.02,
+            "dx=\u2212y\u2212z,  dy=x+ay,  dz=b+z(x\u2212c)",
+            fontfamily='monospace', fontsize=8,
+            color=(0.85, 0.80, 0.75, 0.55), transform=ax.transData)
+
+    os.makedirs(OUTPUT_DIR, exist_ok=True)
+    pdf_path = os.path.join(OUTPUT_DIR, "wonder_strange_attractor.pdf")
+    fig.savefig(pdf_path, facecolor=MARGIN_COLOR, dpi=DPI)
+    plt.close(fig)
+    print(f"saved {pdf_path}")
 
 
 if __name__ == '__main__':
