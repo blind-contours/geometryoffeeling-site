@@ -1,5 +1,5 @@
 """
-Geometry of Feeling — Connection: Connection Entanglement
+Geometry of Feeling — Connection: Double Helix
 Standalone render script
 """
 
@@ -120,59 +120,35 @@ OUTPUT_DIR = os.path.join(SCRIPT_DIR, '..', '..', 'output')
 
 
 # ============================================================================
-# 5. ENTANGLEMENT — enhanced with more visual "spice"
+# 2. DOUBLE HELIX — rose gold + gold, with depth cue
 # ============================================================================
 def render():
     fig, ax = make_fig()
-    np.random.seed(66)
-    t = np.linspace(0, 1, 3000)
-
-    n_modes = 12  # more modes for richer signal
-    signal = np.zeros_like(t)
-    for k in range(n_modes):
-        freq = 2 + k*2.5
-        phase = np.random.uniform(0, 2*np.pi)
-        amp = 1.0/(k+1)**0.7
-        signal += amp*np.sin(freq*np.pi*t + phase)
-    signal = signal/np.max(np.abs(signal))
-
-    # Left particle
-    xs1 = PAD_L + PW*0.05 + PW*0.38*t
-    ys1 = cy + PH*0.35*signal
-    # Right particle — mirrored and slightly stretched
-    xs2 = PAD_L + PW*0.57 + PW*0.38*t
-    ys2 = cy - PH*0.35*signal
-
-    draw_lc_gradient(ax, xs1, ys1, ROSE_GOLD, 0.8, 2.0, 0.28, 0.58, zo=4, smooth=1)
-    draw_lc_gradient(ax, xs2, ys2, GOLD, 0.8, 2.0, 0.28, 0.58, zo=5, smooth=1)
-
-    # Dots at the start of each line
-    head(ax, xs1[0], ys1[0])
-    head(ax, xs2[0], ys2[0])
-
-    # Richer connecting lines — curved arcs instead of straight lines
-    n_links = 35
-    link_idx = np.linspace(100, len(t)-100, n_links, dtype=int)
-    for idx in link_idx:
-        # Curved arc between the two
-        arc_t = np.linspace(0, 1, 50)
-        arc_x = xs1[idx] + (xs2[idx]-xs1[idx])*arc_t
-        # Arc bows outward based on signal value
-        bow = PH*0.08*signal[idx]*np.sin(np.pi*arc_t)
-        arc_y = ys1[idx] + (ys2[idx]-ys1[idx])*arc_t + bow
-        alpha = 0.12 + 0.18*np.abs(signal[idx])
-        draw_lc(ax, arc_x, arc_y, PALE_GOLD, lw=0.6, alpha=alpha, zo=2)
-
-    # Glowing dots at key correlation peaks
-    peaks = np.where(np.abs(np.diff(signal)) < 0.001)[0][:8]
-    for p in peaks:
-        if p < len(xs1) and p < len(xs2):
-            for xx, yy in [(xs1[p], ys1[p]), (xs2[p], ys2[p])]:
-                ax.plot(xx, yy, 'o', color=rgba(WARM_WHITE, 0.15),
-                        markersize=6, markeredgewidth=0, zorder=7)
-
-    label(ax, "|\u03c8\u27e9 = (|01\u27e9 - |10\u27e9)/\u221a2")
-    save(fig, "connection_entanglement.pdf")
+    t = np.linspace(0, 6*np.pi, 3000)
+    r = PW*0.28; pitch = PH*0.80/(6*np.pi)
+    for xs_fn, col, phase in [
+        (lambda: cx + r*np.cos(t), ROSE_GOLD, 0),
+        (lambda: cx + r*np.cos(t+np.pi), GOLD, np.pi)
+    ]:
+        xs_h = xs_fn()
+        ys_h = PAD_B + PH*0.10 + pitch*t
+        pts = np.array([xs_h, ys_h]).T.reshape(-1, 1, 2)
+        segs = np.concatenate([pts[:-1], pts[1:]], axis=1)
+        n = len(segs)
+        depth = 0.5 + 0.5*np.cos(t[:n] + phase)
+        alphas = 0.15 + 0.42*depth
+        lws = 0.5 + 1.5*depth
+        colors = [rgba(col, float(a)) for a in alphas]
+        lc = mc.LineCollection(segs, linewidths=lws, colors=colors,
+                               capstyle='round', joinstyle='round', zorder=4)
+        ax.add_collection(lc)
+    # Rungs
+    for rt in np.linspace(0.2, 6*np.pi-0.2, 18):
+        rx1 = cx + r*np.cos(rt); rx2 = cx + r*np.cos(rt+np.pi)
+        ry = PAD_B + PH*0.10 + pitch*rt
+        draw_lc(ax, np.array([rx1, rx2]), np.array([ry, ry]), PALE_GOLD, lw=0.5, alpha=0.10, zo=3)
+    label(ax, "r(t) = (cos t, sin t, t/2\u03c0) \u00b1 d/2")
+    save(fig, "connection_helix.pdf")
 
 
 if __name__ == '__main__':

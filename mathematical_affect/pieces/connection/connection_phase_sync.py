@@ -24,6 +24,7 @@ import os
 
 DPI = 300; FIG_W = 12; FIG_H = 8
 BG = "#0A0A12"
+MARGIN_COLOR = "#E8D8B8"
 
 # ROSE GOLD + GOLD palette (user request)
 ROSE_GOLD = "#C8887A"
@@ -49,7 +50,9 @@ def rgba(h, a):
 def make_fig():
     fig = plt.figure(figsize=(FIG_W, FIG_H), dpi=DPI)
     ax = fig.add_subplot(111)
-    fig.patch.set_facecolor(BG); ax.set_facecolor(BG)
+    fig.patch.set_facecolor(MARGIN_COLOR)
+    ax.set_facecolor(BG)
+    ax.set_position([0.07, 0.08, 0.86, 0.84])
     ax.set_xlim(0, FIG_W); ax.set_ylim(0, FIG_H)
     ax.set_aspect('equal'); ax.axis('off')
     return fig, ax
@@ -105,13 +108,12 @@ def head(ax, x, y):
     ax.plot(x, y, 'o', color=rgba(WARM_WHITE, 0.55), markersize=4, markeredgewidth=0, zorder=10)
 
 def save(fig, name):
-    fig.subplots_adjust(left=0, right=1, top=1, bottom=0)
     os.makedirs(OUTPUT_DIR, exist_ok=True)
     # Ensure name ends with .pdf
     if not name.endswith(".pdf"):
         name = name + ".pdf"
     fig.savefig(os.path.join(OUTPUT_DIR, name),
-                format='pdf', facecolor=BG)
+                format='pdf', facecolor=MARGIN_COLOR)
     plt.close(fig)
     print(f"saved {name}")
 
@@ -131,9 +133,9 @@ def render():
     all_phases = np.zeros((n_osc, n_steps))
     for step in range(n_steps):
         all_phases[:, step] = phases
-        # Coupling is zero for first 45%, then ramps up — sync starts just past halfway
+        # Coupling ramps from 25% so convergence is visible around midway
         progress = step / n_steps
-        K = 2.5 * max(0, (progress - 0.45) / 0.55)**1.5
+        K = 3.0 * max(0, (progress - 0.25) / 0.75) ** 1.2
         for i in range(n_osc):
             coupling = sum(np.sin(phases[j]-phases[i]) for j in range(n_osc))
             phases[i] += (natural_freqs[i] + K/n_osc*coupling)*dt

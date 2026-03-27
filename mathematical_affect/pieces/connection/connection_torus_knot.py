@@ -24,6 +24,7 @@ import os
 
 DPI = 300; FIG_W = 12; FIG_H = 8
 BG = "#0A0A12"
+MARGIN_COLOR = "#E8D8B8"
 
 # ROSE GOLD + GOLD palette (user request)
 ROSE_GOLD = "#C8887A"
@@ -47,7 +48,9 @@ def rgba(h, a):
 def make_fig():
     fig = plt.figure(figsize=(FIG_W, FIG_H), dpi=DPI)
     ax = fig.add_subplot(111)
-    fig.patch.set_facecolor(BG); ax.set_facecolor(BG)
+    fig.patch.set_facecolor(MARGIN_COLOR)
+    ax.set_facecolor(BG)
+    ax.set_position([0.07, 0.08, 0.86, 0.84])
     ax.set_xlim(0, FIG_W); ax.set_ylim(0, FIG_H)
     ax.set_aspect('equal'); ax.axis('off')
     return fig, ax
@@ -103,13 +106,12 @@ def head(ax, x, y):
     ax.plot(x, y, 'o', color=rgba(WARM_WHITE, 0.55), markersize=4, markeredgewidth=0, zorder=10)
 
 def save(fig, name):
-    fig.subplots_adjust(left=0, right=1, top=1, bottom=0)
     os.makedirs(OUTPUT_DIR, exist_ok=True)
     # Ensure name ends with .pdf
     if not name.endswith(".pdf"):
         name = name + ".pdf"
     fig.savefig(os.path.join(OUTPUT_DIR, name),
-                format='pdf', facecolor=BG)
+                format='pdf', facecolor=MARGIN_COLOR)
     plt.close(fig)
     print(f"saved {name}")
 
@@ -124,7 +126,7 @@ def render():
     fig, ax = make_fig()
     t = np.linspace(0, 2*np.pi, 4000)
     p, q = 3, 5
-    R, r_t = PW*0.32, PW*0.14
+    R, r_t = PW*0.27, PW*0.12
     for i, (phase, col) in enumerate([(0, ROSE_GOLD), (np.pi/p, GOLD)]):
         r_curve = R + r_t*np.cos(q*(t+phase))
         xs_k = cx + r_curve*np.cos(p*(t+phase))

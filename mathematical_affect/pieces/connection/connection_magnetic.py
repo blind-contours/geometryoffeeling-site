@@ -26,6 +26,7 @@ import os
 
 DPI = 300; FIG_W = 12; FIG_H = 8
 BG = "#0A0A12"
+MARGIN_COLOR = "#E8D8B8"
 
 # GOLD palette
 GOLD = "#E8C878"
@@ -46,7 +47,9 @@ def rgba(h, a):
 def make_fig():
     fig = plt.figure(figsize=(FIG_W, FIG_H), dpi=DPI)
     ax = fig.add_subplot(111)
-    fig.patch.set_facecolor(BG); ax.set_facecolor(BG)
+    fig.patch.set_facecolor(MARGIN_COLOR)
+    ax.set_facecolor(BG)
+    ax.set_position([0.07, 0.08, 0.86, 0.84])
     ax.set_xlim(0, FIG_W); ax.set_ylim(0, FIG_H)
     ax.set_aspect('equal'); ax.axis('off')
     return fig, ax
@@ -84,12 +87,11 @@ def split_segments(xs, ys, mask):
     return segments
 
 def save(fig, name):
-    fig.subplots_adjust(left=0, right=1, top=1, bottom=0)
     os.makedirs(OUTPUT_DIR, exist_ok=True)
     if not name.endswith(".pdf"):
         name = name + ".pdf"
     fig.savefig(os.path.join(OUTPUT_DIR, name),
-                format='pdf', facecolor=BG)
+                format='pdf', facecolor=MARGIN_COLOR)
     plt.close(fig)
     print(f"saved {name}")
 

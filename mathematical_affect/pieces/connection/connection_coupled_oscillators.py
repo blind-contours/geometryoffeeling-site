@@ -1,5 +1,5 @@
 """
-Geometry of Feeling — Connection: Connection Entanglement
+Geometry of Feeling — Connection: Coupled Oscillators
 Standalone render script
 """
 
@@ -120,59 +120,28 @@ OUTPUT_DIR = os.path.join(SCRIPT_DIR, '..', '..', 'output')
 
 
 # ============================================================================
-# 5. ENTANGLEMENT — enhanced with more visual "spice"
+# 1. COUPLED OSCILLATORS — rose gold + gold (keep, enhanced palette)
 # ============================================================================
 def render():
     fig, ax = make_fig()
-    np.random.seed(66)
-    t = np.linspace(0, 1, 3000)
-
-    n_modes = 12  # more modes for richer signal
-    signal = np.zeros_like(t)
-    for k in range(n_modes):
-        freq = 2 + k*2.5
-        phase = np.random.uniform(0, 2*np.pi)
-        amp = 1.0/(k+1)**0.7
-        signal += amp*np.sin(freq*np.pi*t + phase)
-    signal = signal/np.max(np.abs(signal))
-
-    # Left particle
-    xs1 = PAD_L + PW*0.05 + PW*0.38*t
-    ys1 = cy + PH*0.35*signal
-    # Right particle — mirrored and slightly stretched
-    xs2 = PAD_L + PW*0.57 + PW*0.38*t
-    ys2 = cy - PH*0.35*signal
-
-    draw_lc_gradient(ax, xs1, ys1, ROSE_GOLD, 0.8, 2.0, 0.28, 0.58, zo=4, smooth=1)
-    draw_lc_gradient(ax, xs2, ys2, GOLD, 0.8, 2.0, 0.28, 0.58, zo=5, smooth=1)
-
-    # Dots at the start of each line
-    head(ax, xs1[0], ys1[0])
-    head(ax, xs2[0], ys2[0])
-
-    # Richer connecting lines — curved arcs instead of straight lines
-    n_links = 35
-    link_idx = np.linspace(100, len(t)-100, n_links, dtype=int)
-    for idx in link_idx:
-        # Curved arc between the two
-        arc_t = np.linspace(0, 1, 50)
-        arc_x = xs1[idx] + (xs2[idx]-xs1[idx])*arc_t
-        # Arc bows outward based on signal value
-        bow = PH*0.08*signal[idx]*np.sin(np.pi*arc_t)
-        arc_y = ys1[idx] + (ys2[idx]-ys1[idx])*arc_t + bow
-        alpha = 0.12 + 0.18*np.abs(signal[idx])
-        draw_lc(ax, arc_x, arc_y, PALE_GOLD, lw=0.6, alpha=alpha, zo=2)
-
-    # Glowing dots at key correlation peaks
-    peaks = np.where(np.abs(np.diff(signal)) < 0.001)[0][:8]
-    for p in peaks:
-        if p < len(xs1) and p < len(xs2):
-            for xx, yy in [(xs1[p], ys1[p]), (xs2[p], ys2[p])]:
-                ax.plot(xx, yy, 'o', color=rgba(WARM_WHITE, 0.15),
-                        markersize=6, markeredgewidth=0, zorder=7)
-
-    label(ax, "|\u03c8\u27e9 = (|01\u27e9 - |10\u27e9)/\u221a2")
-    save(fig, "connection_entanglement.pdf")
+    dt = 0.002; n_steps = 12000
+    omega1, omega2 = 3.0, 3.5; kappa = 0.8
+    x1, v1, x2, v2 = 1.0, 0.0, -0.5, 0.5
+    xs1, xs2, vs1, vs2 = [x1], [x2], [v1], [v2]
+    for _ in range(n_steps):
+        a1 = -omega1**2*x1 + kappa*(x2-x1)
+        a2 = -omega2**2*x2 + kappa*(x1-x2)
+        v1 += a1*dt; v2 += a2*dt; x1 += v1*dt; x2 += v2*dt
+        xs1.append(x1); xs2.append(x2); vs1.append(v1); vs2.append(v2)
+    xs1, xs2, vs1, vs2 = np.array(xs1), np.array(xs2), np.array(vs1), np.array(vs2)
+    sx, sv = PW*0.40, PH*0.40
+    px1 = cx + sx*xs1/np.max(np.abs(xs1)); py1 = cy + sv*vs1/np.max(np.abs(vs1))
+    px2 = cx + sx*xs2/np.max(np.abs(xs2)); py2 = cy + sv*vs2/np.max(np.abs(vs2))
+    draw_lc_gradient(ax, px1, py1, ROSE_GOLD, 0.5, 1.8, 0.10, 0.55, zo=4, smooth=2)
+    draw_lc_gradient(ax, px2, py2, GOLD, 0.5, 1.8, 0.10, 0.55, zo=5, smooth=2)
+    head(ax, px1[-1], py1[-1]); head(ax, px2[-1], py2[-1])
+    label(ax, "\u00eb\u2081=-\u03c9\u00b2x\u2081+\u03ba(x\u2082-x\u2081)")
+    save(fig, "connection_coupled_oscillators.pdf")
 
 
 if __name__ == '__main__':

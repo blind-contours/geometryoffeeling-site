@@ -1,5 +1,5 @@
 """
-Geometry of Feeling — Connection: Connection Entanglement
+Geometry of Feeling — Connection: Orbit Pair
 Standalone render script
 """
 
@@ -120,59 +120,51 @@ OUTPUT_DIR = os.path.join(SCRIPT_DIR, '..', '..', 'output')
 
 
 # ============================================================================
-# 5. ENTANGLEMENT — enhanced with more visual "spice"
+# 3. ORBIT PAIR — Two curves orbiting each other, not merging.
+#    Uses coupled nonlinear oscillators that orbit a shared center.
 # ============================================================================
 def render():
     fig, ax = make_fig()
-    np.random.seed(66)
-    t = np.linspace(0, 1, 3000)
+    dt = 0.003; n_steps = 15000
+    # Two particles orbiting a shared center with mutual perturbation
+    # Particle 1: elliptical orbit
+    th1, r1 = 0.0, PW*0.28
+    th2, r2 = np.pi, PW*0.22
+    w1, w2 = 1.0, 1.3  # angular velocities
 
-    n_modes = 12  # more modes for richer signal
-    signal = np.zeros_like(t)
-    for k in range(n_modes):
-        freq = 2 + k*2.5
-        phase = np.random.uniform(0, 2*np.pi)
-        amp = 1.0/(k+1)**0.7
-        signal += amp*np.sin(freq*np.pi*t + phase)
-    signal = signal/np.max(np.abs(signal))
+    trail1_x, trail1_y = [], []
+    trail2_x, trail2_y = [], []
 
-    # Left particle
-    xs1 = PAD_L + PW*0.05 + PW*0.38*t
-    ys1 = cy + PH*0.35*signal
-    # Right particle — mirrored and slightly stretched
-    xs2 = PAD_L + PW*0.57 + PW*0.38*t
-    ys2 = cy - PH*0.35*signal
+    for step in range(n_steps):
+        # Slightly elliptical orbits with mutual perturbation
+        e1 = 0.2 + 0.05*np.sin(0.1*step*dt)
+        e2 = 0.15 + 0.05*np.cos(0.13*step*dt)
 
-    draw_lc_gradient(ax, xs1, ys1, ROSE_GOLD, 0.8, 2.0, 0.28, 0.58, zo=4, smooth=1)
-    draw_lc_gradient(ax, xs2, ys2, GOLD, 0.8, 2.0, 0.28, 0.58, zo=5, smooth=1)
+        x1 = cx + r1*(1 + e1*np.cos(2*th1))*np.cos(th1)
+        y1 = cy + r1*(1 + e1*np.cos(2*th1))*np.sin(th1)*(PH/PW)
+        x2 = cx + r2*(1 + e2*np.cos(2*th2))*np.cos(th2)
+        y2 = cy + r2*(1 + e2*np.cos(2*th2))*np.sin(th2)*(PH/PW)
 
-    # Dots at the start of each line
-    head(ax, xs1[0], ys1[0])
-    head(ax, xs2[0], ys2[0])
+        trail1_x.append(x1); trail1_y.append(y1)
+        trail2_x.append(x2); trail2_y.append(y2)
 
-    # Richer connecting lines — curved arcs instead of straight lines
-    n_links = 35
-    link_idx = np.linspace(100, len(t)-100, n_links, dtype=int)
-    for idx in link_idx:
-        # Curved arc between the two
-        arc_t = np.linspace(0, 1, 50)
-        arc_x = xs1[idx] + (xs2[idx]-xs1[idx])*arc_t
-        # Arc bows outward based on signal value
-        bow = PH*0.08*signal[idx]*np.sin(np.pi*arc_t)
-        arc_y = ys1[idx] + (ys2[idx]-ys1[idx])*arc_t + bow
-        alpha = 0.12 + 0.18*np.abs(signal[idx])
-        draw_lc(ax, arc_x, arc_y, PALE_GOLD, lw=0.6, alpha=alpha, zo=2)
+        # Mutual perturbation — each slightly pulls the other
+        dx, dy = x2-x1, y2-y1
+        dist = np.sqrt(dx**2 + dy**2) + 0.5
+        perturb = 0.003 / dist
 
-    # Glowing dots at key correlation peaks
-    peaks = np.where(np.abs(np.diff(signal)) < 0.001)[0][:8]
-    for p in peaks:
-        if p < len(xs1) and p < len(xs2):
-            for xx, yy in [(xs1[p], ys1[p]), (xs2[p], ys2[p])]:
-                ax.plot(xx, yy, 'o', color=rgba(WARM_WHITE, 0.15),
-                        markersize=6, markeredgewidth=0, zorder=7)
+        th1 += w1*dt + perturb*np.sin(th2-th1)*dt
+        th2 += w2*dt + perturb*np.sin(th1-th2)*dt
 
-    label(ax, "|\u03c8\u27e9 = (|01\u27e9 - |10\u27e9)/\u221a2")
-    save(fig, "connection_entanglement.pdf")
+    t1x, t1y = np.array(trail1_x), np.array(trail1_y)
+    t2x, t2y = np.array(trail2_x), np.array(trail2_y)
+
+    draw_lc_gradient(ax, t1x, t1y, ROSE_GOLD, 0.3, 1.6, 0.06, 0.48, zo=4)
+    draw_lc_gradient(ax, t2x, t2y, GOLD, 0.3, 1.6, 0.06, 0.48, zo=5)
+    head(ax, t1x[-1], t1y[-1]); head(ax, t2x[-1], t2y[-1])
+
+    label(ax, "d\u03b8/dt = \u03c9 + \u03b5\u00b7sin(\u03b8\u2082-\u03b8\u2081)/r")
+    save(fig, "connection_orbit_pair.pdf")
 
 
 if __name__ == '__main__':
