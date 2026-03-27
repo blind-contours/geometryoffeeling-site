@@ -21,7 +21,7 @@ BG_COLOR = '#4f5d71'
 
 
 def render():
-    SERIES_BG = '#0A0A18'  # wonder series background (deep navy)
+    SERIES_BG = '#DDD9D2'  # matching wonder_recursion margin color
 
     blue = '#90a6cf'
     gold = '#d6b876'
