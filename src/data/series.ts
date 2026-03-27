@@ -681,6 +681,7 @@ export const featuredPieceIds = [
   "peace-horizon",
   "desire-pursuit",
   "nostalgia-reaching",
+  "fractured-bifurcation",
 ];
 
 export function getSeriesBySlug(slug: string): Series | undefined {
