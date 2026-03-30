@@ -50,6 +50,7 @@ import os
 
 DPI = 300; FIG_W = 12; FIG_H = 8
 BG = "#0A0A10"
+MARGIN_COLOR = "#224654"
 
 # Palette: cosmic vast
 COSMIC = "#2A3A8A"; NEBULA_P = "#5A3A8A"; STARLIGHT = "#C8C8D0"
@@ -69,11 +70,26 @@ def rgba(h, a):
     return (c[0], c[1], c[2], float(np.clip(a, 0, 1)))
 
 def make_fig():
+    from matplotlib.patches import FancyBboxPatch, Rectangle
     fig = plt.figure(figsize=(FIG_W, FIG_H), dpi=DPI)
     ax = fig.add_subplot(111)
-    fig.patch.set_facecolor(BG); ax.set_facecolor(BG)
+    fig.patch.set_facecolor(MARGIN_COLOR)
+    ax.set_facecolor(MARGIN_COLOR)
+    fig.subplots_adjust(left=0, right=1, top=1, bottom=0)
     ax.set_xlim(0, FIG_W); ax.set_ylim(0, FIG_H)
     ax.set_aspect('equal'); ax.axis('off')
+    ax.add_patch(Rectangle((0, 0), FIG_W, FIG_H, facecolor=MARGIN_COLOR,
+                            edgecolor='none', zorder=-10))
+    ml = FIG_W * 0.07; mr = FIG_W * 0.07
+    mb = FIG_H * 0.08; mt = FIG_H * 0.08
+    ax.add_patch(FancyBboxPatch((ml, mb), FIG_W - ml - mr, FIG_H - mb - mt,
+                                 boxstyle="square,pad=0",
+                                 facecolor=BG, edgecolor='none', zorder=0))
+    zo = 1000
+    ax.add_patch(Rectangle((0, 0), FIG_W, mb, facecolor=MARGIN_COLOR, edgecolor='none', zorder=zo))
+    ax.add_patch(Rectangle((0, FIG_H - mt), FIG_W, mt, facecolor=MARGIN_COLOR, edgecolor='none', zorder=zo))
+    ax.add_patch(Rectangle((0, 0), ml, FIG_H, facecolor=MARGIN_COLOR, edgecolor='none', zorder=zo))
+    ax.add_patch(Rectangle((FIG_W - mr, 0), mr, FIG_H, facecolor=MARGIN_COLOR, edgecolor='none', zorder=zo))
     return fig, ax
 
 PAD_L = 0.72; PAD_R = 0.60; PAD_T = 0.65; PAD_B = 0.88
@@ -124,7 +140,7 @@ def save(fig, name):
     if not name.endswith(".pdf"):
         name = name + ".pdf"
     fig.savefig(os.path.join(OUTPUT_DIR, name),
-                format='pdf', facecolor=BG)
+                format='pdf', facecolor=MARGIN_COLOR)
     plt.close(fig)
     print(f"saved {name}")
 
@@ -285,7 +301,7 @@ def render():
                     edgecolor='none', zorder=7))
         placed += 1
 
-    add_signature(fig, ax, BG)
+    add_signature(fig, ax, MARGIN_COLOR, margin_piece=True, margin_bottom=FIG_H * 0.08)
     save(fig, "awe_overview.pdf")
 
 if __name__ == '__main__':
