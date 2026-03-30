@@ -2,9 +2,7 @@ import { Resend } from "resend";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
-// Until you verify your domain in Resend, use their test sender.
-// After verification, change to: "Geometry of Feeling <hello@geometryoffeeling.com>"
-const FROM = "Geometry of Feeling <onboarding@resend.dev>";
+const FROM = "Geometry of Feeling <hello@geometryoffeeling.com>";
 
 interface OrderEmailParams {
   to: string;

@@ -8,9 +8,12 @@ import type Stripe from "stripe";
 const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET!;
 
 async function getHighResUrl(pieceId: string): Promise<string | null> {
+  // Piece IDs use hyphens (e.g. "solitude-beacon") but blob files use
+  // underscores (e.g. "prints/solitude_beacon.pdf"). Convert before lookup.
+  const blobKey = pieceId.replace(/-/g, "_");
   try {
-    const { blobs } = await list({ prefix: `prints/${pieceId}`, limit: 1 });
-    if (blobs.length > 0) return blobs[0].downloadUrl;
+    const { blobs } = await list({ prefix: `prints/${blobKey}.pdf`, limit: 1 });
+    if (blobs.length > 0) return blobs[0].url;
   } catch (err) {
     console.error("Failed to find blob for piece:", pieceId, err);
   }

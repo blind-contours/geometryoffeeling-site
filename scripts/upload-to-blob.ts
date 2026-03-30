@@ -45,7 +45,7 @@ async function main() {
 
       const content = readFileSync(filePath);
       const blob = await put(blobPath, content, {
-        access: "private",
+        access: "public",
         addRandomSuffix: false,
         allowOverwrite: true,
       });
@@ -83,7 +83,7 @@ async function main() {
 
       const content = readFileSync(filePath);
       const blob = await put(blobPath, content, {
-        access: "private",
+        access: "public",
         addRandomSuffix: false,
         allowOverwrite: true,
       });

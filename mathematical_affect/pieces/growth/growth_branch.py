@@ -23,13 +23,10 @@ FIG_W = 12
 FIG_H = 8
 BG_COLOR = '#F5F0E6'
 
-# Layout constants (matching series standard)
-PAD_L = 0.72; PAD_R = 0.60; PAD_T = 0.65; PAD_B = 0.88
-PW = FIG_W - PAD_L - PAD_R
-PH = FIG_H - PAD_T - PAD_B
-cx = PAD_L + PW / 2
-XL = PAD_L; XR = PAD_L + PW
-YB_CLIP = 0.0; YT_CLIP = PAD_B + PH
+# Full-bleed — no margins
+cx = FIG_W / 2
+XL = 0.0; XR = FIG_W
+YB_CLIP = 0.0; YT_CLIP = FIG_H
 
 # Palette
 DARK_G = '#2A4A1A'
@@ -116,7 +113,7 @@ def render():
 
     # Collect L-system segments: 13 levels, θ=35°, scale=0.82
     segs = []
-    collect(cx, PAD_B - 0.45, 0, PH * 0.24, 13, 35, 0.82, 0, segs)
+    collect(cx, 0.55, 0, FIG_H * 0.19, 13, 35, 0.82, 0, segs)
     draw_branches(ax, segs, 13, DARK_G, PALE_G)
 
     add_signature(fig, ax, BG_COLOR)
@@ -124,7 +121,7 @@ def render():
 
     os.makedirs(OUTPUT_DIR, exist_ok=True)
     pdf_path = os.path.join(OUTPUT_DIR, "growth_branch.pdf")
-    fig.savefig(pdf_path, format='pdf', bbox_inches='tight', facecolor=BG_COLOR)
+    fig.savefig(pdf_path, format='pdf', facecolor=BG_COLOR)
     plt.close(fig)
     print(f"saved {pdf_path}")
     return pdf_path
