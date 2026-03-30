@@ -30,7 +30,7 @@ from matplotlib.patches import Circle
 import os
 
 DPI=300; FIG_W=12; FIG_H=8
-BG="#1A1420"
+BG="#f3eee7"
 
 # Palette: LGBTQ Pride rainbow — vivid, celebratory, unapologetic
 # Classic 6-stripe pride flag
