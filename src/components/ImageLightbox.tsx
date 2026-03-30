@@ -57,7 +57,7 @@ export default function ImageLightbox({
         >
           <button
             onClick={() => setOpen(false)}
-            className="fixed top-4 right-4 z-50 min-w-[44px] min-h-[44px] flex items-center justify-center text-white/80 text-2xl hover:text-white"
+            className="fixed top-4 right-4 z-50 min-w-[48px] min-h-[48px] flex items-center justify-center bg-black text-white text-4xl rounded-full border border-white/30 hover:bg-black/80"
             aria-label="Close lightbox"
           >
             &times;
