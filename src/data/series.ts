@@ -648,16 +648,16 @@ export const heroSlides: HeroSlide[] = [
 ];
 
 export const featuredSeriesIds = [
-  "peace",
+  "awe",
+  "connection",
+  "grief",
   "pride",
+  "peace",
+  "wonder",
   "desire",
   "cycles",
-  "awe",
-  "nostalgia",
-  "connection",
   "solitude",
-  "grief",
-  "overwhelm",
+  "growth",
 ];
 
 export const featuredPieceIds = [
