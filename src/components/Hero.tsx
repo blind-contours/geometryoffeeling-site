@@ -79,7 +79,7 @@ export default function Hero() {
           </h1>
           <p
             key={current.piece.id}
-            className={`${textClasses} text-caption mt-4 tracking-widest opacity-0 animate-[fadeIn_1s_ease-in_forwards]`}
+            className={`${textClasses} text-sm mt-4 tracking-widest font-medium opacity-0 animate-[fadeIn_1s_ease-in_forwards]`}
           >
             {current.piece.equation}
           </p>
@@ -89,7 +89,7 @@ export default function Hero() {
               current.textColor === "white"
                 ? "border-white/60 text-white/80 hover:bg-white/10"
                 : "border-black/40 text-black/80 hover:bg-black/5"
-            } text-caption uppercase tracking-widest transition-all duration-500`}
+            } text-sm uppercase tracking-widest font-medium transition-all duration-500`}
           >
             Shop Prints
           </Link>
