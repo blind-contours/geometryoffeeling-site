@@ -9,6 +9,9 @@ y_n(t) = h_n · t, h_n ~ Beta(3, 1.5).
 import os
 import numpy as np
 import matplotlib
+import sys as _sys; import os as _os
+_sys.path.insert(0, _os.path.join(_os.path.dirname(_os.path.abspath(__file__)), ".."))
+from signature_utils import add_signature
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import matplotlib.collections as mc
@@ -32,11 +35,9 @@ DARK_G = '#2A4A1A'
 LEAF = '#6A9A4A'
 PALE_G = '#C8D8A8'
 
-
 def hex_to_rgb(h):
     h = h.lstrip('#')
     return tuple(int(h[i:i+2], 16) / 255 for i in (0, 2, 4))
-
 
 def render():
     fig = plt.figure(figsize=(FIG_W, FIG_H), dpi=DPI)
@@ -90,12 +91,7 @@ def render():
                                capstyle='round', zorder=3)
         ax.add_collection(lc)
 
-    # Equation label
-    ax.text(0.75, 0.75,
-            "y_n(t)=h_n\u00b7t,  h_n\u223cBeta(3,1.5)",
-            fontfamily='monospace', fontsize=10,
-            color=(0.12, 0.18, 0.08, 0.31), transform=ax.transData)
-
+    add_signature(fig, ax, BG_COLOR)
     fig.subplots_adjust(left=0, right=1, top=1, bottom=0)
 
     os.makedirs(OUTPUT_DIR, exist_ok=True)
@@ -104,7 +100,6 @@ def render():
     plt.close(fig)
     print(f"saved {pdf_path}")
     return pdf_path
-
 
 if __name__ == '__main__':
     render()

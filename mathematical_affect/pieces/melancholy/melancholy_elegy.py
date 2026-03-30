@@ -21,12 +21,14 @@ Dependencies: matplotlib, numpy, scipy
 
 import numpy as np
 import matplotlib
+import sys as _sys; import os as _os
+_sys.path.insert(0, _os.path.join(_os.path.dirname(_os.path.abspath(__file__)), ".."))
+from signature_utils import add_signature
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import matplotlib.collections as mc
 from scipy.ndimage import gaussian_filter1d
 import os
-
 
 DPI=300; FIG_W=12; FIG_H=8
 BG="#DDD9D2"  # warm parchment
@@ -62,10 +64,6 @@ PAD_L=0.72; PAD_R=0.60; PAD_T=0.65; PAD_B=0.88
 PW=FIG_W-PAD_L-PAD_R; PH=FIG_H-PAD_T-PAD_B
 cx=PAD_L+PW/2; cy=FIG_H/2  # true vertical center; two-pass centering in render()
 
-def label(ax,eq):
-    ax.text(0.75,0.75,eq,fontfamily='monospace',fontsize=10,
-            color=(0.15,0.15,0.20,0.28),transform=ax.transData)
-
 def save(fig, name):
     fig.subplots_adjust(left=0, right=1, top=1, bottom=0)
     os.makedirs(OUTPUT_DIR, exist_ok=True)
@@ -78,7 +76,6 @@ def save(fig, name):
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 OUTPUT_DIR = os.path.join(SCRIPT_DIR, '..', '..', 'output')
-
 
 # =============================================================================
 # 1. ELEGY -- "Last Note Held"
@@ -144,7 +141,6 @@ def _generate_curves(rng, t, convergence, center_y):
         curves.append((ys_v, v_col, v_alpha, lw_start_v, v_lam, 0.72, 40 + voice_i))
 
     return curves
-
 
 def render():
     fig, ax = make_fig()
@@ -214,9 +210,8 @@ def render():
             )
             ax.add_collection(lc)
 
-    label(ax, "y(t)=Ae^(\u2212\u03bbt)\u00b7sin(\u03c9t+\u03c6)")
+    add_signature(fig, ax, BG)
     save(fig, "melancholy_elegy")
-
 
 if __name__ == '__main__':
     render()

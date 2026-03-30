@@ -10,6 +10,9 @@ Damped radiance: I(r,theta) = I_0 * exp(-gamma*r) * cos(n*theta + alpha*r)
 Modulated by line-screen transfer function T(y) = 0.5 + 0.5*sign(sin(2*pi*y/spacing))
 """
 import os
+import sys as _sys; import os as _os
+_sys.path.insert(0, _os.path.join(_os.path.dirname(_os.path.abspath(__file__)), ".."))
+from signature_utils import add_signature
 
 import matplotlib
 matplotlib.use('Agg')
@@ -36,12 +39,10 @@ WARM_CORAL = '#B06068'
 VEIL_COLOR = '#C5C1BA'
 VEIL_DARK = '#BAB6AE'
 
-
 def hex_to_rgba(h, a):
     h = h.lstrip('#')
     r, g, b = (int(h[i:i+2], 16) / 255 for i in (0, 2, 4))
     return (r, g, b, float(np.clip(a, 0, 1)))
-
 
 def render():
     np.random.seed(42)
@@ -166,20 +167,17 @@ def render():
     # ===================================================================
     # Equation label
     # ===================================================================
-    ax.text(0.06, 0.06, "I(r)=I\u2080\u00b7exp(\u2212\u03b3r)\u00b7T(y)",
-            fontfamily='monospace', fontsize=8,
-            color=(0.15, 0.15, 0.20, 0.25), transform=ax.transAxes)
 
     # ===================================================================
     # Save
     # ===================================================================
     os.makedirs(OUTPUT_DIR, exist_ok=True)
     pdf_path = os.path.join(OUTPUT_DIR, "shame_veil.pdf")
+    add_signature(fig, ax, BG_COLOR)
     fig.savefig(pdf_path, facecolor=BG_COLOR, dpi=DPI)
     plt.close(fig)
     print(f"saved {pdf_path}")
     return pdf_path
-
 
 if __name__ == '__main__':
     render()

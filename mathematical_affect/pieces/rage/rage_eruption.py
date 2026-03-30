@@ -5,6 +5,9 @@ Standalone render script
 
 import numpy as np
 import matplotlib
+import sys as _sys; import os as _os
+_sys.path.insert(0, _os.path.join(_os.path.dirname(_os.path.abspath(__file__)), ".."))
+from signature_utils import add_signature
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import matplotlib.collections as mc
@@ -43,9 +46,6 @@ def make_fig():
     ax.set_aspect('equal'); ax.axis('off')
     return fig, ax
 
-def label(ax, eq):
-    ax.text(0.75,0.75,eq,fontfamily='monospace',fontsize=10,
-            color=(0.85,0.80,0.75,EQ_OPACITY),transform=ax.transData)
 def split_segments(xs, ys, mask):
     """Split masked arrays into contiguous segments to avoid straight-line jumps."""
     segments = []
@@ -79,7 +79,6 @@ def save(fig, name):
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 OUTPUT_DIR = os.path.join(SCRIPT_DIR, '..', '..', 'output')
-
 
 def render():
     fig, ax = make_fig()
@@ -116,9 +115,8 @@ def render():
     for r_c, a in [(0.30, 0.06), (0.15, 0.18), (0.06, 0.45), (0.02, 0.80)]:
         ax.add_patch(Circle((cx, cy), radius=r_c,
                     facecolor=rgba(HOT_WHITE, a), edgecolor='none', zorder=8))
-    label(ax, "r(t)=v\u00b7t,  \u03b8=\u03b8\u2080+\u03b5\u00b7sin(\u03c9t)")
+    add_signature(fig, ax, BG)
     save(fig, "rage_eruption.pdf")
-
 
 if __name__ == '__main__':
     render()

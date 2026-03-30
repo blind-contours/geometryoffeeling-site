@@ -5,6 +5,9 @@ Standalone render script
 
 import numpy as np
 import matplotlib
+import sys as _sys; import os as _os
+_sys.path.insert(0, _os.path.join(_os.path.dirname(_os.path.abspath(__file__)), ".."))
+from signature_utils import add_signature
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import matplotlib.collections as mc
@@ -39,10 +42,6 @@ def make_fig():
     ax.set_xlim(0, FIG_W); ax.set_ylim(0, FIG_H)
     ax.set_aspect('equal'); ax.axis('off')
     return fig, ax
-
-def label(ax, eq):
-    ax.text(0.75, 0.75, eq, fontfamily='monospace', fontsize=10,
-            color=(0.55, 0.40, 0.35, 0.40), transform=ax.transData)
 
 def split_segments(xs, ys, mask):
     segments = []; in_seg = False; start = 0
@@ -79,7 +78,6 @@ def save(fig, name):
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 OUTPUT_DIR = os.path.join(SCRIPT_DIR, '..', '..', 'output')
-
 
 def render():
     """The Sealed Chamber — all field lines trapped inside an elliptical boundary.
@@ -191,9 +189,8 @@ def render():
     glow(ax, p1x, p1y, CRIMSON, 0.18)
     glow(ax, p2x, p2y, DARKROSE, 0.14)
 
-    label(ax, "\u2207\u00b7B=0, \u222eB\u00b7dl=\u03bc\u2080I")
+    add_signature(fig, ax, BG)
     save(fig, "desire_magnetism")
-
 
 if __name__ == '__main__':
     render()

@@ -16,13 +16,15 @@ Dependencies: matplotlib, numpy, scipy
 
 import numpy as np
 import matplotlib
+import sys as _sys; import os as _os
+_sys.path.insert(0, _os.path.join(_os.path.dirname(_os.path.abspath(__file__)), ".."))
+from signature_utils import add_signature
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import matplotlib.collections as mc
 from scipy.ndimage import gaussian_filter1d
 from matplotlib.patches import Circle
 import os
-
 
 DPI = 300; FIG_W = 12; FIG_H = 8
 BG = "#2E425E"          # deep navy from wonder_recursion front ridgelines
@@ -35,16 +37,13 @@ STAR_WHITE = "#E8E4E0"; DIM_BLUE = "#384888"; AURORA = "#38A888"
 DEEP_VIOLET = "#3828A0"; WARM_GOLD = "#D8B840"; ICE = "#88A8D0"
 BRIGHT_GOLD = "#F0D060"; BRIGHT_VIOLET = "#A090E0"
 
-
 def hex_to_rgb(h):
     h = h.lstrip('#')
     return tuple(int(h[i:i+2], 16) / 255 for i in (0, 2, 4))
 
-
 def rgba(h, a):
     c = hex_to_rgb(h)
     return (c[0], c[1], c[2], float(np.clip(a, 0, 1)))
-
 
 def make_fig():
     fig = plt.figure(figsize=(FIG_W, FIG_H), dpi=DPI)
@@ -54,15 +53,10 @@ def make_fig():
     ax.set_aspect('equal'); ax.axis('off')
     return fig, ax
 
-
 PAD_L = 0.72; PAD_R = 0.60; PAD_T = 0.65; PAD_B = 0.88
 PW = FIG_W - PAD_L - PAD_R; PH = FIG_H - PAD_T - PAD_B
 cx = PAD_L + PW / 2; cy = PAD_B + PH / 2
 
-
-def label(ax, eq):
-    ax.text(0.75,0.75,eq,fontfamily='monospace',fontsize=10,
-            color=(0.85,0.80,0.75,0.55),transform=ax.transData)
 def split_segments(xs, ys, mask):
     segments = []
     in_seg = False
@@ -78,7 +72,6 @@ def split_segments(xs, ys, mask):
         segments.append((xs[start:], ys[start:]))
     return segments
 
-
 def draw_lc(ax, xs, ys, col, lw, alpha, zo=4, smooth=0):
     if smooth > 0:
         ys = gaussian_filter1d(ys, smooth)
@@ -87,7 +80,6 @@ def draw_lc(ax, xs, ys, col, lw, alpha, zo=4, smooth=0):
     lc = mc.LineCollection(segs, linewidths=lw, colors=[rgba(col, alpha)],
                            capstyle='round', joinstyle='round', zorder=zo)
     ax.add_collection(lc)
-
 
 def save(fig, name):
     fig.subplots_adjust(left=0, right=1, top=1, bottom=0)
@@ -102,7 +94,6 @@ def save(fig, name):
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 OUTPUT_DIR = os.path.join(SCRIPT_DIR, '..', '..', 'output')
-
 
 # =============================================================================
 # 3. STRANGE ATTRACTOR -- Rossler attractor projected to 2D
@@ -172,17 +163,12 @@ def render():
                                capstyle='round', zorder=3)
     ax.add_collection(lc_obj)
 
-    ax.text(ml + 0.02, mb + 0.02,
-            "dx=\u2212y\u2212z,  dy=x+ay,  dz=b+z(x\u2212c)",
-            fontfamily='monospace', fontsize=8,
-            color=(0.85, 0.80, 0.75, 0.55), transform=ax.transData)
-
     os.makedirs(OUTPUT_DIR, exist_ok=True)
     pdf_path = os.path.join(OUTPUT_DIR, "wonder_strange_attractor.pdf")
+    add_signature(fig, ax, MARGIN_COLOR, margin_piece=True, margin_bottom=FIG_H * 0.08)
     fig.savefig(pdf_path, facecolor=MARGIN_COLOR, dpi=DPI)
     plt.close(fig)
     print(f"saved {pdf_path}")
-
 
 if __name__ == '__main__':
     render()

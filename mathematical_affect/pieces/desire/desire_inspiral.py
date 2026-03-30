@@ -9,6 +9,9 @@ person you can't have — everything moves toward it, nothing arrives.
 
 import numpy as np
 import matplotlib
+import sys as _sys; import os as _os
+_sys.path.insert(0, _os.path.join(_os.path.dirname(_os.path.abspath(__file__)), ".."))
+from signature_utils import add_signature
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import matplotlib.collections as mc
@@ -44,10 +47,6 @@ def make_fig():
     ax.set_aspect('equal'); ax.axis('off')
     return fig, ax
 
-def label(ax, eq):
-    ax.text(0.75, 0.75, eq, fontfamily='monospace', fontsize=10,
-            color=(0.55, 0.40, 0.35, 0.40), transform=ax.transData)
-
 def draw_lc_gradient_xy(ax, xs, ys, col, lw_s, lw_e, a_s, a_e, zo=4, smooth=0):
     if len(xs) < 2: return
     if smooth > 0:
@@ -74,7 +73,6 @@ def save(fig, name):
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 OUTPUT_DIR = os.path.join(SCRIPT_DIR, '..', '..', 'output')
-
 
 def render():
     fig, ax = make_fig()
@@ -183,9 +181,8 @@ def render():
                            a_s=0.04, a_e=0.15,
                            zo=3, smooth=1)
 
-    label(ax, "r(\u03b8)=r\u2080\u2212b\u03b8, r\u2192\u0338 0")
+    add_signature(fig, ax, BG)
     save(fig, "desire_inspiral")
-
 
 if __name__ == '__main__':
     render()

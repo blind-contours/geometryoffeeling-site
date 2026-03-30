@@ -5,6 +5,9 @@ Standalone render script
 
 import numpy as np
 import matplotlib
+import sys as _sys; import os as _os
+_sys.path.insert(0, _os.path.join(_os.path.dirname(_os.path.abspath(__file__)), ".."))
+from signature_utils import add_signature
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import matplotlib.collections as mc
@@ -40,9 +43,6 @@ PAD_L=0.72; PAD_R=0.60; PAD_T=0.65; PAD_B=0.88
 PW=FIG_W-PAD_L-PAD_R; PH=FIG_H-PAD_T-PAD_B
 cx=PAD_L+PW/2; cy=PAD_B+PH/2
 
-def label(ax,eq):
-    ax.text(0.75,0.75,eq,fontfamily='monospace',fontsize=10,
-            color=(0.15,0.15,0.20,0.25),transform=ax.transData)
 def draw_lc(ax,xs,ys,col,lw,alpha,zo=4,smooth=0):
     if smooth>0:
         ys=gaussian_filter1d(ys,smooth)
@@ -60,7 +60,6 @@ def save(fig,name):
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 OUTPUT_DIR = os.path.join(SCRIPT_DIR, '..', '..', 'output')
-
 
 def render():
     fig,ax=make_fig()
@@ -86,9 +85,8 @@ def render():
         for r,a in [(0.12,0.08),(0.06,0.18),(0.025,0.40)]:
             ax.add_patch(Circle((px,py),radius=r,
                         facecolor=rgba(HONEY,a),edgecolor='none',zorder=6))
-    label(ax,"B(r)=\u03bc\u2080/(4\u03c0)\u00b7(3(m\u00b7r\u0302)r\u0302\u2212m)/r\u00b3")
+    add_signature(fig, ax, BG)
     save(fig,"longing_magnetic.pdf")
-
 
 if __name__ == '__main__':
     render()

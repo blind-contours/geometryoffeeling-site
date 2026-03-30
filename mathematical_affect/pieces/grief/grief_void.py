@@ -5,6 +5,9 @@ Clean diamond shape with smooth arcs, broken equatorial lines.
 """
 import colorsys
 import os
+import sys as _sys; import os as _os
+_sys.path.insert(0, _os.path.join(_os.path.dirname(_os.path.abspath(__file__)), ".."))
+from signature_utils import add_signature
 
 import matplotlib
 matplotlib.use('Agg')
@@ -18,7 +21,6 @@ DPI = 300
 FIG_W = 12
 FIG_H = 8
 BG_COLOR = '#DDD9D2'
-
 
 def make_palette(n_lines=60, sat_boost=1.8):
     anchors_t = np.array([0.00, 0.06, 0.14, 0.22, 0.30, 0.38, 0.46, 0.50,
@@ -48,7 +50,6 @@ def make_palette(n_lines=60, sat_boost=1.8):
             boosted.append(colorsys.hsv_to_rgb(h, s, v))
         colors = np.clip(np.array(boosted), 0.0, 1.0)
     return colors
-
 
 def render():
     sx = 0.12
@@ -107,18 +108,13 @@ def render():
         ax.plot(x, y, color=line_colors[i], lw=lw, alpha=1.0,
                 solid_capstyle="round")
 
-    # Equation label
-    ax.text(0.06, 0.06, "(x\u2212cx)\u00b2/a\u00b2+(y\u2212cy)\u00b2/b\u00b2=1",
-            fontfamily='monospace', fontsize=8,
-            color=(0.15, 0.15, 0.20, 0.25), transform=ax.transAxes)
-
     os.makedirs(OUTPUT_DIR, exist_ok=True)
     pdf_path = os.path.join(OUTPUT_DIR, "grief_void.pdf")
+    add_signature(fig, ax, BG_COLOR)
     fig.savefig(pdf_path, facecolor=BG_COLOR, dpi=DPI)
     plt.close(fig)
     print(f"saved {pdf_path}")
     return pdf_path
-
 
 if __name__ == '__main__':
     render()

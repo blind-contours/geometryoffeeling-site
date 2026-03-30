@@ -5,6 +5,9 @@ Standalone render script
 
 import numpy as np
 import matplotlib
+import sys as _sys; import os as _os
+_sys.path.insert(0, _os.path.join(_os.path.dirname(_os.path.abspath(__file__)), ".."))
+from signature_utils import add_signature
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import matplotlib.collections as mc
@@ -56,9 +59,6 @@ def make_fig():
     ax.axis('off')
     return fig, ax
 
-def label(ax, eq):
-    ax.text(0.75,0.75,eq,fontfamily='monospace',fontsize=10,
-            color=(0.15,0.15,0.20,0.25),transform=ax.transData)
 def split_segments(xs, ys, mask):
     """Split arrays into contiguous segments where mask is True."""
     segments = []
@@ -96,7 +96,6 @@ def save(fig, name):
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 OUTPUT_DIR = os.path.join(SCRIPT_DIR, '..', '..', 'output')
-
 
 def render():
     fig, ax = make_fig()
@@ -244,12 +243,10 @@ def render():
         tri_x = [acx, acx - arrow_size * 0.5, acx + arrow_size * 0.5]
         ax.fill(tri_x, tri_y, color=rgba(CRIMSON, 0.40), zorder=n_slices + 6)
 
-    label(ax, "V(x)=x\u2074/4 + ax\u00b2/2 + bx")
+    add_signature(fig, ax, BG)
     save(fig, "fractured_catastrophe_fold.pdf")
 
-
 # ── run ───────────────────────────────────────────────────────────────────────
-
 
 if __name__ == '__main__':
     render()

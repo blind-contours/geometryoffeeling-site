@@ -8,6 +8,9 @@ thinner lines -- overextending to match what it covets.
 Transfer filaments drip downward like gravitational drainage.
 """
 import os
+import sys as _sys; import os as _os
+_sys.path.insert(0, _os.path.join(_os.path.dirname(_os.path.abspath(__file__)), ".."))
+from signature_utils import add_signature
 
 import matplotlib
 matplotlib.use('Agg')
@@ -28,12 +31,10 @@ ENVIED_COLORS = ['#8A9A30', '#A0AA40', '#70882A', '#96A438', '#7E9228']
 # Envier body: grey-olive, desaturated
 ENVIER_COLORS = ['#7A7A68', '#8A8A78', '#6A6A58', '#757568', '#808070']
 
-
 def hex_to_rgba(h, a):
     h = h.lstrip('#')
     r, g, b = (int(h[i:i+2], 16) / 255.0 for i in (0, 2, 4))
     return (r, g, b, float(np.clip(a, 0, 1)))
-
 
 def render():
     np.random.seed(42)
@@ -168,19 +169,14 @@ def render():
                     color=(rc, gc, bc, a_fil), lw=lw_fil,
                     solid_capstyle="round", zorder=3)
 
-    # --- Equation label ---
-    ax.text(0.06, 0.06, "dE/dt=\u2212\u03b3\u00b7E+\u03ba\u00b7(E*\u2212E)",
-            fontfamily='monospace', fontsize=8,
-            color=(0.15, 0.15, 0.20, 0.25), transform=ax.transAxes)
-
     # --- Save ---
     os.makedirs(OUTPUT_DIR, exist_ok=True)
     pdf_path = os.path.join(OUTPUT_DIR, "envy_shadow.pdf")
+    add_signature(fig, ax, BG_COLOR)
     fig.savefig(pdf_path, facecolor=BG_COLOR, dpi=DPI)
     plt.close(fig)
     print(f"saved {pdf_path}")
     return pdf_path
-
 
 if __name__ == '__main__':
     render()

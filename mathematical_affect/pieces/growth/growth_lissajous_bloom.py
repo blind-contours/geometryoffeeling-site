@@ -5,6 +5,9 @@ Standalone render script
 
 import numpy as np
 import matplotlib
+import sys as _sys; import os as _os
+_sys.path.insert(0, _os.path.join(_os.path.dirname(_os.path.abspath(__file__)), ".."))
+from signature_utils import add_signature
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import matplotlib.collections as mc
@@ -37,9 +40,6 @@ PAD_L=0.72; PAD_R=0.60; PAD_T=0.65; PAD_B=0.88
 PW=FIG_W-PAD_L-PAD_R; PH=FIG_H-PAD_T-PAD_B
 cx=PAD_L+PW/2; cy=PAD_B+PH/2
 
-def label(ax,eq):
-    ax.text(0.75,0.75,eq,fontfamily='monospace',fontsize=10,
-            color=(0.12,0.18,0.08,0.31),transform=ax.transData)
 def split_segments(xs, ys):
     """Convert x,y arrays into line segments for LineCollection."""
     pts = np.array([xs, ys]).T.reshape(-1, 1, 2)
@@ -61,7 +61,6 @@ def save(fig, name):
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 OUTPUT_DIR = os.path.join(SCRIPT_DIR, '..', '..', 'output')
-
 
 def render():
     fig, ax = make_fig()
@@ -143,11 +142,8 @@ def render():
         ccy = cy + r * np.sin(center_theta)
         draw_lc(ax, ccx, ccy, GOLD, lw=0.3, alpha=0.08, zo=2)
 
-    label(ax,
-          "x = A\u00b7sin(a\u00b7t+\u03b4),  y = B\u00b7sin(b\u00b7t),  "
-          "(a:b) \u2208 {1:2, 2:3, 3:4, 3:5, ...}")
+    add_signature(fig, ax, BG)
     save(fig, "growth_lissajous_bloom.pdf")
-
 
 if __name__ == '__main__':
     render()

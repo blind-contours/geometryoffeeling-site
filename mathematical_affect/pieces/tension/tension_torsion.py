@@ -5,6 +5,9 @@ Standalone render script
 
 import numpy as np
 import matplotlib
+import sys as _sys; import os as _os
+_sys.path.insert(0, _os.path.join(_os.path.dirname(_os.path.abspath(__file__)), ".."))
+from signature_utils import add_signature
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import matplotlib.collections as mc
@@ -48,9 +51,6 @@ def make_fig():
     ax.axis('off')
     return fig, ax
 
-def label(ax, eq):
-    ax.text(0.75,0.75,eq,fontfamily='monospace',fontsize=10,
-            color=(1,1,1,0.20),transform=ax.transData)
 def split_segments(xs, ys, mask):
     """Split arrays into contiguous segments where mask is True."""
     segments = []
@@ -85,7 +85,6 @@ def save(fig, name):
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 OUTPUT_DIR = os.path.join(SCRIPT_DIR, '..', '..', 'output')
-
 
 def render():
     fig, ax = make_fig()
@@ -253,9 +252,8 @@ def render():
                         arrowprops=dict(arrowstyle='->', color=rgba(RED, 0.45),
                                         lw=1.0), zorder=23)
 
-    label(ax, "\u03c6(r) = \u03c4\u00b7r/(GJ),  \u03c4_max = T\u00b7r/J")
+    add_signature(fig, ax, BG)
     save(fig, "tension_torsion.pdf")
-
 
 if __name__ == '__main__':
     render()

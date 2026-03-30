@@ -17,12 +17,14 @@ Palette: gold, amber, warm white
 
 import numpy as np
 import matplotlib
+import sys as _sys; import os as _os
+_sys.path.insert(0, _os.path.join(_os.path.dirname(_os.path.abspath(__file__)), ".."))
+from signature_utils import add_signature
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import matplotlib.collections as mc
 from scipy.ndimage import gaussian_filter1d
 import os
-
 
 DPI = 300; FIG_W = 12; FIG_H = 8
 BG = "#0A0A12"
@@ -74,10 +76,6 @@ PAD_L = 0.72; PAD_R = 0.60; PAD_T = 0.65; PAD_B = 0.88
 PW = FIG_W - PAD_L - PAD_R; PH = FIG_H - PAD_T - PAD_B
 cx = PAD_L + PW/2; cy = PAD_B + PH/2
 
-def label(ax, eq, note=None):
-    ax.text(0.75,0.75,eq,fontfamily='monospace',fontsize=10,
-            color=(0.85,0.80,0.75,0.55),transform=ax.transData)
-
 def draw_lc(ax, xs, ys, col, lw, alpha, zo=4, smooth=0):
     if len(xs) < 2: return
     if smooth > 0:
@@ -114,7 +112,6 @@ def save(fig, name):
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 OUTPUT_DIR = os.path.join(SCRIPT_DIR, '..', '..', 'output')
 
-
 def trace_field_line(x, y, poles, step=0.012, max_steps=2000, direction=1):
     """Trace a field line through monopole field.
     poles: list of (px, py, charge) where charge>0 is source (N), <0 is sink (S).
@@ -142,7 +139,6 @@ def trace_field_line(x, y, poles, step=0.012, max_steps=2000, direction=1):
             if charge < 0 and np.sqrt((x - px)**2 + (y - py)**2) < 0.15:
                 return np.array(xs_f), np.array(ys_f)
     return np.array(xs_f), np.array(ys_f)
-
 
 def render():
     fig, ax = make_fig()
@@ -309,9 +305,8 @@ def render():
     ax.add_patch(Circle((s_x, s_y), radius=0.015,
                  facecolor=rgba(WARM_WHITE, 0.65), edgecolor='none', zorder=9))
 
-    label(ax, "B = B\u2081 + B\u2082, \u2207\u00d7B = \u03bcJ")
+    add_signature(fig, ax, MARGIN_COLOR, margin_piece=True, margin_bottom=FIG_H * 0.08)
     save(fig, "connection_magnetic.pdf")
-
 
 if __name__ == '__main__':
     render()

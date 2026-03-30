@@ -9,6 +9,9 @@ gold, and violet.
 import os
 import numpy as np
 import matplotlib
+import sys as _sys; import os as _os
+_sys.path.insert(0, _os.path.join(_os.path.dirname(_os.path.abspath(__file__)), ".."))
+from signature_utils import add_signature
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 
@@ -20,13 +23,11 @@ FIG_W = 12
 FIG_H = 8
 BG_COLOR = '#f3eee7'
 
-
 def smooth_palette(cols, n):
     rgba = np.array([plt.matplotlib.colors.to_rgba(c) for c in cols])
     xs = np.linspace(0, 1, len(rgba))
     t = np.linspace(0, 1, n)
     return np.column_stack([np.interp(t, xs, rgba[:, k]) for k in range(4)])
-
 
 def render():
     fig, ax = plt.subplots(figsize=(FIG_W, FIG_H), dpi=DPI, facecolor=BG_COLOR)
@@ -50,18 +51,13 @@ def render():
         y = 0.18 + h * (1 - np.abs(s) ** p)
         ax.plot(x, y, color=cols[i], lw=1.1 if i < 6 else 1.0, alpha=0.95)
 
-    # Equation label
-    ax.text(0.06, 0.06, "y=h(1\u2212|s|^p)",
-            fontfamily='monospace', fontsize=8,
-            color=(0.15, 0.15, 0.20, 0.25), transform=ax.transAxes)
-
     os.makedirs(OUTPUT_DIR, exist_ok=True)
     pdf_path = os.path.join(OUTPUT_DIR, "pride_shelter.pdf")
+    add_signature(fig, ax, BG_COLOR)
     fig.savefig(pdf_path, facecolor=BG_COLOR, dpi=DPI)
     plt.close(fig)
     print(f"saved {pdf_path}")
     return pdf_path
-
 
 if __name__ == '__main__':
     render()

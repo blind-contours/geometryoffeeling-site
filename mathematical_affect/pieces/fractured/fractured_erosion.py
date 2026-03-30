@@ -8,6 +8,9 @@ The error function solution: z(x,t) = z₀ · erfc(x / 2√(Dt))
 
 import numpy as np
 import matplotlib
+import sys as _sys; import os as _os
+_sys.path.insert(0, _os.path.join(_os.path.dirname(_os.path.abspath(__file__)), ".."))
+from signature_utils import add_signature
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import matplotlib.collections as mc
@@ -29,16 +32,13 @@ SIENNA = "#A85A2A"; RUST = "#C84A20"
 PAD_L = 0.78; PAD_R = 0.65; PAD_T = 0.72; PAD_B = 1.05
 PW = FIG_W - PAD_L - PAD_R; PH = FIG_H - PAD_T - PAD_B
 
-
 def hex_to_rgb(h):
     h = h.lstrip('#')
     return tuple(int(h[i:i+2], 16) / 255 for i in (0, 2, 4))
 
-
 def rgba(h, a):
     c = hex_to_rgb(h)
     return (c[0], c[1], c[2], float(np.clip(a, 0, 1)))
-
 
 def draw_lc(ax, xs, ys, col, lw, alpha, zo=4):
     if len(xs) < 2:
@@ -48,7 +48,6 @@ def draw_lc(ax, xs, ys, col, lw, alpha, zo=4):
     lc = mc.LineCollection(segs, linewidths=lw, colors=[rgba(col, alpha)],
                            capstyle='round', joinstyle='round', zorder=zo)
     ax.add_collection(lc)
-
 
 def render():
     np.random.seed(42)
@@ -194,12 +193,8 @@ def render():
         wy = wy[:k+1]
         draw_lc(ax, wx, wy, TEAL, 0.4, 0.04, zo=3)
 
-    # Equation label
-    ax.text(0.75, 0.75, "\u2202z/\u2202t = D\u00b7\u2207\u00b2z",
-            fontfamily='monospace', fontsize=10,
-            color=(0.15, 0.15, 0.20, 0.25), transform=ax.transData)
-
     # Save
+    add_signature(fig, ax, BG)
     fig.subplots_adjust(left=0, right=1, top=1, bottom=0)
     os.makedirs(OUTPUT_DIR, exist_ok=True)
     pdf_path = os.path.join(OUTPUT_DIR, "fractured_erosion.pdf")
@@ -207,7 +202,6 @@ def render():
     plt.close(fig)
     print(f"saved {pdf_path}")
     return pdf_path
-
 
 if __name__ == '__main__':
     render()

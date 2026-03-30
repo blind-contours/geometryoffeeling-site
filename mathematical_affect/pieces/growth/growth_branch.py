@@ -5,6 +5,9 @@ Symmetric fractal canopy — L-system A→F[−θA][+θA],
 from a single recursive rule. θ=35°, scale ratio 0.82.
 """
 
+import sys as _sys; import os as _os
+_sys.path.insert(0, _os.path.join(_os.path.dirname(_os.path.abspath(__file__)), ".."))
+from signature_utils import add_signature
 import os
 import numpy as np
 import matplotlib
@@ -32,16 +35,13 @@ YB_CLIP = 0.0; YT_CLIP = PAD_B + PH
 DARK_G = '#2A4A1A'
 PALE_G = '#C8D8A8'
 
-
 def hex_to_rgb(h):
     h = h.lstrip('#')
     return tuple(int(h[i:i+2], 16) / 255 for i in (0, 2, 4))
 
-
 def rgba(h, a):
     c = hex_to_rgb(h)
     return (c[0], c[1], c[2], float(np.clip(a, 0, 1)))
-
 
 def clip_seg(x1, y1, x2, y2):
     """Cohen–Sutherland line clipping to plot area."""
@@ -71,7 +71,6 @@ def clip_seg(x1, y1, x2, y2):
             x2, y2, c2 = x, y, code(x, y)
     return None
 
-
 def collect(x, y, angle, length, depth, spread, scale, sb, segs):
     """Recursive L-system: A → F[−θA][+θA]"""
     if depth == 0 or length < 0.004:
@@ -89,7 +88,6 @@ def collect(x, y, angle, length, depth, spread, scale, sb, segs):
     collect(x2, y2, angle + spread + w2, length * scale,
             depth - 1, spread, scale, sb * 2 + 2, segs)
 
-
 def draw_branches(ax, segs, max_depth, col_dark, col_light):
     """Render branches with depth-based color and thickness."""
     cd = hex_to_rgb(col_dark)
@@ -106,7 +104,6 @@ def draw_branches(ax, segs, max_depth, col_dark, col_light):
                 solid_capstyle='round',
                 zorder=max(1, int(depth)))
 
-
 def render():
     fig = plt.figure(figsize=(FIG_W, FIG_H), dpi=DPI)
     ax = fig.add_subplot(111)
@@ -122,12 +119,7 @@ def render():
     collect(cx, PAD_B - 0.45, 0, PH * 0.24, 13, 35, 0.82, 0, segs)
     draw_branches(ax, segs, 13, DARK_G, PALE_G)
 
-    # Equation label
-    ax.text(0.75, 0.75,
-            "A\u2192F[\u2212\u03b8 A][+\u03b8 A],  13 levels,  \u03b8=35\u00b0,  r=0.82",
-            fontfamily='monospace', fontsize=10,
-            color=(0.12, 0.18, 0.08, 0.31), transform=ax.transData)
-
+    add_signature(fig, ax, BG_COLOR)
     fig.subplots_adjust(left=0, right=1, top=1, bottom=0)
 
     os.makedirs(OUTPUT_DIR, exist_ok=True)
@@ -136,7 +128,6 @@ def render():
     plt.close(fig)
     print(f"saved {pdf_path}")
     return pdf_path
-
 
 if __name__ == '__main__':
     render()

@@ -5,6 +5,9 @@ Standalone render script
 
 import numpy as np
 import matplotlib
+import sys as _sys; import os as _os
+_sys.path.insert(0, _os.path.join(_os.path.dirname(_os.path.abspath(__file__)), ".."))
+from signature_utils import add_signature
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import matplotlib.collections as mc
@@ -39,10 +42,6 @@ def make_fig():
     ax.set_aspect('equal'); ax.axis('off')
     return fig, ax
 
-def label(ax, eq):
-    ax.text(0.75, 0.75, eq, fontfamily='monospace', fontsize=10,
-            color=(0.55, 0.40, 0.35, 0.40), transform=ax.transData)
-
 def draw_lc(ax, xs, ys, col, lw, alpha, zo=4, smooth=0):
     if smooth > 0: ys = gaussian_filter1d(ys, smooth)
     pts = np.array([xs, ys]).T.reshape(-1, 1, 2)
@@ -63,7 +62,6 @@ def save(fig, name):
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 OUTPUT_DIR = os.path.join(SCRIPT_DIR, '..', '..', 'output')
-
 
 def render():
     fig, ax = make_fig()
@@ -147,9 +145,8 @@ def render():
                 ax.plot([xs_w[j], xs_w[j]], [ys_bot[j], ys_top[j]],
                         color=rgba(DARKROSE, 0.10), lw=0.3, zorder=2)
 
-    label(ax, "f(t)=A\u00b7exp(\u2212(t mod T)/\u03c3)")
+    add_signature(fig, ax, BG)
     save(fig, "desire_pulse")
-
 
 if __name__ == '__main__':
     render()

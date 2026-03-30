@@ -4,6 +4,9 @@ Recursive midpoint displacement rendered as landscape ridgelines
 receding into atmospheric depth.
 """
 import os
+import sys as _sys; import os as _os
+_sys.path.insert(0, _os.path.join(_os.path.dirname(_os.path.abspath(__file__)), ".."))
+from signature_utils import add_signature
 
 import matplotlib
 matplotlib.use('Agg')
@@ -17,7 +20,6 @@ DPI = 300
 FIG_W = 12
 FIG_H = 8
 BG_COLOR = '#DDD9D2'
-
 
 def midpoint_displacement(x0, y0, x1, y1, depth, roughness, H, rng):
     """Recursive midpoint displacement fractal.
@@ -54,7 +56,6 @@ def midpoint_displacement(x0, y0, x1, y1, depth, roughness, H, rng):
     xs = np.concatenate([xs_left, xs_right[1:]])
     ys = np.concatenate([ys_left, ys_right[1:]])
     return xs, ys
-
 
 def render():
     rng = np.random.default_rng(42)
@@ -142,21 +143,14 @@ def render():
         ax.plot(xs, ys, color=line_color, lw=lw, solid_capstyle="round",
                 zorder=12 + i)
 
-    # ---- equation label ----
-    ax.text(0.06, 0.06,
-            "H(x)=\u03A3\u03B4\u1D62\u00B72^(\u2212iH), H\u2208(0,1)",
-            fontfamily='monospace', fontsize=8,
-            color=(0.15, 0.15, 0.20, 0.25),
-            transform=ax.transAxes)
-
     # ---- save ----
     os.makedirs(OUTPUT_DIR, exist_ok=True)
     pdf_path = os.path.join(OUTPUT_DIR, "wonder_recursion.pdf")
+    add_signature(fig, ax, BG_COLOR)
     fig.savefig(pdf_path, facecolor=BG_COLOR, dpi=DPI)
     plt.close(fig)
     print(f"saved {pdf_path}")
     return pdf_path
-
 
 if __name__ == '__main__':
     render()

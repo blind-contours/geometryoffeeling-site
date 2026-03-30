@@ -5,6 +5,9 @@ Standalone render script
 
 import numpy as np
 import matplotlib
+import sys as _sys; import os as _os
+_sys.path.insert(0, _os.path.join(_os.path.dirname(_os.path.abspath(__file__)), ".."))
+from signature_utils import add_signature
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import matplotlib.collections as mc
@@ -56,9 +59,6 @@ def make_fig():
     ax.axis('off')
     return fig, ax
 
-def label(ax, eq):
-    ax.text(0.75,0.75,eq,fontfamily='monospace',fontsize=10,
-            color=(0.15,0.15,0.20,0.25),transform=ax.transData)
 def split_segments(xs, ys, mask):
     """Split arrays into contiguous segments where mask is True."""
     segments = []
@@ -96,7 +96,6 @@ def save(fig, name):
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 OUTPUT_DIR = os.path.join(SCRIPT_DIR, '..', '..', 'output')
-
 
 def render():
     fig, ax = make_fig()
@@ -202,9 +201,8 @@ def render():
         ax.add_patch(Circle((imp_x, imp_y), radius=r_,
                     facecolor=rgba(CRIMSON, a_), edgecolor='none', zorder=7))
 
-    label(ax, "\u03c3(r) ~ K_IC / \u221a(2\u03c0r)")
+    add_signature(fig, ax, BG)
     save(fig, "fractured_glass_fracture.pdf")
-
 
 if __name__ == '__main__':
     render()

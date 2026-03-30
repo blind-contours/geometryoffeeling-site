@@ -16,12 +16,14 @@ Dependencies: matplotlib, numpy, scipy
 
 import numpy as np
 import matplotlib
+import sys as _sys; import os as _os
+_sys.path.insert(0, _os.path.join(_os.path.dirname(_os.path.abspath(__file__)), ".."))
+from signature_utils import add_signature
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import matplotlib.collections as mc
 from scipy.ndimage import gaussian_filter1d
 import os
-
 
 DPI=300; FIG_W=12; FIG_H=8
 BG="#F2F0EC"  # very light — trust is an open space
@@ -52,9 +54,6 @@ PAD_L=0.72; PAD_R=0.60; PAD_T=0.65; PAD_B=0.88
 PW=FIG_W-PAD_L-PAD_R; PH=FIG_H-PAD_T-PAD_B
 cx=PAD_L+PW/2; cy=PAD_B+PH/2
 
-def label(ax,eq):
-    ax.text(0.75,0.75,eq,fontfamily='monospace',fontsize=10,
-            color=(0.20,0.25,0.20,0.22),transform=ax.transData)
 def split_segments(xs, ys, mask):
     """Split masked arrays into contiguous segments to avoid straight-line jumps."""
     segments = []
@@ -95,7 +94,6 @@ def save(fig, name):
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 OUTPUT_DIR = os.path.join(SCRIPT_DIR, '..', '..', 'output')
 
-
 # =============================================================================
 # 5. BREATH TOGETHER — two sine waves with slightly different periods,
 #    gradually synchronizing
@@ -129,9 +127,8 @@ def render():
                         [min(y1[j],y2[j]),min(y1[j+1],y2[j+1]),
                          max(y1[j+1],y2[j+1]),max(y1[j],y2[j])],
                         color=rgba(LINEN,0.10),linewidth=0,zorder=2)
-    label(ax,"\u03c9\u2082(t)\u2192\u03c9\u2081")
+    add_signature(fig, ax, BG)
     save(fig,"trust_breath_together.pdf")
-
 
 if __name__ == '__main__':
     render()

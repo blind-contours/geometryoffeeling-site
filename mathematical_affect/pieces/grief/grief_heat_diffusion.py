@@ -12,13 +12,15 @@ Dependencies: matplotlib, numpy, scipy
 
 import numpy as np
 import matplotlib
+import sys as _sys; import os as _os
+_sys.path.insert(0, _os.path.join(_os.path.dirname(_os.path.abspath(__file__)), ".."))
+from signature_utils import add_signature
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import matplotlib.collections as mc
 from scipy.ndimage import gaussian_filter1d
 from matplotlib.patches import Circle, Ellipse
 import os, sys
-
 
 DPI=300; FIG_W=12; FIG_H=8
 BG="#DDD9D2"
@@ -51,9 +53,6 @@ PAD_L=0.72; PAD_R=0.60; PAD_T=0.65; PAD_B=0.88
 PW=FIG_W-PAD_L-PAD_R; PH=FIG_H-PAD_T-PAD_B
 cx=PAD_L+PW/2; cy=PAD_B+PH/2
 
-def label(ax,eq):
-    ax.text(0.75,0.75,eq,fontfamily='monospace',fontsize=10,
-            color=(0.15,0.15,0.20,0.25),transform=ax.transData)
 def split_segments(xs, ys, mask):
     segments = []
     in_seg = False; start = 0
@@ -104,7 +103,6 @@ def save(fig, name):
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 OUTPUT_DIR = os.path.join(SCRIPT_DIR, '..', '..', 'output')
 
-
 # ═══════════════════════════════════════════════════════════════
 # 4. HEAT DIFFUSION (improved — stronger initial pulse)
 # ═══════════════════════════════════════════════════════════════
@@ -149,9 +147,8 @@ def render():
         ax.add_patch(Circle((cx,PAD_B+PH*0.05+PH*0.42),radius=r,
                     facecolor=rgba(NAVY,a),edgecolor='none',zorder=1))
 
-    label(ax,"\u2202u/\u2202t=\u03b1\u00b7\u2202\u00b2u/\u2202x\u00b2")
+    add_signature(fig, ax, BG)
     save(fig,"grief_heat_diffusion")
-
 
 if __name__ == '__main__':
     render()

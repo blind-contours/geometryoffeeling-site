@@ -5,6 +5,9 @@ Standalone render script
 
 import numpy as np
 import matplotlib
+import sys as _sys; import os as _os
+_sys.path.insert(0, _os.path.join(_os.path.dirname(_os.path.abspath(__file__)), ".."))
+from signature_utils import add_signature
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import matplotlib.collections as mc
@@ -48,9 +51,6 @@ def make_fig():
     ax.axis('off')
     return fig, ax
 
-def label(ax, eq):
-    ax.text(0.75,0.75,eq,fontfamily='monospace',fontsize=10,
-            color=(1,1,1,0.20),transform=ax.transData)
 def split_segments(xs, ys, mask):
     """Split arrays into contiguous segments where mask is True."""
     segments = []
@@ -85,7 +85,6 @@ def save(fig, name):
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 OUTPUT_DIR = os.path.join(SCRIPT_DIR, '..', '..', 'output')
-
 
 def render():
     fig, ax = make_fig()
@@ -232,9 +231,8 @@ def render():
     ax.plot([cx, cx], [Y_MIN + 0.3, Y_MAX - 0.3],
             color=rgba(RED, 0.18), linewidth=0.6, linestyle='-', zorder=2)
 
-    label(ax, "dx/dt = \u2212(y+z),  dy/dt = x+ay,  dz/dt = b+z(x\u2212c)")
+    add_signature(fig, ax, BG)
     save(fig, "tension_opposition.pdf")
-
 
 if __name__ == '__main__':
     render()

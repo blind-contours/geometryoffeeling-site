@@ -7,11 +7,13 @@ Classic physics interference pattern evoking two forces in tension.
 
 import numpy as np
 import matplotlib
+import sys as _sys; import os as _os
+_sys.path.insert(0, _os.path.join(_os.path.dirname(_os.path.abspath(__file__)), ".."))
+from signature_utils import add_signature
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import matplotlib.collections as mc
 import os
-
 
 DPI    = 300
 FIG_W  = 12
@@ -38,16 +40,13 @@ PH = FIG_H - PAD_T  - PAD_B
 cx = PAD_L + PW / 2
 cy = PAD_B + PH / 2
 
-
 def hex_to_rgb(h):
     h = h.lstrip('#')
     return tuple(int(h[i:i+2], 16) / 255 for i in (0, 2, 4))
 
-
 def rgba(h, a):
     c = hex_to_rgb(h)
     return (c[0], c[1], c[2], float(np.clip(a, 0, 1)))
-
 
 def make_fig():
     fig = plt.figure(figsize=(FIG_W, FIG_H), dpi=DPI)
@@ -60,12 +59,6 @@ def make_fig():
     ax.axis('off')
     return fig, ax
 
-
-def label(ax, eq):
-    ax.text(0.75, 0.75, eq, fontfamily='monospace', fontsize=10,
-            color=(1, 1, 1, 0.20), transform=ax.transData)
-
-
 def save(fig, name):
     fig.subplots_adjust(left=0, right=1, top=1, bottom=0)
     os.makedirs(OUTPUT_DIR, exist_ok=True)
@@ -76,10 +69,8 @@ def save(fig, name):
     plt.close(fig)
     print(f"saved {name}")
 
-
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 OUTPUT_DIR = os.path.join(SCRIPT_DIR, '..', '..', 'output')
-
 
 # =============================================================================
 # INTERFERENCE — 2D interference field from two point sources
@@ -243,9 +234,8 @@ def render():
         ax.plot(src[0], src[1], 'o', color=rgba(clr, 0.90),
                 markersize=4, markeredgewidth=0, zorder=10)
 
-    label(ax, "A(x,y) = sin(k\u00b7d\u2081) + sin(k\u00b7d\u2082)")
+    add_signature(fig, ax, BG)
     save(fig, "tension_interference")
-
 
 if __name__ == '__main__':
     render()

@@ -19,13 +19,15 @@ Dependencies: matplotlib, numpy, scipy
 
 import numpy as np
 import matplotlib
+import sys as _sys; import os as _os
+_sys.path.insert(0, _os.path.join(_os.path.dirname(_os.path.abspath(__file__)), ".."))
+from signature_utils import add_signature
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import matplotlib.collections as mc
 from scipy.ndimage import gaussian_filter1d
 from matplotlib.patches import Circle
 import os
-
 
 DPI = 300; FIG_W = 12; FIG_H = 8
 BG = "#E8D8D0"
@@ -56,9 +58,6 @@ def make_fig():
     ax.set_aspect('equal'); ax.axis('off')
     return fig, ax
 
-def label(ax, eq):
-    ax.text(0.75,0.75,eq,fontfamily='monospace',fontsize=10,
-            color=(0.55,0.40,0.35,0.40),transform=ax.transData)
 def split_segments(xs, ys, mask):
     segments = []; in_seg = False; start = 0
     for j in range(len(mask)):
@@ -123,7 +122,6 @@ def save(fig, name):
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 OUTPUT_DIR = os.path.join(SCRIPT_DIR, '..', '..', 'output')
 
-
 # =============================================================================
 # 1. PURSUIT (kept — Lotka-Volterra phase-space orbits)
 # =============================================================================
@@ -179,9 +177,8 @@ def render():
     x_s = PAD_L + PW * 0.04 + PW * 0.92 * (x_star - 0.5) / (35 - 0.5)
     y_s = PAD_B + PH * 0.04 + PH * 0.92 * (y_star - 0.5) / (18 - 0.5)
     glow(ax, x_s, y_s, GILT, 0.35)
-    label(ax, "dx/dt=\u03b1x\u2212\u03b2xy, dy/dt=\u03b4xy\u2212\u03b3y")
+    add_signature(fig, ax, BG)
     save(fig, "desire_pursuit")
-
 
 if __name__ == '__main__':
     render()

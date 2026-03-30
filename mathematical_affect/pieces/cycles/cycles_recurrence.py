@@ -5,6 +5,9 @@ Standalone render script
 
 import numpy as np
 import matplotlib
+import sys as _sys; import os as _os
+_sys.path.insert(0, _os.path.join(_os.path.dirname(_os.path.abspath(__file__)), ".."))
+from signature_utils import add_signature
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import matplotlib.collections as mc
@@ -41,9 +44,6 @@ PAD_L=0.72; PAD_R=0.60; PAD_T=0.65; PAD_B=0.88
 PW=FIG_W-PAD_L-PAD_R; PH=FIG_H-PAD_T-PAD_B
 cx=PAD_L+PW/2; cy=PAD_B+PH/2
 
-def label(ax,eq):
-    ax.text(0.75,0.75,eq,fontfamily='monospace',fontsize=10,
-            color=(0.15,0.15,0.20,0.25),transform=ax.transData)
 def split_segments(xs, ys, mask):
     segments = []
     in_seg = False; start = 0
@@ -93,7 +93,6 @@ def save(fig, name):
     plt.close(fig)
     print(f"saved {name}")
 
-
 def render():
     fig,ax=make_fig()
     alphas_irr=[np.sqrt(2), np.pi/2, (1+np.sqrt(5))/2, np.sqrt(3),
@@ -111,9 +110,8 @@ def render():
         alpha=0.07+0.38*(1-abs(frac-0.5)*1.3)
         lw=0.35+0.85*(1-abs(frac-0.5))
         draw_lc_xy(ax,xs_r,ys_r,col,lw=lw,alpha=alpha,zo=3)
-    label(ax,"x=cos(t), y=cos(at), a irrational")
+    add_signature(fig, ax, BG)
     save(fig,"cycles_recurrence")
-
 
 if __name__ == '__main__':
     render()

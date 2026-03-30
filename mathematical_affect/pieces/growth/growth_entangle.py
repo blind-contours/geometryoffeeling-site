@@ -8,6 +8,9 @@ converging into shared light.
 import os
 import numpy as np
 import matplotlib
+import sys as _sys; import os as _os
+_sys.path.insert(0, _os.path.join(_os.path.dirname(_os.path.abspath(__file__)), ".."))
+from signature_utils import add_signature
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 
@@ -19,15 +22,12 @@ FIG_W = 12
 FIG_H = 8
 BG_COLOR = '#F5F0E6'
 
-
 def hex_to_rgb01(h):
     h = h.lstrip("#")
     return np.array([int(h[i:i+2], 16) for i in (0, 2, 4)]) / 255.0
 
-
 def blend(c1, c2, t):
     return (1 - t) * np.asarray(c1) + t * np.asarray(c2)
-
 
 def interpolate_palette(colors, u):
     colors = [np.asarray(c) for c in colors]
@@ -40,7 +40,6 @@ def interpolate_palette(colors, u):
     i = int(np.floor(pos))
     frac = pos - i
     return blend(colors[i], colors[i + 1], frac)
-
 
 def render():
     rng = np.random.default_rng(99)
@@ -146,18 +145,13 @@ def render():
         color = interpolate_palette(pal, depth_frac)
         ax.plot(xs, ys, color=(*color, alpha), lw=lw, solid_capstyle='round')
 
-    # Equation label
-    ax.text(0.06, 0.06, "\u2202u/\u2202t=D\u2207\u00b2u+f(u,v)",
-            fontfamily='monospace', fontsize=8,
-            color=(0.15, 0.15, 0.20, 0.25), transform=ax.transAxes)
-
     os.makedirs(OUTPUT_DIR, exist_ok=True)
     pdf_path = os.path.join(OUTPUT_DIR, "growth_entangle.pdf")
+    add_signature(fig, ax, BG_COLOR)
     fig.savefig(pdf_path, facecolor=BG_COLOR, dpi=DPI)
     plt.close(fig)
     print(f"saved {pdf_path}")
     return pdf_path
-
 
 if __name__ == '__main__':
     render()

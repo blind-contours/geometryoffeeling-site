@@ -19,6 +19,9 @@ Dependencies: matplotlib, numpy, scipy
 
 import numpy as np
 import matplotlib
+import sys as _sys; import os as _os
+_sys.path.insert(0, _os.path.join(_os.path.dirname(_os.path.abspath(__file__)), ".."))
+from signature_utils import add_signature
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import matplotlib.collections as mc
@@ -46,16 +49,13 @@ GOLDEN       = "#E8B010"
 PALETTE = [ROSE_PINK, DEEP_VIOLET, VIVID_CYAN, SOLAR_ORANGE, MAGENTA_GLOW,
            EMERALD, ULTRAVIOLET, HOT_CORAL, ELECTRIC_BLUE, GOLDEN]
 
-
 def hex_to_rgb(h):
     h = h.lstrip('#')
     return tuple(int(h[i:i+2], 16)/255 for i in (0, 2, 4))
 
-
 def rgba(h, a):
     c = hex_to_rgb(h)
     return (c[0], c[1], c[2], float(np.clip(a, 0, 1)))
-
 
 def make_fig():
     fig = plt.figure(figsize=(FIG_W, FIG_H), dpi=DPI)
@@ -68,18 +68,11 @@ def make_fig():
     ax.axis('off')
     return fig, ax
 
-
 PAD_L = 0.72; PAD_R = 0.60; PAD_T = 0.65; PAD_B = 0.88
 PW = FIG_W - PAD_L - PAD_R
 PH = FIG_H - PAD_T - PAD_B
 cx = PAD_L + PW / 2
 cy = PAD_B + PH / 2
-
-
-def label(ax, eq):
-    ax.text(0.75, 0.75, eq, fontfamily='monospace', fontsize=10,
-            color=(0.35, 0.20, 0.40, 0.22), transform=ax.transData)
-
 
 def draw_lc(ax, xs, ys, col_rgba, lw, zo=4):
     pts = np.array([xs, ys]).T.reshape(-1, 1, 2)
@@ -87,7 +80,6 @@ def draw_lc(ax, xs, ys, col_rgba, lw, zo=4):
     lc = mc.LineCollection(segs, linewidths=lw, colors=[col_rgba],
                            capstyle='round', joinstyle='round', zorder=zo)
     ax.add_collection(lc)
-
 
 def save(fig, name):
     fig.subplots_adjust(left=0, right=1, top=1, bottom=0)
@@ -99,10 +91,8 @@ def save(fig, name):
     plt.close(fig)
     print(f"saved {name}")
 
-
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 OUTPUT_DIR = os.path.join(SCRIPT_DIR, '..', '..', 'output')
-
 
 def _split_masked(xs, ys, mask):
     segments = []
@@ -118,7 +108,6 @@ def _split_masked(xs, ys, mask):
     if in_seg and len(mask) - start >= 5:
         segments.append((xs[start:], ys[start:]))
     return segments
-
 
 def _draw_petal(ax, xs, ys, color_hex, lw_peak, a_peak, zo,
                 smooth_sigma=4, fade_power=0.5):
@@ -157,7 +146,6 @@ def _draw_petal(ax, xs, ys, color_hex, lw_peak, a_peak, zo,
             capstyle='round', joinstyle='round', zorder=zo)
         ax.add_collection(lc)
 
-
 def _reflect_and_draw(ax, r, theta_base, col, lw, alpha, zo,
                       n_fold, sector, smooth, fade):
     """Reflect a single petal curve across all n_fold symmetry axes."""
@@ -169,7 +157,6 @@ def _reflect_and_draw(ax, r, theta_base, col, lw, alpha, zo,
             ys = cy + r * np.sin(theta)
             _draw_petal(ax, xs, ys, col, lw, alpha, zo=zo,
                         smooth_sigma=smooth, fade_power=fade)
-
 
 # ===============================================================================
 # KALEIDOSCOPE — broken sine waves of euphoria radiating from center
@@ -319,9 +306,8 @@ def render():
             for sx, sy in segments:
                 draw_lc(ax, sx, sy, rgba(c, a), lw=lw, zo=2)
 
-    label(ax, "R_k(\u03b8)=\u03b8+2\u03c0k/n")
+    add_signature(fig, ax, BG)
     save(fig, "euphoria_kaleidoscope.pdf")
-
 
 if __name__ == '__main__':
     render()

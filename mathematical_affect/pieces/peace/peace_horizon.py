@@ -40,13 +40,15 @@ Dependencies: matplotlib, numpy, scipy
 
 import numpy as np
 import matplotlib
+import sys as _sys; import os as _os
+_sys.path.insert(0, _os.path.join(_os.path.dirname(_os.path.abspath(__file__)), ".."))
+from signature_utils import add_signature
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import matplotlib.collections as mc
 from matplotlib.patches import Circle, Ellipse
 from scipy.ndimage import gaussian_filter1d
 import os
-
 
 DPI = 300; FIG_W = 12; FIG_H = 8
 BG = "#F0EDE8"  # warm parchment — NOT pure white
@@ -80,9 +82,6 @@ PAD_L = 0.72; PAD_R = 0.60; PAD_T = 0.65; PAD_B = 0.88
 PW = FIG_W - PAD_L - PAD_R; PH = FIG_H - PAD_T - PAD_B
 cx = PAD_L + PW / 2; cy = PAD_B + PH / 2
 
-def label(ax, eq):
-    ax.text(0.75,0.75,eq,fontfamily='monospace',fontsize=10,
-            color=(0.40,0.45,0.40,0.22),transform=ax.transData)
 def split_segments(xs, ys, mask):
     segments = []; in_seg = False; start = 0
     for j in range(len(mask)):
@@ -116,7 +115,6 @@ def save(fig, name):
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 OUTPUT_DIR = os.path.join(SCRIPT_DIR, '..', '..', 'output')
 
-
 # ============================================================================
 # 9. HORIZON — Rothko-style color field bands
 # ============================================================================
@@ -147,9 +145,8 @@ def render():
             alpha = alpha_max * (1 - dist_from_center * 0.6)
             lw = 0.84 + 0.56 * (1 - dist_from_center)
             draw_lc(ax, xs, ys, col, lw=lw, alpha=alpha, zo=3)
-    label(ax, "f(y)=\u03a3 c_k\u00b7rect((y\u2212y_k)/h_k)")
+    add_signature(fig, ax, BG)
     save(fig, "peace_horizon.pdf")
-
 
 if __name__ == '__main__':
     render()

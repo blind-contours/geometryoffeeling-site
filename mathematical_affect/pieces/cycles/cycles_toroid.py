@@ -13,6 +13,9 @@ cycles that almost repeat but never do.
 
 import colorsys
 import os
+import sys as _sys; import os as _os
+_sys.path.insert(0, _os.path.join(_os.path.dirname(_os.path.abspath(__file__)), ".."))
+from signature_utils import add_signature
 
 import matplotlib
 matplotlib.use('Agg')
@@ -27,7 +30,6 @@ DPI = 300
 FIG_W = 12
 FIG_H = 8
 BG_COLOR = '#F0E8DA'
-
 
 def render():
     # --- Golden ratio winding number ---
@@ -153,19 +155,14 @@ def render():
         )
         ax.add_collection(lc_front)
 
-    # --- Equation label ---
-    ax.text(0.06, 0.06, "\u03c9=\u03c6=(1+\u221a5)/2",
-            fontfamily='monospace', fontsize=8,
-            color=(0.15, 0.15, 0.20, 0.25), transform=ax.transAxes)
-
     # --- Save ---
     os.makedirs(OUTPUT_DIR, exist_ok=True)
     pdf_path = os.path.join(OUTPUT_DIR, "cycles_toroid.pdf")
+    add_signature(fig, ax, BG_COLOR)
     fig.savefig(pdf_path, facecolor=BG_COLOR, dpi=DPI)
     plt.close(fig)
     print(f"saved {pdf_path}")
     return pdf_path
-
 
 if __name__ == '__main__':
     render()

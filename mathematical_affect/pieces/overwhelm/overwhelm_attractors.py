@@ -5,6 +5,9 @@ Standalone render script
 
 import numpy as np
 import matplotlib
+import sys as _sys; import os as _os
+_sys.path.insert(0, _os.path.join(_os.path.dirname(_os.path.abspath(__file__)), ".."))
+from signature_utils import add_signature
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import matplotlib.collections as mc
@@ -58,9 +61,6 @@ def make_fig():
     ax.axis('off')
     return fig, ax
 
-def label(ax, eq):
-    ax.text(0.75,0.75,eq,fontfamily='monospace',fontsize=10,
-            color=(1,1,1,0.18),transform=ax.transData)
 def split_segments(xs, ys, mask):
     """Split masked arrays into contiguous segments to avoid straight-line jumps."""
     segments = []
@@ -158,7 +158,6 @@ def _normalize_to_canvas(raw_x, raw_y, pad_frac=0.08):
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 OUTPUT_DIR = os.path.join(SCRIPT_DIR, '..', '..', 'output')
-
 
 def render():
     fig, ax = make_fig()
@@ -272,9 +271,8 @@ def render():
             draw_lc(ax, seg_xs, seg_ys, halv_cols[i],
                     lw=0.5, alpha=0.35, zo=14 + i)
 
-    label(ax, "Lorenz + R\u00f6ssler + Chen + Halvorsen")
+    add_signature(fig, ax, BG)
     save(fig, "overwhelm_attractors.pdf")
-
 
 if __name__ == '__main__':
     render()

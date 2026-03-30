@@ -20,6 +20,9 @@ Dependencies: matplotlib, numpy, scipy
 
 import numpy as np
 import matplotlib
+import sys as _sys; import os as _os
+_sys.path.insert(0, _os.path.join(_os.path.dirname(_os.path.abspath(__file__)), ".."))
+from signature_utils import add_signature
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import matplotlib.collections as mc
@@ -71,9 +74,6 @@ def make_fig():
     ax.axis('off')
     return fig, ax
 
-def label(ax, eq):
-    ax.text(0.75,0.75,eq,fontfamily='monospace',fontsize=10,
-            color=(0.15,0.15,0.20,0.25),transform=ax.transData)
 def split_segments(xs, ys, mask):
     """Split arrays into contiguous segments where mask is True."""
     segments = []
@@ -115,7 +115,6 @@ def save(fig, name):
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 OUTPUT_DIR = os.path.join(SCRIPT_DIR, '..', '..', 'output')
-
 
 # =============================================================================
 # 2. BIFURCATION CASCADE
@@ -230,14 +229,9 @@ def render():
     # Axis hints: faint r-labels
     for r_tick in [2.5, 3.0, 3.5, 4.0]:
         tx = PAD_L + PW * (r_tick - r_min) / (r_max - r_min)
-        ax.text(tx, PAD_B - 0.12, f"r={r_tick:.1f}",
-                fontfamily='monospace', fontsize=5.5,
-                color=(0.28, 0.24, 0.18, 0.15), ha='center',
-                transform=ax.transData)
 
-    label(ax, "x_{n+1} = r x_n(1-x_n)")
+    add_signature(fig, ax, BG)
     save(fig, "fractured_bifurcation.pdf")
-
 
 if __name__ == '__main__':
     render()

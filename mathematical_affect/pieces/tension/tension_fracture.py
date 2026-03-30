@@ -5,6 +5,9 @@ Standalone render script
 
 import numpy as np
 import matplotlib
+import sys as _sys; import os as _os
+_sys.path.insert(0, _os.path.join(_os.path.dirname(_os.path.abspath(__file__)), ".."))
+from signature_utils import add_signature
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import matplotlib.collections as mc
@@ -48,9 +51,6 @@ def make_fig():
     ax.axis('off')
     return fig, ax
 
-def label(ax, eq):
-    ax.text(0.75,0.75,eq,fontfamily='monospace',fontsize=10,
-            color=(1,1,1,0.20),transform=ax.transData)
 def split_segments(xs, ys, mask):
     """Split arrays into contiguous segments where mask is True."""
     segments = []
@@ -85,7 +85,6 @@ def save(fig, name):
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 OUTPUT_DIR = os.path.join(SCRIPT_DIR, '..', '..', 'output')
-
 
 def render():
     fig, ax = make_fig()
@@ -260,9 +259,8 @@ def render():
         for sx, sy in segs_g:
             draw_lc(ax, sx, sy, DIM, 0.8, a_mult, zo=2)
 
-    label(ax, "\u03c3(\u03b5) = E\u00b7\u03b5 (elastic),  \u03c3 = \u03c3_y(\u03b5/\u03b5_y)^n (hardening)")
+    add_signature(fig, ax, BG)
     save(fig, "tension_fracture.pdf")
-
 
 if __name__ == '__main__':
     render()

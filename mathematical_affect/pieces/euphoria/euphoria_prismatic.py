@@ -5,6 +5,9 @@ Standalone render script
 
 import numpy as np
 import matplotlib
+import sys as _sys; import os as _os
+_sys.path.insert(0, _os.path.join(_os.path.dirname(_os.path.abspath(__file__)), ".."))
+from signature_utils import add_signature
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import matplotlib.collections as mc
@@ -41,9 +44,6 @@ PAD_L=0.72; PAD_R=0.60; PAD_T=0.65; PAD_B=0.88
 PW=FIG_W-PAD_L-PAD_R; PH=FIG_H-PAD_T-PAD_B
 cx=PAD_L+PW/2; cy=PAD_B+PH/2
 
-def label(ax,eq):
-    ax.text(0.75,0.75,eq,fontfamily='monospace',fontsize=10,
-            color=(0.35,0.20,0.40,0.22),transform=ax.transData)
 def split_segments(xs, ys, mask):
     """Split masked arrays into contiguous segments to avoid straight-line jumps."""
     segments = []
@@ -78,7 +78,6 @@ def save(fig,name):
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 OUTPUT_DIR = os.path.join(SCRIPT_DIR, '..', '..', 'output')
 
-
 def render():
     fig,ax=make_fig()
     t=np.linspace(0,1,3000); xs=PAD_L+PW*t
@@ -106,9 +105,8 @@ def render():
             draw_lc(ax,xs,ys+y_shift,col,lw=lw,alpha=alpha,zo=3+j,smooth=3)
     # white convergence line on far left
     draw_lc(ax,xs[:300],np.full(300,cy),WHITE_HOT,lw=3.0,alpha=0.35,zo=6)
-    label(ax,"n(\u03bb)\u00b7sin(\u03b8)=\u0394")
+    add_signature(fig, ax, BG)
     save(fig,"euphoria_prismatic.pdf")
-
 
 if __name__ == '__main__':
     render()

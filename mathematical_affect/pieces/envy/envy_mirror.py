@@ -6,6 +6,9 @@ RIGHT body (shadow): same curves but desaturated, thinner, hollower.
 Coupling filaments carry color from source to shadow.
 """
 import os
+import sys as _sys; import os as _os
+_sys.path.insert(0, _os.path.join(_os.path.dirname(_os.path.abspath(__file__)), ".."))
+from signature_utils import add_signature
 
 import matplotlib
 matplotlib.use('Agg')
@@ -40,12 +43,10 @@ SHADOW_GREYS = [
 SOURCE_CORE = '#5CA040'
 SHADOW_CORE = '#7A8A78'
 
-
 def hex_to_rgba(h, a):
     h = h.lstrip('#')
     r, g, b = (int(h[i:i+2], 16) / 255.0 for i in (0, 2, 4))
     return (r, g, b, float(np.clip(a, 0, 1)))
-
 
 def render():
     fig, ax = plt.subplots(figsize=(FIG_W, FIG_H), dpi=DPI, facecolor=BG_COLOR)
@@ -214,22 +215,17 @@ def render():
     # ------------------------------------------------------------------
     # Equation label
     # ------------------------------------------------------------------
-    ax.text(0.06, 0.06,
-            "B(t)=(1+\u03b5)\u00b7A(t)\u00b7exp(\u2212\u03b4t), \u03b4>0",
-            fontfamily='monospace', fontsize=8,
-            color=(0.15, 0.15, 0.20, 0.25),
-            transform=ax.transAxes)
 
     # ------------------------------------------------------------------
     # Save
     # ------------------------------------------------------------------
     os.makedirs(OUTPUT_DIR, exist_ok=True)
     pdf_path = os.path.join(OUTPUT_DIR, 'envy_mirror.pdf')
+    add_signature(fig, ax, BG_COLOR)
     fig.savefig(pdf_path, facecolor=BG_COLOR, dpi=DPI)
     plt.close(fig)
     print(f"saved {pdf_path}")
     return pdf_path
-
 
 if __name__ == '__main__':
     render()

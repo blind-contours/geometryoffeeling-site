@@ -17,13 +17,15 @@ Palette: deep grey, dark green, warm gold accent
 
 import numpy as np
 import matplotlib
+import sys as _sys; import os as _os
+_sys.path.insert(0, _os.path.join(_os.path.dirname(_os.path.abspath(__file__)), ".."))
+from signature_utils import add_signature
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import matplotlib.collections as mc
 from scipy.ndimage import gaussian_filter1d
 from matplotlib.patches import Circle
 import os
-
 
 DPI=300; FIG_W=12; FIG_H=8
 BG="#E0DDD6"
@@ -55,10 +57,6 @@ PAD_L=0.72; PAD_R=0.60; PAD_T=0.65; PAD_B=0.88
 PW=FIG_W-PAD_L-PAD_R; PH=FIG_H-PAD_T-PAD_B
 cx=PAD_L+PW/2; cy=PAD_B+PH/2
 
-def label(ax,eq):
-    ax.text(0.75,0.75,eq,fontfamily='monospace',fontsize=10,
-            color=(0.25,0.28,0.30,0.25),transform=ax.transData)
-
 def draw_lc(ax,xs,ys,col,lw,alpha,zo=4,smooth=0):
     if smooth>0:
         ys=gaussian_filter1d(ys,smooth)
@@ -80,7 +78,6 @@ def save(fig, name):
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 OUTPUT_DIR = os.path.join(SCRIPT_DIR, '..', '..', 'output')
-
 
 def draw_ripple_droplet(ax, px, py, n_rings, max_r, wavelength=None,
                         color_func=None, alpha_base=0.35, lw_base=0.8,
@@ -130,7 +127,6 @@ def draw_ripple_droplet(ax, px, py, n_rings, max_r, wavelength=None,
                     facecolor=center_color, edgecolor='none',
                     zorder=zo_base + 5))
 
-
 def beacon_color(frac):
     """Color function for the beacon droplet: gold -> warm -> blue -> grey mist."""
     if frac < 0.08:
@@ -148,7 +144,6 @@ def beacon_color(frac):
     else:
         return "#BAC8D4"    # light grey mist
 
-
 def crowd_color(frac):
     """Color function for crowd droplets: blue tones throughout, darker for contrast."""
     if frac < 0.30:
@@ -157,7 +152,6 @@ def crowd_color(frac):
         return "#3A6A9A"    # bold blue
     else:
         return "#4A7AAA"    # medium blue
-
 
 def render():
     fig, ax = make_fig()
@@ -291,9 +285,8 @@ def render():
     # ================================================================
     # EQUATION LABEL
     # ================================================================
-    label(ax, "A(r)=A\u2080/r\u00b2")
+    add_signature(fig, ax, BG)
     save(fig, "solitude_beacon")
-
 
 if __name__ == '__main__':
     render()

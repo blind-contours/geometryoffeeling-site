@@ -5,6 +5,9 @@ A pole singularity warps concentric circles into nested lobes,
 revealing hidden structure in simple geometry.
 """
 import os
+import sys as _sys; import os as _os
+_sys.path.insert(0, _os.path.join(_os.path.dirname(_os.path.abspath(__file__)), ".."))
+from signature_utils import add_signature
 
 import matplotlib
 matplotlib.use('Agg')
@@ -18,7 +21,6 @@ DPI = 300
 FIG_W = 12
 FIG_H = 8
 BG_COLOR = '#4f5d71'
-
 
 def render():
     SERIES_BG = '#DDD9D2'  # matching wonder_recursion margin color
@@ -94,18 +96,13 @@ def render():
         ax.plot(center_x + rr * np.cos(t), center_y + rr * np.sin(t),
                 color=ring, lw=1.15, alpha=alpha, zorder=2)
 
-    # Equation label
-    ax.text(margin_l + 0.02, margin_b + 0.02, "w=z+a/(z\u2212z\u2080)",
-            fontfamily='monospace', fontsize=8,
-            color=(0.85, 0.80, 0.75, 0.35), transform=ax.transData)
-
     os.makedirs(OUTPUT_DIR, exist_ok=True)
     pdf_path = os.path.join(OUTPUT_DIR, "wonder_transform.pdf")
+    add_signature(fig, ax, BG_COLOR)
     fig.savefig(pdf_path, facecolor=SERIES_BG, dpi=DPI)
     plt.close(fig)
     print(f"saved {pdf_path}")
     return pdf_path
-
 
 if __name__ == '__main__':
     render()
