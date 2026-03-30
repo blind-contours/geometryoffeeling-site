@@ -18,7 +18,7 @@ export const PRINT_SIZES: PrintSize[] = [
     id: "24x16",
     label: '24" × 16"',
     dimensions: "24x16",
-    priceCents: 10000,
+    priceCents: 9500,
     prodigiSku: "GLOBAL-HGE-16X24",
   },
   {
