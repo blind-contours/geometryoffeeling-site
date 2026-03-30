@@ -19,9 +19,9 @@ from matplotlib.patches import Circle
 import os
 
 DPI = 300; FIG_W = 12; FIG_H = 8
-BG = "#1A1420"
+BG = "#f3eee7"
 
-# Classic 6-stripe pride flag colors
+# Full LGBTQ+ spectrum — rainbow + trans colors woven in
 PRIDE_RED    = "#E40303"
 PRIDE_ORANGE = "#FF8C00"
 PRIDE_YELLOW = "#FFED00"
@@ -29,8 +29,16 @@ PRIDE_GREEN  = "#008026"
 PRIDE_BLUE   = "#004DFF"
 PRIDE_VIOLET = "#750787"
 
-PRIDE_COLORS = [PRIDE_RED, PRIDE_ORANGE, PRIDE_YELLOW, PRIDE_GREEN,
-                PRIDE_BLUE, PRIDE_VIOLET]
+# Trans flag colors
+TRANS_PINK   = "#F5A9B8"
+TRANS_BLUE   = "#5BCEFA"
+TRANS_WHITE  = "#FFFFFF"
+
+# Interleaved: trans pink → red → orange → trans blue → yellow → trans white →
+#              green → trans pink → blue → violet → trans blue
+PRIDE_COLORS = [TRANS_PINK, PRIDE_RED, PRIDE_ORANGE, TRANS_BLUE,
+                PRIDE_YELLOW, TRANS_WHITE, PRIDE_GREEN, TRANS_PINK,
+                PRIDE_BLUE, PRIDE_VIOLET, TRANS_BLUE]
 
 # Golden angle in radians
 GOLDEN_ANGLE = np.pi * (3 - np.sqrt(5))  # ~137.508 degrees
@@ -94,15 +102,15 @@ def render():
     # =========================================================================
     # 1. SUNFLOWER PETAL PATTERN — golden angle placement
     # =========================================================================
-    n_petals = 300
-    max_radius = PH * 0.44  # use height as constraint for circular pattern
+    n_petals = 350
+    max_radius = PH * 0.46  # slightly larger bloom
 
     for i in range(1, n_petals + 1):
         # Golden angle positioning
         r = max_radius * np.sqrt(i / n_petals)
         theta = i * GOLDEN_ANGLE
 
-        # Position — keep circular (no aspect squash on the spiral itself)
+        # Position
         x = cx + r * np.cos(theta)
         y = cy + r * np.sin(theta)
 
@@ -113,24 +121,24 @@ def render():
         # Radius fraction for color mapping (0=center, 1=edge)
         frac = np.sqrt(i / n_petals)
 
-        # Petal size — smaller, more delicate; grows gently toward outside
-        base_size = 0.045 + 0.075 * frac
-        # Add a subtle fibonacci-related variation
-        size_var = 1.0 + 0.12 * np.sin(i * 0.618)
+        # Petal size — bolder, more flower-like; larger dots that overlap slightly
+        base_size = 0.07 + 0.10 * frac
+        # Subtle variation for organic feel
+        size_var = 1.0 + 0.15 * np.sin(i * 0.618)
         petal_r = base_size * size_var
 
         # Color from pride palette based on radial position
         rgb = pride_color_at_radius(frac)
 
-        # Draw concentric rings for each petal (soft ripple/glow effect)
-        n_rings = 5
+        # Draw concentric rings for each petal — bolder, more opaque
+        n_rings = 4
         for ring in range(n_rings):
             ring_frac = ring / (n_rings - 1)
-            ring_r = petal_r * (1.0 - ring_frac * 0.7)
-            # Alpha: outer rings are more transparent, inner rings more opaque
-            alpha = 0.08 + 0.55 * (1.0 - ring_frac)
+            ring_r = petal_r * (1.0 - ring_frac * 0.65)
+            # Bolder alpha — more saturated, more present
+            alpha = 0.15 + 0.70 * (1.0 - ring_frac)
             # Slight color brightening toward center of each petal
-            brighten = 1.0 + 0.35 * (1.0 - ring_frac)
+            brighten = 1.0 + 0.25 * (1.0 - ring_frac)
             bright_rgb = tuple(min(1.0, c * brighten) for c in rgb)
 
             circle = Circle((x, y), ring_r,
@@ -144,9 +152,9 @@ def render():
     # =========================================================================
     n_overlay_spirals = 3
     spiral_configs = [
-        {'a': 0.015, 'rotation': 0,           'color': PRIDE_YELLOW, 'alpha': 0.18, 'lw': 0.8},
-        {'a': 0.012, 'rotation': np.pi * 0.5, 'color': PRIDE_VIOLET, 'alpha': 0.14, 'lw': 0.6},
-        {'a': 0.018, 'rotation': np.pi * 1.0, 'color': PRIDE_RED,    'alpha': 0.12, 'lw': 0.5},
+        {'a': 0.015, 'rotation': 0,           'color': PRIDE_VIOLET, 'alpha': 0.12, 'lw': 0.6},
+        {'a': 0.012, 'rotation': np.pi * 0.5, 'color': TRANS_BLUE,   'alpha': 0.10, 'lw': 0.5},
+        {'a': 0.018, 'rotation': np.pi * 1.0, 'color': TRANS_PINK,   'alpha': 0.10, 'lw': 0.5},
     ]
 
     for cfg in spiral_configs:
@@ -188,9 +196,9 @@ def render():
     # =========================================================================
     # 3. SOFT CENTER GLOW — warm radial highlight at the heart
     # =========================================================================
-    for glow_r, glow_a in [(2.0, 0.02), (1.4, 0.04), (0.8, 0.06), (0.4, 0.08)]:
+    for glow_r, glow_a in [(1.8, 0.03), (1.2, 0.05), (0.6, 0.07)]:
         glow = Circle((cx, cy), glow_r,
-                      facecolor=(1.0, 0.85, 0.7, glow_a),
+                      facecolor=(0.95, 0.75, 0.80, glow_a),
                       edgecolor='none', zorder=1)
         ax.add_patch(glow)
 
