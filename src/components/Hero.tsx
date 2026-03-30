@@ -73,7 +73,7 @@ export default function Hero() {
       <div className="absolute inset-0 flex items-center justify-center">
         <div className="text-center px-6">
           <h1
-            className={`${textClasses} text-3xl md:text-5xl font-mono font-normal tracking-[0.15em] transition-colors duration-[2000ms]`}
+            className={`${textClasses} text-3xl md:text-5xl font-mono font-medium tracking-[0.15em] transition-colors duration-[2000ms]`}
           >
             The geometry of feeling.
           </h1>
