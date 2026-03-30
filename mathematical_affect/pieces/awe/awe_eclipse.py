@@ -1,0 +1,148 @@
+"""
+Geometry of Feeling — Awe: Awe Eclipse
+Standalone render script
+"""
+
+import numpy as np
+import matplotlib
+matplotlib.use('Agg')
+import matplotlib.pyplot as plt
+import matplotlib.collections as mc
+from matplotlib.patches import Circle, Ellipse
+from scipy.ndimage import gaussian_filter1d, gaussian_filter
+import os
+
+DPI = 300; FIG_W = 12; FIG_H = 8
+BG = "#0A0A10"
+
+# Palette: cosmic vast
+COSMIC = "#2A3A8A"; NEBULA_P = "#5A3A8A"; STARLIGHT = "#C8C8D0"
+VOID = "#1A1A40"; AZURE = "#3A5AA0"; CORONA = "#D0A040"
+ULTRAVIOLET = "#4A2A7A"; DEEP = "#1A2A5A"; ICE = "#A0B0C8"
+GOLD = "#D4AA40"; AMBER = "#C88030"; INDIGO = "#1A1A60"
+CRIMSON = "#8A2020"; IVORY = "#D8D0C0"; SLATE = "#4A5A6A"
+ROSE = "#8A3050"; TEAL = "#2A6A6A"; CYAN = "#3A8AAA"
+PEACH = "#C89070"; MAGENTA = "#7A2A6A"; SILVER = "#A0A8B8"
+
+def hex_to_rgb(h):
+    h = h.lstrip('#')
+    return tuple(int(h[i:i+2], 16) / 255 for i in (0, 2, 4))
+
+def rgba(h, a):
+    c = hex_to_rgb(h)
+    return (c[0], c[1], c[2], float(np.clip(a, 0, 1)))
+
+def make_fig():
+    fig = plt.figure(figsize=(FIG_W, FIG_H), dpi=DPI)
+    ax = fig.add_subplot(111)
+    fig.patch.set_facecolor(BG); ax.set_facecolor(BG)
+    ax.set_xlim(0, FIG_W); ax.set_ylim(0, FIG_H)
+    ax.set_aspect('equal'); ax.axis('off')
+    return fig, ax
+
+PAD_L = 0.72; PAD_R = 0.60; PAD_T = 0.65; PAD_B = 0.88
+PW = FIG_W - PAD_L - PAD_R; PH = FIG_H - PAD_T - PAD_B
+cx = PAD_L + PW / 2; cy = PAD_B + PH / 2
+
+def label(ax, eq):
+    ax.text(0.75,0.75,eq,fontfamily='monospace',fontsize=10,
+            color=(0.85,0.80,0.75,0.55),transform=ax.transData)
+def split_segments(xs, ys, mask):
+    segments = []
+    in_seg = False; start = 0
+    for j in range(len(mask)):
+        if mask[j] and not in_seg:
+            start = j; in_seg = True
+        elif not mask[j] and in_seg:
+            if j - start >= 3:
+                segments.append((xs[start:j], ys[start:j]))
+            in_seg = False
+    if in_seg and len(mask) - start >= 3:
+        segments.append((xs[start:], ys[start:]))
+    return segments
+
+def draw_lc(ax, xs, ys, col, lw, alpha, zo=4, smooth=0):
+    if len(xs) < 2: return
+    if smooth > 0:
+        ys = gaussian_filter1d(ys, smooth)
+    pts = np.array([xs, ys]).T.reshape(-1, 1, 2)
+    segs = np.concatenate([pts[:-1], pts[1:]], axis=1)
+    lc = mc.LineCollection(segs, linewidths=lw, colors=[rgba(col, alpha)],
+                           capstyle='round', joinstyle='round', zorder=zo)
+    ax.add_collection(lc)
+
+def draw_tapered(ax, xs, ys, col, lw_start, lw_end, a_start, a_end, zo=4):
+    """Draw a line with tapering width and alpha."""
+    if len(xs) < 2: return
+    pts = np.array([xs, ys]).T.reshape(-1, 1, 2)
+    segs = np.concatenate([pts[:-1], pts[1:]], axis=1)
+    n = len(segs)
+    alphas = np.linspace(a_start, a_end, n)
+    lws = np.linspace(lw_start, lw_end, n)
+    colors = [rgba(col, float(a)) for a in alphas]
+    lc = mc.LineCollection(segs, linewidths=lws, colors=colors,
+                           capstyle='round', joinstyle='round', zorder=zo)
+    ax.add_collection(lc)
+
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+OUTPUT_DIR = os.path.join(SCRIPT_DIR, '..', '..', 'output')
+
+def save(fig, name):
+    os.makedirs(OUTPUT_DIR, exist_ok=True)
+    if not name.endswith('.pdf'):
+        name = name + '.pdf'
+    fig.subplots_adjust(left=0, right=1, top=1, bottom=0)
+    fig.savefig(os.path.join(OUTPUT_DIR, name),
+                format='pdf', facecolor=BG)
+    plt.close(fig)
+    print(f'saved {name}')
+
+
+def render():
+    fig, ax = make_fig()
+    np.random.seed(11)
+    moon_r = PW * 0.14
+    # Corona streams — radial filaments from behind the disk
+    n_streams = 200
+    for i in range(n_streams):
+        angle = i / n_streams * 2 * np.pi
+        t = np.linspace(0, 1, 600)
+        # Stream length varies — longer at equator, shorter at poles
+        equatorial_factor = 1.0 - 0.5 * abs(np.sin(angle))
+        length = PW * (0.2 + 0.35 * equatorial_factor) * np.random.uniform(0.7, 1.3)
+        r = moon_r * 0.95 + t * length
+        # Streamers have subtle helical twist
+        twist = PW * 0.015 * np.sin(t * 3 * np.pi + angle * 3) * equatorial_factor
+        xs = cx + r * np.cos(angle) + twist * np.cos(angle + np.pi / 2)
+        ys = cy + r * np.sin(angle) + twist * np.sin(angle + np.pi / 2)
+        mask = ((xs > PAD_L) & (xs < PAD_L + PW) &
+                (ys > PAD_B) & (ys < PAD_B + PH))
+        if mask.sum() < 3: continue
+        col = CORONA if i % 3 == 0 else (STARLIGHT if i % 3 == 1 else IVORY)
+        for seg_xs, seg_ys in split_segments(xs, ys, mask):
+            draw_tapered(ax, seg_xs, seg_ys, col, 1.2, 0.05, 0.40, 0.01, zo=3)
+    # Inner corona glow
+    for r_, a_ in [(moon_r * 1.8, 0.04), (moon_r * 1.4, 0.10), (moon_r * 1.15, 0.25)]:
+        ax.add_patch(Circle((cx, cy), radius=r_,
+                    facecolor=rgba(CORONA, a_), edgecolor='none', zorder=4))
+    # Chromosphere — thin red ring
+    theta = np.linspace(0, 2 * np.pi, 600)
+    cr_xs = cx + moon_r * 1.02 * np.cos(theta)
+    cr_ys = cy + moon_r * 1.02 * np.sin(theta)
+    draw_lc(ax, cr_xs, cr_ys, CRIMSON, lw=1.5, alpha=0.5, zo=5)
+    # Moon disk — pure black
+    ax.add_patch(Circle((cx, cy), radius=moon_r,
+                facecolor=rgba(BG, 1.0), edgecolor='none', zorder=6))
+    # Diamond ring effect — single bright point at edge
+    dr_angle = np.pi * 0.25
+    dr_x = cx + moon_r * np.cos(dr_angle)
+    dr_y = cy + moon_r * np.sin(dr_angle)
+    for r_, a_ in [(0.15, 0.06), (0.08, 0.15), (0.03, 0.50), (0.012, 0.90)]:
+        ax.add_patch(Circle((dr_x, dr_y), radius=r_,
+                    facecolor=rgba(STARLIGHT, a_), edgecolor='none', zorder=8))
+    label(ax, "I(r)=I_corona/r")
+    save(fig, "awe_eclipse.pdf")
+
+
+if __name__ == '__main__':
+    render()
