@@ -41,7 +41,6 @@ const baseUrl =
 // Group by emotional valence for the page structure
 const heavyEmotions = [
   "grief",
-  "melancholy",
   "longing",
   "nostalgia",
   "solitude",
@@ -53,7 +52,6 @@ const tenseEmotions = [
   "confusion",
   "fractured",
   "rage",
-  "envy",
 ];
 const warmEmotions = [
   "connection",
@@ -63,10 +61,8 @@ const warmEmotions = [
   "anticipation",
 ];
 const lightEmotions = [
-  "joy",
   "wonder",
   "awe",
-  "euphoria",
   "peace",
   "growth",
   "resilience",

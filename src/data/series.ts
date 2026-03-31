@@ -311,29 +311,6 @@ export const series: Series[] = [
     bundlePrice: 169,
   },
 
-  // ── MELANCHOLY ──────────────────────────────────────────
-  {
-    id: "melancholy",
-    name: "MELANCHOLY",
-    emotion: "sadness without crisis, a low sustained tone",
-    tagline: "Entropy increasing slowly. Drift without destination. The Lethe flowing at the speed of forgetting.",
-    description: "Entropy fields, slow drift functions, elegiac decay, dissolution, and the river Lethe. Sadness that is not acute but ambient — a background hum of loss.",
-    story: "Melancholy is not grief. Grief has an object. Melancholy is a state — a slow, pervasive sadness that colors everything without breaking anything. The mathematics of entropy describes this: systems that slowly lose order, not catastrophically, but inevitably.",
-    mathematicalPrimitive: "entropy, drift, slow decay, dissolution",
-    background: "#D8D4D0",
-    palette: ["#708090", "#8090A0", "#6070A0", "#506080", "#405070"],
-    makingOf: "61 renders. 5 survived.",
-    pieces: [
-      { id: "melancholy-dissolve", title: "Dissolve", series: "melancholy", equation: "c(t) = c₀ · e^{-kt}", description: "Concentration decaying in solution. The sharp definition of a substance spreading until it's everywhere and nowhere. I watched it go from something to nothing.", emotionalNote: "Spreading until it's everywhere and nowhere", background: "#D8D4D0", imageUrl: "/prints/melancholy/melancholy_dissolve.jpg", gumroadUrl: "https://gumroad.com/l/placeholder", price: 45 },
-      { id: "melancholy-drift", title: "Drift", series: "melancholy", equation: "dx = μdt + σdW", description: "Brownian motion with weak drift — a slow, purposeless migration. There's technically a direction, but it barely matters.", emotionalNote: "Movement without purpose, direction without urgency", background: "#D8D4D0", imageUrl: "/prints/melancholy/melancholy_drift.jpg", gumroadUrl: "https://gumroad.com/l/placeholder", price: 45 },
-      { id: "melancholy-elegy", title: "Elegy", series: "melancholy", equation: "f(t) = A · t^{-α}, α ∈ (0,1)", description: "Power-law decay — slower than exponential. The signal fades but refuses to fully vanish. It just gets quieter and quieter without ever reaching silence.", emotionalNote: "Getting quieter without ever reaching silence", background: "#D8D4D0", imageUrl: "/prints/melancholy/melancholy_elegy.jpg", gumroadUrl: "https://gumroad.com/l/placeholder", price: 45 },
-      { id: "melancholy-entropy", title: "Entropy", series: "melancholy", equation: "S = -k Σ pᵢ ln pᵢ, dS/dt ≥ 0", description: "Shannon entropy increasing over time. I watched the system slowly lose the information that once made it ordered — structure dissolving into noise so gradually you can't point to when it changed.", emotionalNote: "Order dissolving into noise so slowly you can't point to when", background: "#D8D4D0", imageUrl: "/prints/melancholy/melancholy_entropy.jpg", gumroadUrl: "https://gumroad.com/l/placeholder", price: 45 },
-      { id: "melancholy-lethe", title: "Lethe", series: "melancholy", equation: "∂c/∂t + v·∇c = D∇²c", description: "Advection-diffusion in a slow river — substance carried downstream and dispersed. Named for the mythological river of forgetting. The current does the work.", emotionalNote: "The slow current that carries everything away", background: "#D8D4D0", imageUrl: "/prints/melancholy/melancholy_lethe.jpg", gumroadUrl: "https://gumroad.com/l/placeholder", price: 45 },
-    ],
-    bundleGumroadUrl: "https://gumroad.com/l/placeholder-melancholy-bundle",
-    bundlePrice: 169,
-  },
-
   // ── SURRENDER ───────────────────────────────────────────
   {
     id: "surrender",
@@ -428,28 +405,6 @@ export const series: Series[] = [
     bundlePrice: 169,
   },
 
-  // ── ENVY ────────────────────────────────────────────────
-  {
-    id: "envy",
-    name: "ENVY",
-    emotion: "comparison, mirroring, the distance between you and them",
-    tagline: "Mirror functions. Glass ceilings at y = c. Shadow projections of brighter forms.",
-    description: "Mirror reflections, barrier functions, shadow projections, covetous proximity curves, and surveillance geometry. The mathematics of watching something you cannot have.",
-    story: "Envy is a function of distance — not physical distance, but the gap between what you are and what you see someone else being. It requires a mirror: you must be able to see the comparison clearly. This series renders that geometry of comparison.",
-    mathematicalPrimitive: "reflection, barrier functions, projection, proximity",
-    background: "#0C1A0C",
-    palette: ["#40A040", "#308030", "#50C050", "#206020", "#60E060"],
-    makingOf: "40 renders. 5 survived.",
-    pieces: [
-      { id: "envy-glass-ceiling", title: "Glass Ceiling", series: "envy", equation: "f(x) = min(g(x), c)", description: "A function clamped at a ceiling. Growth is permitted to a point, then truncated. You can't see the barrier from below — you only find it when you hit it.", emotionalNote: "You only find the ceiling when you hit it", background: "#0C1A0C", imageUrl: "/prints/envy/envy_glass_ceiling.jpg", gumroadUrl: "https://gumroad.com/l/placeholder", price: 45 },
-      { id: "envy-mirror", title: "Mirror", series: "envy", equation: "f(-x) = f(x)", description: "A function reflected across an axis. The same form, reversed. I kept staring at it and realized the mirror shows you more about yourself than about the other side.", emotionalNote: "The mirror shows you more about yourself", background: "#0C1A0C", imageUrl: "/prints/envy/envy_mirror.jpg", gumroadUrl: "https://gumroad.com/l/placeholder", price: 45 },
-      { id: "envy-shadow", title: "Shadow", series: "envy", equation: "P(x) = x - (x·n̂)n̂", description: "Orthogonal projection — the shadow of a higher-dimensional object onto a lower plane. Always less than the original. You only see the flattened version.", emotionalNote: "You only ever see the flattened version", background: "#0C1A0C", imageUrl: "/prints/envy/envy_shadow.jpg", gumroadUrl: "https://gumroad.com/l/placeholder", price: 45 },
-      { id: "envy-watch", title: "Watch", series: "envy", equation: "θ(t) = arctan(y(t)/x(t))", description: "An angle function that tracks a moving point. The geometry of eyes that follow — always computed, always pointing at what they can't look away from.", emotionalNote: "Eyes that can't look away", background: "#0C1A0C", imageUrl: "/prints/envy/envy_watch.jpg", gumroadUrl: "https://gumroad.com/l/placeholder", price: 45 },
-    ],
-    bundleGumroadUrl: "https://gumroad.com/l/placeholder-envy-bundle",
-    bundlePrice: 169,
-  },
-
   // ── RAGE ────────────────────────────────────────────────
   {
     id: "rage",
@@ -470,27 +425,6 @@ export const series: Series[] = [
       { id: "rage-shockwave", title: "Shockwave", series: "rage", equation: "v > c, M = v/c >> 1", description: "Motion faster than the medium can communicate — the Mach cone. The shockwave arrives before the warning. By the time you hear it, it's already past you.", emotionalNote: "It arrives before the warning", background: "#1A0A0A", imageUrl: "/prints/rage/rage_shockwave.jpg", gumroadUrl: "https://gumroad.com/l/placeholder", price: 45 },
     ],
     bundleGumroadUrl: "https://gumroad.com/l/placeholder-rage-bundle",
-    bundlePrice: 169,
-  },
-
-  // ── JOY ─────────────────────────────────────────────────
-  {
-    id: "joy",
-    name: "JOY",
-    emotion: "radiance, expansion, light from the center",
-    tagline: "Sunburst functions. Confetti scatter. Lissajous curves in perfect bloom.",
-    description: "Sunburst radiation, confetti scatter distributions, Lissajous blooms, pinwheel symmetry, and bloom functions. Energy radiating outward from a center.",
-    story: "Joy is centrifugal — it radiates outward. The mathematics of radiation, scatter, and bloom describe systems that expand from a center with no resistance. Light. Confetti. Fireworks. This series captures the geometry of feeling that goes outward.",
-    mathematicalPrimitive: "radial expansion, scatter distributions, symmetric bloom",
-    background: "#FFFCF0",
-    palette: ["#E8A020", "#F0C040", "#E06030", "#D04080", "#40A0D0"],
-    makingOf: "45 renders. 5 survived.",
-    pieces: [
-      { id: "joy-bloom", title: "Bloom", series: "joy", equation: "r(θ) = a + b·cos(nθ), a > b", description: "A rose curve expanding — petals opening as the amplitude grows. I let each petal unfold without constraining it. The geometry of opening up.", emotionalNote: "Opening without hesitation", background: "#FFFCF0", imageUrl: "/prints/joy/joy_bloom.jpg", gumroadUrl: "https://gumroad.com/l/placeholder", price: 45 },
-      { id: "joy-lissajous", title: "Lissajous", series: "joy", equation: "x = sin(3t), y = sin(4t)", description: "A Lissajous figure at a 3:4 ratio — the closed curve two harmonics make when they're in perfect relationship. Clean, complete, satisfying.", emotionalNote: "Two harmonics in perfect relationship", background: "#FFFCF0", imageUrl: "/prints/joy/joy_lissajous.jpg", gumroadUrl: "https://gumroad.com/l/placeholder", price: 45 },
-      { id: "joy-sunburst", title: "Sunburst", series: "joy", equation: "I(r,θ) = I₀ · (1/r) · Σ δ(θ - 2πn/N)", description: "Light streaming outward from a center in every direction equally. No direction favored, no angle brighter. I wanted pure radiance with no preference.", emotionalNote: "Light going everywhere equally", background: "#FFFCF0", imageUrl: "/prints/joy/joy_sunburst.jpg", gumroadUrl: "https://gumroad.com/l/placeholder", price: 45 },
-    ],
-    bundleGumroadUrl: "https://gumroad.com/l/placeholder-joy-bundle",
     bundlePrice: 169,
   },
 
@@ -537,28 +471,6 @@ export const series: Series[] = [
       { id: "trust-weave", title: "Weave", series: "trust", equation: "f(x,y) = sin(x)sin(y) + sin(x)cos(y)", description: "Two sinusoidal functions interlocking — warp and weft creating a fabric. Neither thread is strong alone. Together they hold.", emotionalNote: "Neither strong alone, together they hold", background: "#E8E4E0", imageUrl: "/prints/trust/trust_weave.jpg", gumroadUrl: "https://gumroad.com/l/placeholder", price: 45 },
     ],
     bundleGumroadUrl: "https://gumroad.com/l/placeholder-trust-bundle",
-    bundlePrice: 169,
-  },
-
-  // ── EUPHORIA ────────────────────────────────────────────
-  {
-    id: "euphoria",
-    name: "EUPHORIA",
-    emotion: "peak intensity, maximum amplitude, the ceiling",
-    tagline: "Crown functions at maximum amplitude. Kaleidoscopic symmetry. Stained glass tessellation at full saturation.",
-    description: "Maximum-amplitude functions, kaleidoscopic symmetry groups, crown waveforms, prismatic refraction, and stained glass tessellation. Systems at peak intensity — the mathematical ceiling.",
-    story: "Euphoria is a system at maximum amplitude. It cannot go higher. The mathematics of extrema — peaks, crowns, saturated color fields — describe moments of maximum intensity. These are not sustainable states, which makes them precious.",
-    mathematicalPrimitive: "maximum amplitude, symmetry groups, tessellation, refraction",
-    background: "#0A0A14",
-    palette: ["#E040E0", "#40E0E0", "#E0E040", "#E04040", "#40E040"],
-    makingOf: "50 renders. 5 survived.",
-    pieces: [
-      { id: "euphoria-crown", title: "Crown", series: "euphoria", equation: "f(θ) = |cos(nθ/2)|^{1/n}", description: "A supercircle in polar coordinates — the curve crowns at its vertices. I pushed each peak to maximum. That's what euphoria looks like mathematically: everything at the ceiling.", emotionalNote: "Everything at the ceiling", background: "#0A0A14", imageUrl: "/prints/euphoria/euphoria_crown.jpg", gumroadUrl: "https://gumroad.com/l/placeholder", price: 45 },
-      { id: "euphoria-firework", title: "Firework", series: "euphoria", equation: "r(t) = v₀t - ½gt², θ ~ Uniform(0,2π)", description: "Ballistic trajectories launched from a single point in all directions — expanding outward, then falling. One brilliant moment, then gravity. I kept the burst.", emotionalNote: "One brilliant moment, then gravity", background: "#0A0A14", imageUrl: "/prints/euphoria/euphoria_firework.jpg", gumroadUrl: "https://gumroad.com/l/placeholder", price: 45 },
-      { id: "euphoria-kaleidoscope", title: "Kaleidoscope", series: "euphoria", equation: "f(r,θ) = f(r, θ + 2π/n), n = 6", description: "Six-fold rotational symmetry — every 60 degrees reveals the same pattern. I kept rotating it and it never stopped being satisfying.", emotionalNote: "The same beauty at every angle", background: "#0A0A14", imageUrl: "/prints/euphoria/euphoria_kaleidoscope.jpg", gumroadUrl: "https://gumroad.com/l/placeholder", price: 45 },
-      { id: "euphoria-prismatic", title: "Prismatic", series: "euphoria", equation: "n(λ) = A + B/λ² + C/λ⁴", description: "Cauchy's dispersion equation — white light separated into its full spectrum. Every wavelength that was hidden inside, spread out and visible. All of it at once.", emotionalNote: "Everything that was hidden inside, visible at once", background: "#0A0A14", imageUrl: "/prints/euphoria/euphoria_prismatic.jpg", gumroadUrl: "https://gumroad.com/l/placeholder", price: 45 },
-    ],
-    bundleGumroadUrl: "https://gumroad.com/l/placeholder-euphoria-bundle",
     bundlePrice: 169,
   },
 

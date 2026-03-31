@@ -30,7 +30,6 @@ const baseUrl =
 const giftPickSeriesIds = [
   "connection",
   "awe",
-  "joy",
   "wonder",
   "growth",
   "resilience",

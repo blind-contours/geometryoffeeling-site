@@ -42,7 +42,6 @@ const curatedSeriesIds = [
   "solitude",
   "grief",
   "surrender",
-  "melancholy",
   "nostalgia",
   "longing",
   "trust",
