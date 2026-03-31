@@ -24,10 +24,9 @@ export default function AboutPage() {
   return (
     <div className="pt-28 pb-16">
       <div className="max-w-content mx-auto px-6">
-        <div className="max-w-2xl">
           {/* About the Artist */}
-          <section className="mb-20">
-            <div className="mb-10">
+          <section className="mb-20 max-w-4xl lg:grid lg:grid-cols-[340px_1fr] lg:gap-14 lg:items-start">
+            <div className="mb-10 lg:mb-0">
               <Image
                 src="/david-mccoy.jpg"
                 alt="David McCoy at work — Singularity render on one screen, Python code on the other"
@@ -50,11 +49,11 @@ export default function AboutPage() {
                 giving out. The patients in my studies are facing the worst
                 outcome there is, and the statistics I write help determine
                 whether a new valve will give them more time. It&apos;s precise
-                work. It matters in the most human way possible.
+                work.
               </p>
               <p className="text-body text-secondary">
                 My training is in causal inference and targeted learning — I
-                did my Ph.D. at UC Berkeley under Mark van der Laan, building
+                did my Ph.D. at UC Berkeley, building
                 statistical methods for understanding cause and effect in
                 complex systems. Before that, I studied philosophy and cognitive
                 neuroscience. I&apos;ve always been drawn to how things connect
@@ -63,11 +62,10 @@ export default function AboutPage() {
               </p>
               <p className="text-body text-secondary">
                 The honest truth is I&apos;ve never been naturally gifted at
-                math. Compared to my colleagues at Berkeley, I was always the
-                one who needed more time, more intuition, more visual thinking.
-                But that turned out to be the thing. Where others saw proofs, I
-                saw shapes. Where they saw convergence theorems, I felt
-                something.
+                math. Compared to my colleagues at Berkeley, I was the one who
+                had to draw things out — literally sketch the geometry of a
+                problem before I could understand it. That turned out to be the
+                whole point.
               </p>
               <p className="text-body text-secondary">
                 Over ten years ago, I had a simple idea: a circle sitting on
@@ -106,6 +104,7 @@ export default function AboutPage() {
             </div>
           </section>
 
+          <div className="max-w-2xl">
           <div className="border-t border-border mb-20" />
 
           {/* The Work */}
@@ -179,7 +178,7 @@ ys = baseline + PH*0.44 * np.exp(-lam*t) * np.cos(omega*np.pi*t)`}
               in a gallery with no label, would someone stop and feel something?
             </p>
           </section>
-        </div>
+          </div>
       </div>
     </div>
   );
