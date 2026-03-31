@@ -32,7 +32,7 @@ const config: Config = {
       },
       maxWidth: {
         content: "1200px",
-        gallery: "1600px",
+        gallery: "1800px",
       },
       spacing: {
         "gallery-gap": "20px",
