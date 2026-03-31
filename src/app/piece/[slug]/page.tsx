@@ -101,6 +101,7 @@ export default function PiecePage({ params }: Props) {
           width={1680}
           height={1155}
           background={piece.background}
+          pdfUrl={piece.imageUrl.replace(/\.jpg$/, ".pdf")}
         />
       </div>
 

@@ -9,6 +9,7 @@ interface ImageLightboxProps {
   width: number;
   height: number;
   background?: string;
+  pdfUrl?: string;
 }
 
 export default function ImageLightbox({
@@ -17,8 +18,20 @@ export default function ImageLightbox({
   width,
   height,
   background,
+  pdfUrl,
 }: ImageLightboxProps) {
   const [open, setOpen] = useState(false);
+  const [pdfAvailable, setPdfAvailable] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    if (!open || !pdfUrl) return;
+    if (pdfAvailable !== null) return;
+    fetch(pdfUrl, { method: "HEAD" }).then((res) => {
+      setPdfAvailable(res.ok);
+    }).catch(() => {
+      setPdfAvailable(false);
+    });
+  }, [open, pdfUrl, pdfAvailable]);
 
   useEffect(() => {
     if (!open) return;
@@ -32,6 +45,8 @@ export default function ImageLightbox({
       window.removeEventListener("keydown", handleKey);
     };
   }, [open]);
+
+  const showPdf = pdfUrl && pdfAvailable;
 
   return (
     <>
@@ -53,29 +68,47 @@ export default function ImageLightbox({
 
       {open && (
         <div
-          className="fixed inset-0 z-50 bg-black/95 flex items-start justify-center overflow-auto"
+          className="fixed inset-0 z-50 bg-black/95 flex items-center justify-center"
           onClick={() => setOpen(false)}
         >
           <button
             onClick={() => setOpen(false)}
-            className="fixed top-4 right-4 z-50 min-w-[44px] min-h-[44px] flex items-center justify-center text-black text-3xl font-bold hover:text-black/70"
+            className="fixed top-4 right-4 z-50 min-w-[44px] min-h-[44px] flex items-center justify-center text-white text-3xl font-bold hover:text-white/70"
             aria-label="Close lightbox"
           >
             &times;
           </button>
           <div
-            className="min-w-[200vw] md:min-w-0 md:max-w-[90vw] md:my-8"
+            className={showPdf ? "w-full h-full md:w-[90vw] md:h-[90vh]" : "min-w-[200vw] md:min-w-0 md:max-w-[90vw] md:my-8"}
             onClick={(e) => e.stopPropagation()}
           >
-            <Image
-              src={src}
-              alt={alt}
-              width={width * 2}
-              height={height * 2}
-              unoptimized
-              className="w-full h-auto"
-              style={{ backgroundColor: background }}
-            />
+            {showPdf ? (
+              <object
+                data={pdfUrl}
+                type="application/pdf"
+                className="w-full h-full"
+              >
+                <Image
+                  src={src}
+                  alt={alt}
+                  width={width * 2}
+                  height={height * 2}
+                  unoptimized
+                  className="w-full h-auto"
+                  style={{ backgroundColor: background }}
+                />
+              </object>
+            ) : (
+              <Image
+                src={src}
+                alt={alt}
+                width={width * 2}
+                height={height * 2}
+                unoptimized
+                className="w-full h-auto"
+                style={{ backgroundColor: background }}
+              />
+            )}
           </div>
         </div>
       )}
