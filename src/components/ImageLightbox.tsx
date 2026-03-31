@@ -41,6 +41,7 @@ export default function ImageLightbox({
           alt={alt}
           width={width}
           height={height}
+          quality={90}
           className="w-full h-auto"
           priority
           style={{ backgroundColor: background }}
@@ -71,6 +72,7 @@ export default function ImageLightbox({
               alt={alt}
               width={width * 2}
               height={height * 2}
+              quality={95}
               className="w-full h-auto"
               style={{ backgroundColor: background }}
             />
