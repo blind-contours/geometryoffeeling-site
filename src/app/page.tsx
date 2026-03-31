@@ -36,23 +36,28 @@ export default function Home() {
       <Hero />
 
       {/* Positioning statement */}
-      <section className="max-w-content mx-auto px-6 py-24">
-        <h2 className="text-lg md:text-xl font-mono font-light leading-relaxed text-primary max-w-3xl mb-12">
-          Mathematical fine art for people who think precisely and feel deeply.
+      <section className="max-w-content mx-auto px-6 py-24 md:text-center">
+        <h2 className="text-xl md:text-2xl font-mono font-light leading-relaxed text-primary max-w-3xl md:mx-auto mb-12">
+          I find the equation hiding inside real things — and I draw it.
         </h2>
 
-        <div className="max-w-2xl space-y-6 mb-12">
-          <p className="text-body text-secondary">
-            Every piece begins with a human emotion — grief, growth, connection
-            — and asks: what mathematical function has the same shape as this
-            feeling? I research the emotion across art history and science,
-            then build the image from first principles. The equation isn&apos;t
-            decoration. It&apos;s the reason the piece looks the way it does.
+        <div className="max-w-2xl md:mx-auto space-y-6 mb-12">
+          <p className="text-body md:text-[17px] md:leading-relaxed text-secondary md:text-primary/80">
+            I spend weeks researching how things actually work. How a tree
+            bifurcates as it grows. How stress propagates through cracking
+            glass. How two coupled pendulums reshape each other&apos;s motion.
+            How heat diffuses until you can&apos;t tell it was ever there.
           </p>
-          <p className="text-body text-secondary">
-            In a world of AI-generated imagery, I went the other direction.
-            Minimalist fine art built from mathematical first principles
-            — not prompted, not generated, not automated. Every curve was chosen.
+          <p className="text-body md:text-[17px] md:leading-relaxed text-secondary md:text-primary/80">
+            I find the governing equation, write the code in Python, and render
+            the image from first principles — then strip away everything until
+            only the essential geometry remains. Each series connects a human
+            emotion to the mathematics that shares its shape. Grief follows
+            exponential decay. Connection mirrors coupled oscillators. The
+            equation isn&apos;t decoration. It&apos;s the reason the piece exists.
+          </p>
+          <p className="text-body md:text-[17px] md:leading-relaxed text-secondary md:text-primary/80">
+            No AI. No prompts. No generation. Every curve was chosen.
             Every parameter was earned.
           </p>
         </div>
@@ -87,7 +92,7 @@ export default function Home() {
         <div className="text-center mt-8">
           <Link
             href="/series"
-            className="text-caption uppercase tracking-widest text-secondary hover:text-primary transition-colors duration-500"
+            className="inline-block text-caption md:text-[13px] uppercase tracking-widest text-primary border-b border-primary/30 pb-1 hover:border-primary transition-colors duration-500"
           >
             Explore all {series.length} series &rarr;
           </Link>

@@ -171,7 +171,7 @@ export default function HomeSeriesGrid({ series, index }: HomeSeriesGridProps) {
       <div className={`mt-10 ${isRight ? "md:text-right" : ""}`}>
         <Link
           href={`/series/${series.id}`}
-          className="text-caption uppercase tracking-widest text-secondary hover:text-primary transition-colors duration-500"
+          className="inline-block text-caption md:text-[13px] uppercase tracking-widest text-primary border-b border-primary/30 pb-1 hover:border-primary transition-colors duration-500"
         >
           Explore series &rarr;
         </Link>
