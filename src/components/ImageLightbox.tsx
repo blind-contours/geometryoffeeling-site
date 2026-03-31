@@ -72,7 +72,7 @@ export default function ImageLightbox({
               alt={alt}
               width={width * 2}
               height={height * 2}
-              quality={95}
+              unoptimized
               className="w-full h-auto"
               style={{ backgroundColor: background }}
             />
