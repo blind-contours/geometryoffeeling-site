@@ -78,20 +78,15 @@ export default function AboutPage() {
               </p>
               <p className="text-body text-secondary">
                 So I started building. I collected equations the way other
-                people collect records — coupled oscillators for connection,
-                exponential decay for grief, L-system branching for growth,
-                Voronoi tessellation for fracture, orbital mechanics for
-                desire, murmuration algorithms for awe. Each one a
-                mathematical system that genuinely behaves the way an
+                people collect records — exponential decay for grief, coupled
+                oscillators for connection, L-system branching for growth. Each
+                one a mathematical system that genuinely behaves the way an
                 emotion does.
               </p>
               <p className="text-body text-secondary">
                 This became my craft. Something that made me feel like a kid
-                again — at play, using everything I&apos;d learned and trained
-                in, but pointed in a completely different direction. A place
-                where all the work I&apos;d done on myself — emotionally,
-                intellectually — could come together in a way that finally felt
-                like me.
+                again — at play, using everything I&apos;d learned, but pointed
+                in a completely different direction.
               </p>
               <p className="text-body text-secondary">
                 These pieces are all a product of that journey. I&apos;m happy
