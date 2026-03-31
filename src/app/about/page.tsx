@@ -80,12 +80,12 @@ export default function AboutPage() {
               </p>
               <p className="text-body text-secondary">
                 So I started building. I collected equations the way other
-                people collect records — Lorenz attractors for the chaos of
-                overwhelm, coupled oscillators for connection, exponential
-                decay for grief, L-system branching for growth, Voronoi
-                tessellation for fracture, orbital mechanics for desire,
-                murmuration algorithms for awe. Each one a mathematical system
-                that genuinely behaves the way an emotion does.
+                people collect records — coupled oscillators for connection,
+                exponential decay for grief, L-system branching for growth,
+                Voronoi tessellation for fracture, orbital mechanics for
+                desire, murmuration algorithms for awe. Each one a
+                mathematical system that genuinely behaves the way an
+                emotion does.
               </p>
               <p className="text-body text-secondary">
                 This became my craft. Something that made me feel like a kid

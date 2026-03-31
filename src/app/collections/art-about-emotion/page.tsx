@@ -7,7 +7,7 @@ export const metadata: Metadata = {
   title:
     "Emotional Art Prints | Minimalist Art About Grief, Connection, Awe & More — Geometry of Feeling",
   description:
-    "Emotional art that means something. 26 series of minimalist fine art prints exploring grief, connection, awe, desire, solitude, overwhelm, joy, and surrender through mathematics. Art that expresses feelings through the equations that share their shape. Museum-quality prints from $45.",
+    "Emotional art that means something. Minimalist fine art prints exploring grief, connection, awe, desire, solitude, joy, and surrender through mathematics. Art that expresses feelings through the equations that share their shape. Museum-quality prints from $45.",
   keywords: [
     "emotional art prints",
     "art about grief",
@@ -24,7 +24,7 @@ export const metadata: Metadata = {
     title:
       "Emotional Art Prints | Minimalist Art About Grief, Connection, Awe & More — Geometry of Feeling",
     description:
-      "Emotional art that means something. 26 series of minimalist fine art prints exploring grief, connection, awe, desire, solitude, overwhelm, joy, and surrender through mathematics. Art that expresses feelings through the equations that share their shape. Museum-quality prints from $45.",
+      "Emotional art that means something. Minimalist fine art prints exploring grief, connection, awe, desire, solitude, joy, and surrender through mathematics. Art that expresses feelings through the equations that share their shape. Museum-quality prints from $45.",
     images: [
       {
         url: "/prints/grief/grief_void.jpg",
@@ -48,9 +48,7 @@ const heavyEmotions = [
 ];
 const tenseEmotions = [
   "tension",
-  "overwhelm",
   "fractured",
-  "rage",
 ];
 const warmEmotions = [
   "connection",
@@ -115,9 +113,9 @@ export default function ArtAboutEmotionPage() {
           feelings are real. The correspondence between them is the art.
         </p>
         <p className="text-body text-secondary max-w-2xl mb-4">
-          26 series. 26 emotions. Each one uses a different class of
-          mathematical functions to render a different quality of feeling. Browse
-          by the emotion you want to see on your wall.
+          Each series uses a different class of mathematical functions to render
+          a different quality of feeling. Browse by the emotion you want to see
+          on your wall.
         </p>
         <p className="text-caption text-muted mb-16">
           Museum-quality giclée on Hahnemühle German Etching 310gsm. From $45

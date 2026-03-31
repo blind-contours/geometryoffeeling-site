@@ -104,29 +104,6 @@ export const series: Series[] = [
     bundlePrice: 169,
   },
 
-  // ── OVERWHELM ───────────────────────────────────────────
-  {
-    id: "overwhelm",
-    name: "OVERWHELM",
-    emotion: "too much, saturation, systems past capacity",
-    tagline: "Twelve harmonics, eight wave sources, twenty-two parallel streams. Each coherent alone. Together, unresolvable.",
-    description: "Multiple simultaneous systems rendered together — strange attractors, Kuramoto synchronization, Lévy flights, phase floods, and turbulent flow. The density is the overwhelm.",
-    story: "Overwhelm is not confusion. Each individual signal is clear. The problem is that there are too many of them. This series renders dozens of simultaneous mathematical systems in the same visual field. The palette uses the full spectrum because overwhelm does not discriminate.",
-    mathematicalPrimitive: "multi-system superposition, turbulence, swarm dynamics",
-    background: "#0A0A12",
-    palette: ["#E84040", "#40A0E8", "#E8D040", "#40E888", "#D040E8", "#E88040", "#4060E8", "#A0E840", "#E840A0", "#40E8D0"],
-    makingOf: "91 renders. 5 survived.",
-    pieces: [
-      { id: "overwhelm-attractors", title: "Attractors", series: "overwhelm", equation: "dx/dt = σ(y-x), dy/dt = x(ρ-z)-y", description: "I rendered multiple Lorenz attractors on top of each other. Each one follows its own deterministic path, but layered together they become unreadable. That's the point.", emotionalNote: "Every path makes sense alone — together they're unreadable", background: "#0A0A12", imageUrl: "/prints/overwhelm/overwhelm_attractors.jpg", gumroadUrl: "https://gumroad.com/l/placeholder", price: 45 },
-      { id: "overwhelm-kuramoto", title: "Kuramoto", series: "overwhelm", equation: "dθᵢ/dt = ωᵢ + (K/N)Σsin(θⱼ - θᵢ)", description: "Dozens of Kuramoto oscillators all trying to sync up and none of them fully succeeding. Each one is doing the right thing individually. Together it's too much.", emotionalNote: "Dozens of rhythms trying and failing to find each other", background: "#0A0A12", imageUrl: "/prints/overwhelm/overwhelm_kuramoto.jpg", gumroadUrl: "https://gumroad.com/l/placeholder", price: 45 },
-      { id: "overwhelm-levy-swarm", title: "Levy Swarm", series: "overwhelm", equation: "P(x) ~ |x|^{-1-α}, 0 < α < 2", description: "A swarm of Lévy flights — random walks that mostly take small steps but occasionally leap across the entire field. I couldn't keep them contained. That was the feeling I wanted.", emotionalNote: "Motion that refuses to stay bounded", background: "#0A0A12", imageUrl: "/prints/overwhelm/overwhelm_levy_swarm.jpg", gumroadUrl: "https://gumroad.com/l/placeholder", price: 45 },
-      { id: "overwhelm-phase-flood", title: "Phase Flood", series: "overwhelm", equation: "ψ(x,t) = Σ Aₙ e^{i(kₙx - ωₙt + φₙ)}", description: "I superposed dozens of complex wave functions. The resulting field is nonzero everywhere and still nowhere. Every point vibrates from every direction at once.", emotionalNote: "Nowhere still, nothing quiet", background: "#0A0A12", imageUrl: "/prints/overwhelm/overwhelm_phase_flood.jpg", gumroadUrl: "https://gumroad.com/l/placeholder", price: 45 },
-      { id: "overwhelm-turbulence", title: "Turbulence", series: "overwhelm", equation: "Re = ρvL/μ >> Re_cr", description: "Fluid flow past the critical Reynolds number. I pushed the simulation until the laminar lines broke apart — order dissolving into chaos at every scale simultaneously.", emotionalNote: "Order dissolving at every scale at once", background: "#0A0A12", imageUrl: "/prints/overwhelm/overwhelm_turbulence.jpg", gumroadUrl: "https://gumroad.com/l/placeholder", price: 45 },
-    ],
-    bundleGumroadUrl: "https://gumroad.com/l/placeholder-overwhelm-bundle",
-    bundlePrice: 169,
-  },
-
   // ── GRIEF ───────────────────────────────────────────────
   {
     id: "grief",
@@ -381,29 +358,6 @@ export const series: Series[] = [
       { id: "awe-overview", title: "Overview", series: "awe", equation: "h/R ≈ 0.01‰", description: "Earth's atmosphere as a thin luminous arc against the void — the Overview Effect. I drew it to scale. That line is impossibly thin. Everything I know is under it.", emotionalNote: "Everything is under that thin line", background: "#0A0A10", imageUrl: "/prints/awe/awe_overview.jpg", gumroadUrl: "https://gumroad.com/l/placeholder", price: 45 },
     ],
     bundleGumroadUrl: "https://gumroad.com/l/placeholder-awe-bundle",
-    bundlePrice: 169,
-  },
-
-  // ── RAGE ────────────────────────────────────────────────
-  {
-    id: "rage",
-    name: "RAGE",
-    emotion: "explosive force, destruction, uncontained energy",
-    tagline: "Detonation wavefronts. Shockwave propagation. Systems that exceed every boundary at once.",
-    description: "Detonation physics, shockwave propagation, chaotic bursts, shattering dynamics, and eruption mechanics. Energy that has exceeded all containment.",
-    story: "Rage is energy without containment. The mathematics of explosion — detonation waves, shock fronts, energy release rates — describe systems where the internal pressure exceeds every boundary simultaneously. This series renders that moment of total release.",
-    mathematicalPrimitive: "detonation, shockwave, energy release, chaotic burst",
-    background: "#1A0A0A",
-    palette: ["#E82020", "#FF4040", "#FF6010", "#CC1010", "#FF8030"],
-    makingOf: "42 renders. 5 survived.",
-    pieces: [
-      { id: "rage-chaos", title: "Chaos", series: "rage", equation: "x_{n+1} = 4x_n(1-x_n)", description: "The logistic map at r=4. Fully chaotic — every initial condition leads somewhere completely unpredictable. I ran it thousands of times and no two paths match.", emotionalNote: "No two paths match, ever", background: "#1A0A0A", imageUrl: "/prints/rage/rage_chaos.jpg", gumroadUrl: "https://gumroad.com/l/placeholder", price: 45 },
-      { id: "rage-detonation", title: "Detonation", series: "rage", equation: "D = √(2(γ²-1)q)", description: "The Chapman-Jouguet detonation velocity — the minimum speed at which a detonation wave can propagate. Below this speed, it fizzles. At this speed, everything goes.", emotionalNote: "The minimum speed at which everything goes", background: "#1A0A0A", imageUrl: "/prints/rage/rage_detonation.jpg", gumroadUrl: "https://gumroad.com/l/placeholder", price: 45 },
-      { id: "rage-eruption", title: "Eruption", series: "rage", equation: "p(z) = ρgz + p₀, p > p_yield", description: "Pressure exceeding yield strength — the magma chamber equation. I pushed the internal pressure past every boundary. Containment fails. Everything comes up.", emotionalNote: "Pressure that exceeds every boundary at once", background: "#1A0A0A", imageUrl: "/prints/rage/rage_eruption.jpg", gumroadUrl: "https://gumroad.com/l/placeholder", price: 45 },
-      { id: "rage-shatter", title: "Shatter", series: "rage", equation: "E_release > Σ G_c · A_crack", description: "Griffith fracture — the energy available exceeds the surface energy of all possible cracks simultaneously. Everything breaks in every direction at once.", emotionalNote: "Breaking in every direction at once", background: "#1A0A0A", imageUrl: "/prints/rage/rage_shatter.jpg", gumroadUrl: "https://gumroad.com/l/placeholder", price: 45 },
-      { id: "rage-shockwave", title: "Shockwave", series: "rage", equation: "v > c, M = v/c >> 1", description: "Motion faster than the medium can communicate — the Mach cone. The shockwave arrives before the warning. By the time you hear it, it's already past you.", emotionalNote: "It arrives before the warning", background: "#1A0A0A", imageUrl: "/prints/rage/rage_shockwave.jpg", gumroadUrl: "https://gumroad.com/l/placeholder", price: 45 },
-    ],
-    bundleGumroadUrl: "https://gumroad.com/l/placeholder-rage-bundle",
     bundlePrice: 169,
   },
 

@@ -31,10 +31,8 @@ const featuredSeriesIds = [
   "awe",
   "connection",
   "fractured",
-  "overwhelm",
   "cycles",
   "growth",
-  "chaos",
   "tension",
 ];
 
@@ -132,7 +130,7 @@ export default function MathematicalArtPage() {
             >
               complete catalog
             </Link>{" "}
-            across all 26 mathematical series, or explore{" "}
+            across all series, or explore{" "}
             <Link
               href="/series"
               className="text-primary underline underline-offset-4 hover:opacity-70 transition-opacity duration-500"
