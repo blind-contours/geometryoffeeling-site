@@ -22,21 +22,21 @@ DPI = 300
 FIG_W = 12
 FIG_H = 8
 CONTENT_BG = "#0A0A18"
-MARGIN_COLOR = "#CCC8C0"
+MARGIN_COLOR = "#CCC2AA"
 
-# Strata line palette: cosmic teal -> violet -> earth -> gold
+# Strata line palette: vivid cosmic teal -> violet -> earth -> gold
 PALETTE = [
-    "#4888B0", "#6858B0", "#8B6A6A", "#B08850",
-    "#C8A050", "#D8C070", "#E8D890"
+    "#50A0D0", "#7868D0", "#C06060", "#D09040",
+    "#E0B830", "#F0D040", "#F8E070"
 ]
 
 # Event layers — singular geological events
 EVENT_LAYERS = [
-    {"index": 10, "color": "#D8B840", "alpha": 0.6, "width": 1.1},
-    {"index": 35, "color": "#606880", "alpha": 0.45, "width": 0.7},
-    {"index": 55, "color": "#F0D060", "alpha": 0.55, "width": 1.0},
-    {"index": 75, "color": "#D8B840", "alpha": 0.5, "width": 1.0},
-    {"index": 90, "color": "#A07040", "alpha": 0.4, "width": 0.8},
+    {"index": 10, "color": "#F0D060", "alpha": 0.75, "width": 1.4},
+    {"index": 35, "color": "#8090B0", "alpha": 0.55, "width": 0.9},
+    {"index": 55, "color": "#FFE070", "alpha": 0.7, "width": 1.3},
+    {"index": 75, "color": "#F0D060", "alpha": 0.65, "width": 1.3},
+    {"index": 90, "color": "#C08040", "alpha": 0.5, "width": 1.0},
 ]
 
 NUM_LAYERS = 100
@@ -189,10 +189,10 @@ def render():
             line_width = event.get("width", 1.3)
         else:
             rgb = get_grad_color(PALETTE, t)
-            alpha = 0.18 + (1 - depth_factor) * 0.5
+            alpha = 0.35 + (1 - depth_factor) * 0.55
             wv = np.sin(i * 1.7) * 0.25 + np.sin(i * 4.3) * 0.1
-            line_width = max(0.3, min(1.3,
-                                       0.5 + (1 - depth_factor) * 0.4 + wv * 0.4))
+            line_width = max(0.5, min(1.6,
+                                       0.7 + (1 - depth_factor) * 0.5 + wv * 0.4))
 
         # Compute y positions
         sd = i * 137.5
