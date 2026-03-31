@@ -101,7 +101,7 @@ export default function PiecePage({ params }: Props) {
           width={1680}
           height={1155}
           background={piece.background}
-          hiresSrc={piece.imageUrl.replace(/\.jpg$/, "_hires.jpg")}
+          pdfUrl={`https://9wbvpcvk2ch9x7ir.public.blob.vercel-storage.com/prints/${piece.id.replace(/-/g, "_")}.pdf`}
         />
       </div>
 

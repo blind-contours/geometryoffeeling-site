@@ -2,6 +2,9 @@
 
 import Image from "next/image";
 import { useState, useEffect } from "react";
+import dynamic from "next/dynamic";
+
+const PdfCanvas = dynamic(() => import("./PdfCanvas"), { ssr: false });
 
 interface ImageLightboxProps {
   src: string;
@@ -9,7 +12,7 @@ interface ImageLightboxProps {
   width: number;
   height: number;
   background?: string;
-  hiresSrc?: string;
+  pdfUrl?: string;
 }
 
 export default function ImageLightbox({
@@ -18,9 +21,20 @@ export default function ImageLightbox({
   width,
   height,
   background,
-  hiresSrc,
+  pdfUrl,
 }: ImageLightboxProps) {
   const [open, setOpen] = useState(false);
+  const [pdfAvailable, setPdfAvailable] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    if (!open || !pdfUrl) return;
+    if (pdfAvailable !== null) return;
+    fetch(pdfUrl, { method: "HEAD" }).then((res) => {
+      setPdfAvailable(res.ok);
+    }).catch(() => {
+      setPdfAvailable(false);
+    });
+  }, [open, pdfUrl, pdfAvailable]);
 
   useEffect(() => {
     if (!open) return;
@@ -34,6 +48,8 @@ export default function ImageLightbox({
       window.removeEventListener("keydown", handleKey);
     };
   }, [open]);
+
+  const showPdf = pdfUrl && pdfAvailable;
 
   return (
     <>
@@ -69,15 +85,19 @@ export default function ImageLightbox({
             className="min-w-[200vw] md:min-w-0 md:max-w-[90vw] md:my-8"
             onClick={(e) => e.stopPropagation()}
           >
-            <Image
-              src={hiresSrc || src}
-              alt={alt}
-              width={width * 2}
-              height={height * 2}
-              unoptimized
-              className="w-full h-auto"
-              style={{ backgroundColor: background }}
-            />
+            {showPdf ? (
+              <PdfCanvas url={pdfUrl} background={background} />
+            ) : (
+              <Image
+                src={src}
+                alt={alt}
+                width={width * 2}
+                height={height * 2}
+                unoptimized
+                className="w-full h-auto"
+                style={{ backgroundColor: background }}
+              />
+            )}
           </div>
         </div>
       )}
