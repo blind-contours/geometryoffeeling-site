@@ -45,8 +45,8 @@ export default function PdfCanvas({
         const canvas = canvasRef.current;
         if (!canvas) return;
 
-        // Render at 2x scale for retina crispness
-        const viewport = page.getViewport({ scale: 2 });
+        // Render at 3x scale for maximum crispness
+        const viewport = page.getViewport({ scale: 3 });
 
         canvas.width = viewport.width;
         canvas.height = viewport.height;
