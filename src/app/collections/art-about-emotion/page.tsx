@@ -49,7 +49,6 @@ const heavyEmotions = [
 const tenseEmotions = [
   "tension",
   "overwhelm",
-  "confusion",
   "fractured",
   "rage",
 ];

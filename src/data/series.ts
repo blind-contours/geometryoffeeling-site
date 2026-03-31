@@ -200,27 +200,6 @@ export const series: Series[] = [
     bundlePrice: 169,
   },
 
-  // ── CONFUSION ───────────────────────────────────────────
-  {
-    id: "confusion",
-    name: "CONFUSION",
-    emotion: "disorientation, tangling, loss of clarity",
-    tagline: "Aliased signals, impossible knots, labyrinths with no exit. The geometry of not knowing which way is forward.",
-    description: "Aliased signals, topological knots, labyrinths, tangles, and vertigo spirals. Systems that fold back on themselves until the path forward becomes invisible.",
-    story: "Confusion is not ignorance. It is the state of having too many valid interpretations. Aliasing occurs when a signal is sampled too slowly — the true frequency becomes indistinguishable from a false one. This series renders that ambiguity as visual structure.",
-    mathematicalPrimitive: "aliasing, topological knots, labyrinth generation, tangled trajectories",
-    background: "#E6E2DC",
-    palette: ["#8A7A6A", "#6A8A7A", "#7A6A8A", "#9A8A7A", "#6A7A8A"],
-    makingOf: "52 renders. 5 survived.",
-    pieces: [
-      { id: "confusion-aliased", title: "Aliased", series: "confusion", equation: "f_alias = |f - n·f_s|, n = round(f/f_s)", description: "I sampled a signal below the Nyquist rate and watched the true frequency become indistinguishable from its aliases. You can't tell which one is real anymore.", emotionalNote: "When the real signal and its reflections look identical", background: "#E6E2DC", imageUrl: "/prints/confusion/confusion_aliased.jpg", gumroadUrl: "https://gumroad.com/l/placeholder", price: 45 },
-      { id: "confusion-knot", title: "Knot", series: "confusion", equation: "K: S¹ → S³", description: "A topological knot — a closed curve in 3D space that crosses itself so many times you lose track of where it started. Can't be untangled without cutting.", emotionalNote: "A path that crosses itself until the start is lost", background: "#E6E2DC", imageUrl: "/prints/confusion/confusion_knot.jpg", gumroadUrl: "https://gumroad.com/l/placeholder", price: 45 },
-      { id: "confusion-vertigo", title: "Vertigo", series: "confusion", equation: "r(t) = e^{-at}(cos ωt, sin ωt, t)", description: "A spiral that ascends and decays at the same time. I tilted the visual field until I lost my own sense of orientation making it.", emotionalNote: "The spiral that makes the ground feel uncertain", background: "#E6E2DC", imageUrl: "/prints/confusion/confusion_vertigo.jpg", gumroadUrl: "https://gumroad.com/l/placeholder", price: 45 },
-    ],
-    bundleGumroadUrl: "https://gumroad.com/l/placeholder-confusion-bundle",
-    bundlePrice: 169,
-  },
-
   // ── SHAME ───────────────────────────────────────────────
   {
     id: "shame",
