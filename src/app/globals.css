@@ -36,6 +36,22 @@ body {
 }
 
 
+/* Desktop font scale-up */
+@media (min-width: 1024px) {
+  body {
+    font-size: 18px;
+  }
+  .text-headline {
+    font-size: 21px;
+  }
+  .text-headline-lg {
+    font-size: 26px;
+  }
+  .text-caption {
+    font-size: 14px;
+  }
+}
+
 /* Hide scrollbar for mobile horizontal scroll */
 .scrollbar-hide {
   -ms-overflow-style: none;
