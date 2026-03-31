@@ -49,7 +49,7 @@ export async function sendOrderConfirmation({
       email once it ships — typically 5–10 business days.
     </p>
 
-    <div style="background:#F0EDE8;padding:4px;margin-bottom:24px;">
+    <div style="margin-bottom:24px;">
       <img src="${imageUrl}" alt="${pieceTitle}" style="width:100%;display:block;" />
     </div>
 
