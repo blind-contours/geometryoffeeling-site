@@ -56,15 +56,11 @@ export default function Home() {
             exponential decay. Connection mirrors coupled oscillators. The
             equation isn&apos;t decoration. It&apos;s the reason the piece exists.
           </p>
-          <p className="text-body md:text-[17px] md:leading-relaxed text-secondary md:text-primary/80">
-            No AI. No prompts. No generation. Every curve was chosen.
-            Every parameter was earned.
-          </p>
         </div>
 
         <div className="border border-border px-6 py-4 inline-block">
-          <p className="text-caption uppercase tracking-widest text-secondary">
-            Built in Python. Evaluated as art. No AI generated images.
+          <p className="text-caption uppercase tracking-widest text-primary/70">
+            Hand-coded in Python. Thousands of renders. Every parameter earned. No AI generated images.
           </p>
         </div>
       </section>
