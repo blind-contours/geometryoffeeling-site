@@ -1,16 +1,27 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import Image from "next/image";
 
 interface PdfCanvasProps {
   url: string;
   background?: string;
+  fallbackSrc: string;
+  fallbackAlt: string;
+  fallbackWidth: number;
+  fallbackHeight: number;
 }
 
-export default function PdfCanvas({ url, background }: PdfCanvasProps) {
+export default function PdfCanvas({
+  url,
+  background,
+  fallbackSrc,
+  fallbackAlt,
+  fallbackWidth,
+  fallbackHeight,
+}: PdfCanvasProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(false);
+  const [status, setStatus] = useState<"loading" | "ready" | "error">("loading");
 
   useEffect(() => {
     let cancelled = false;
@@ -18,9 +29,14 @@ export default function PdfCanvas({ url, background }: PdfCanvasProps) {
     async function renderPdf() {
       try {
         const pdfjsLib = await import("pdfjs-dist");
-        pdfjsLib.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.mjs`;
+        pdfjsLib.GlobalWorkerOptions.workerSrc = "/pdf.worker.min.mjs";
 
-        const pdf = await pdfjsLib.getDocument(url).promise;
+        const loadingTask = pdfjsLib.getDocument({
+          url,
+          disableAutoFetch: false,
+          enableXfa: false,
+        });
+        const pdf = await loadingTask.promise;
         if (cancelled) return;
 
         const page = await pdf.getPage(1);
@@ -29,10 +45,8 @@ export default function PdfCanvas({ url, background }: PdfCanvasProps) {
         const canvas = canvasRef.current;
         if (!canvas) return;
 
-        // Scale to fit viewport width while maintaining aspect ratio
-        // Use 2x for retina sharpness
-        const baseScale = 2;
-        const viewport = page.getViewport({ scale: baseScale });
+        // Render at 2x scale for retina crispness
+        const viewport = page.getViewport({ scale: 2 });
 
         canvas.width = viewport.width;
         canvas.height = viewport.height;
@@ -40,13 +54,16 @@ export default function PdfCanvas({ url, background }: PdfCanvasProps) {
         const ctx = canvas.getContext("2d");
         if (!ctx) return;
 
-        await page.render({ canvasContext: ctx, viewport, canvas }).promise;
-        if (!cancelled) setLoading(false);
-      } catch {
-        if (!cancelled) {
-          setError(true);
-          setLoading(false);
-        }
+        const renderTask = page.render({
+          canvasContext: ctx,
+          viewport,
+          canvas,
+        });
+        await renderTask.promise;
+        if (!cancelled) setStatus("ready");
+      } catch (err) {
+        console.error("PDF render failed:", err);
+        if (!cancelled) setStatus("error");
       }
     }
 
@@ -54,11 +71,23 @@ export default function PdfCanvas({ url, background }: PdfCanvasProps) {
     return () => { cancelled = true; };
   }, [url]);
 
-  if (error) return null;
+  if (status === "error") {
+    return (
+      <Image
+        src={fallbackSrc}
+        alt={fallbackAlt}
+        width={fallbackWidth}
+        height={fallbackHeight}
+        unoptimized
+        className="w-full h-auto"
+        style={{ backgroundColor: background }}
+      />
+    );
+  }
 
   return (
     <div className="w-full" style={{ backgroundColor: background }}>
-      {loading && (
+      {status === "loading" && (
         <div className="flex items-center justify-center py-40">
           <div className="text-white/50 text-sm">Loading high-res view...</div>
         </div>
@@ -66,7 +95,7 @@ export default function PdfCanvas({ url, background }: PdfCanvasProps) {
       <canvas
         ref={canvasRef}
         className="w-full h-auto"
-        style={{ display: loading ? "none" : "block" }}
+        style={{ display: status === "loading" ? "none" : "block" }}
       />
     </div>
   );

@@ -86,7 +86,14 @@ export default function ImageLightbox({
             onClick={(e) => e.stopPropagation()}
           >
             {showPdf ? (
-              <PdfCanvas url={pdfUrl} background={background} />
+              <PdfCanvas
+                url={pdfUrl}
+                background={background}
+                fallbackSrc={src}
+                fallbackAlt={alt}
+                fallbackWidth={width * 2}
+                fallbackHeight={height * 2}
+              />
             ) : (
               <Image
                 src={src}
