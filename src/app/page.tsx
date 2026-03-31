@@ -65,19 +65,21 @@ export default function Home() {
       </section>
 
       {/* Featured pieces */}
-      <section className="max-w-content mx-auto px-6 pb-24">
-        <h2 className="text-headline uppercase tracking-widest text-primary mb-8">
+      <section className="max-w-gallery mx-auto px-6 lg:px-10 pb-32">
+        <h2 className="text-headline-lg uppercase tracking-widest text-primary mb-8">
           Featured Pieces
         </h2>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-gallery-gap">
           {featuredPieces.map((piece) => (
             <PrintCard key={piece.id} piece={piece} showBuyButton />
           ))}
         </div>
       </section>
 
+      <hr className="border-border max-w-gallery mx-auto" />
+
       {/* Series collection grid */}
-      <section className="max-w-content mx-auto px-6 pb-24">
+      <section className="max-w-gallery mx-auto px-6 lg:px-10 py-24">
         {featuredSeries.map((s, i) => (
           <HomeSeriesGrid key={s.id} series={s} index={i} />
         ))}

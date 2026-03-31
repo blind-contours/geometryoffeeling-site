@@ -26,11 +26,16 @@ const config: Config = {
       },
       fontSize: {
         headline: ["18px", { letterSpacing: "0.05em", fontWeight: "400" }],
+        "headline-lg": ["22px", { letterSpacing: "0.04em", fontWeight: "400" }],
         body: ["16px", { lineHeight: "1.8", fontWeight: "400" }],
         caption: ["12px", { letterSpacing: "0.08em", fontWeight: "400" }],
       },
       maxWidth: {
         content: "1200px",
+        gallery: "1600px",
+      },
+      spacing: {
+        "gallery-gap": "20px",
       },
     },
   },

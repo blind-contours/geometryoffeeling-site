@@ -8,7 +8,7 @@ export default function Navigation() {
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-bg/90 backdrop-blur-sm border-b border-border">
-      <div className="max-w-content mx-auto px-6 h-14 flex items-center justify-between">
+      <div className="max-w-gallery mx-auto px-6 lg:px-10 h-14 flex items-center justify-between">
         <Link
           href="/"
           className="text-caption uppercase tracking-widest text-primary hover:opacity-70 transition-opacity duration-500"
