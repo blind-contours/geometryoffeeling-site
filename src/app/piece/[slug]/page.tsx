@@ -105,6 +105,10 @@ export default function PiecePage({ params }: Props) {
         />
       </div>
 
+      <p className="text-caption text-muted text-center mb-8 max-w-content mx-auto px-6">
+        Every piece is rendered as a vector — mathematically precise at any size. What you see here is a high-resolution capture; the actual print is sharper still.
+      </p>
+
       <div className="max-w-content mx-auto px-6">
         <div className="max-w-2xl">
           {/* Title and emotional note */}
