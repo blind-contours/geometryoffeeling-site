@@ -452,7 +452,7 @@ export interface HeroSlide {
 export const heroSlides: HeroSlide[] = [
   { pieceId: "desire-pursuit", textColor: "black" },
   { pieceId: "growth-branch", textColor: "black" },
-  { pieceId: "pride-waves", textColor: "black" },
+  { pieceId: "pride-shelter", textColor: "black" },
   { pieceId: "grief-void", textColor: "black" },
   { pieceId: "wonder-strange-attractor", textColor: "white" },
   { pieceId: "humility-plumb", textColor: "white" },
