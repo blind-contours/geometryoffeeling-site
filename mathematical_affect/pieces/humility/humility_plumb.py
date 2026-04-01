@@ -126,13 +126,16 @@ def render():
     os.makedirs(PUBLIC_DIR, exist_ok=True)
 
     pdf_path = os.path.join(OUTPUT_DIR, "humility_plumb.pdf")
+    public_pdf_path = os.path.join(PUBLIC_DIR, "humility_plumb.pdf")
     jpg_path = os.path.join(PUBLIC_DIR, "humility_plumb.jpg")
     fig.savefig(pdf_path, facecolor=MARGIN, dpi=DPI)
+    fig.savefig(public_pdf_path, facecolor=MARGIN, dpi=DPI)
     fig.savefig(jpg_path, facecolor=MARGIN, dpi=DPI, pil_kwargs={"quality": 96})
     plt.close(fig)
     print(f"saved {pdf_path}")
+    print(f"saved {public_pdf_path}")
     print(f"saved {jpg_path}")
-    return pdf_path, jpg_path
+    return pdf_path, public_pdf_path, jpg_path
 
 
 if __name__ == "__main__":
