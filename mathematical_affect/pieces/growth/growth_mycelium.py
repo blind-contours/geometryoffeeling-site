@@ -1,9 +1,10 @@
 """
 Geometry of Feeling — Growth: Mycelium
 Space colonization algorithm (Runions et al. 2007) —
-six spore germination sites each grow a branching
-network through a shared attractor field. Thick trunk
-hyphae taper to gossamer tips via the pipe model.
+a single spore site grows a branching network through
+clustered nutrient zones, shifting color as it discovers
+each one. Thick trunk hyphae taper to gossamer tips
+via the pipe model.
 
 Dependencies: matplotlib, numpy, scipy
     pip install matplotlib numpy scipy
@@ -21,29 +22,46 @@ from scipy.spatial import KDTree
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 OUTPUT_DIR = os.path.join(SCRIPT_DIR, '..', '..', 'output')
+PRINT_DIR = os.path.join(SCRIPT_DIR, '..', '..', '..', 'public', 'prints', 'growth')
 
 DPI = 300
 FIG_W = 12
 FIG_H = 8
 BG_COLOR = '#F5F0E6'
 
+# ── Growth Series Palette ─────────────────────────────────────────────────────
+DEEP_MOSS    = '#1A3A1A'
+DARK_GREEN   = '#1A4D2E'
+FOREST       = '#2E8B4A'
+SPRING       = '#6BBF6E'
+LIME         = '#A8D86E'
+GOLD         = '#E8D878'
+TEAL         = '#2A7A6A'
+AMBER        = '#C8A030'
+WARM_OCHRE   = '#D4A832'
+
+
 def hex_to_rgb01(h):
     h = h.lstrip("#")
     return np.array([int(h[i:i+2], 16) for i in (0, 2, 4)]) / 255.0
 
+
 def blend(c1, c2, t):
     return (1 - t) * np.asarray(c1) + t * np.asarray(c2)
 
+
 # ── Space Colonization ─────────────────────────────────────────────────────────
-def space_colonize(attractors, root, step=0.008, influence=0.12,
-                   kill=0.008, max_iter=600):
+def space_colonize(attractors, root, step=0.005, influence=0.10,
+                   kill=0.005, max_iter=1000):
     """
     Runions et al. 2007 space colonization algorithm.
     Operates in normalized coordinates (0..1, 0..1).
+    Returns nodes, parents, and depth for each node.
     """
     att = np.array(attractors, dtype=float).copy()
     nodes = [np.array(root, dtype=float)]
     parents = [-1]
+    depths = [0]
 
     for _ in range(max_iter):
         if len(att) == 0:
@@ -71,13 +89,15 @@ def space_colonize(attractors, root, step=0.008, influence=0.12,
                 avg /= n2
             nodes.append(nodes[ni] + avg * step)
             parents.append(ni)
+            depths.append(depths[ni] + 1)
 
         na = np.array(nodes)
         tree = KDTree(na)
         dists, _ = tree.query(att)
         att = att[dists > kill]
 
-    return nodes, parents
+    return nodes, parents, depths
+
 
 def pipe_model(parents, n_nodes):
     """Compute subtree size for each node (pipe model thickness)."""
@@ -88,28 +108,31 @@ def pipe_model(parents, n_nodes):
             cc[p] += cc[i]
     return cc
 
-def render_network(ax, nodes, parents, col_dark, col_light,
-                   lw_max=2.8, alpha_base=0.10, alpha_max=0.75):
-    """Render tree with depth-based color/thickness."""
+
+def render_network(ax, nodes, parents, depths, palette_func,
+                   lw_max=5.0, lw_min=0.08, alpha_trunk=0.92,
+                   alpha_tip=0.12):
+    """Render network with pipe-model thickness and zone-aware color."""
     n = len(nodes)
     if n < 2:
         return
 
     cc = pipe_model(parents, n)
     max_cc = cc.max()
-
-    cd = hex_to_rgb01(col_dark)
-    cl = hex_to_rgb01(col_light)
+    max_depth = max(depths) if depths else 1
 
     for i in range(1, n):
         p = parents[i]
         if p < 0:
             continue
 
-        frac = (cc[i] / max_cc) ** 0.35
-        col = tuple(cd[k] + (cl[k] - cd[k]) * (1 - frac) for k in range(3))
-        alpha = alpha_base + (alpha_max - alpha_base) * frac
-        lw = max(0.12, lw_max * (frac ** 0.8))
+        frac = (cc[i] / max_cc) ** 0.4
+        lw = lw_min + (lw_max - lw_min) * (frac ** 0.7)
+
+        depth_frac = depths[i] / max_depth if max_depth > 0 else 0
+        col = palette_func(depth_frac, nodes[i])
+
+        alpha = alpha_tip + (alpha_trunk - alpha_tip) * frac
 
         ax.plot([nodes[p][0], nodes[i][0]],
                 [nodes[p][1], nodes[i][1]],
@@ -118,7 +141,38 @@ def render_network(ax, nodes, parents, col_dark, col_light,
                 solid_capstyle='round',
                 zorder=max(1, int(frac * 10)))
 
+
+def make_nutrient_palette(base_colors_hex, zone_specs):
+    """Palette that shifts color near nutrient discovery zones."""
+    base_colors = [hex_to_rgb01(h) for h in base_colors_hex]
+
+    def palette_func(depth_frac, pos):
+        # Base color interpolated by depth
+        t = np.clip(depth_frac, 0, 1)
+        idx = t * (len(base_colors) - 1)
+        i = int(np.floor(idx))
+        f = idx - i
+        if i >= len(base_colors) - 1:
+            base = np.array(base_colors[-1])
+        else:
+            base = np.array(blend(base_colors[i], base_colors[i + 1], f))
+
+        # Shift color near nutrient zones
+        pos = np.array(pos)
+        for (zx, zy, radius, color_hex) in zone_specs:
+            zc = hex_to_rgb01(color_hex)
+            d = np.sqrt((pos[0] - zx)**2 + (pos[1] - zy)**2)
+            if d < radius:
+                mix = (1.0 - (d / radius)) ** 1.5
+                base = blend(base, zc, mix * 0.75)
+
+        return tuple(base)
+    return palette_func
+
+
 def render():
+    rng = np.random.default_rng(2020)
+
     fig, ax = plt.subplots(figsize=(FIG_W, FIG_H), dpi=DPI, facecolor=BG_COLOR)
     fig.subplots_adjust(0, 0, 1, 1)
     ax.set_position([0, 0, 1, 1])
@@ -127,63 +181,72 @@ def render():
     ax.set_ylim(0, 1)
     ax.axis('off')
 
-    rng = np.random.default_rng(2026)
+    # Nutrient-rich zones with gaps between them
+    nutrient_centers = [
+        (0.35, 0.55), (0.60, 0.35), (0.75, 0.70),
+        (0.45, 0.82), (0.85, 0.50),
+    ]
 
-    # Attractor field across the canvas
-    n_attractors = 2500
-    att_all = np.column_stack([
-        rng.uniform(0.04, 0.96, n_attractors),
-        rng.uniform(0.06, 0.94, n_attractors)
+    # Clustered attractors around nutrient centers
+    all_att = []
+    for cx, cy in nutrient_centers:
+        pts = np.column_stack([
+            rng.normal(cx, 0.16, 500),
+            rng.normal(cy, 0.16, 500)
+        ])
+        pts = pts[(pts[:, 0] > 0.06) & (pts[:, 0] < 0.94) &
+                  (pts[:, 1] > 0.06) & (pts[:, 1] < 0.94)]
+        all_att.append(pts)
+
+    # Sparse background attractors for connective tendrils
+    att_bg = np.column_stack([
+        rng.uniform(0.06, 0.94, 800),
+        rng.uniform(0.06, 0.94, 800)
     ])
+    all_att.append(att_bg)
+    att = np.vstack(all_att)
 
-    # 6 seed points — spore germination sites
-    seeds = [
-        (0.18, 0.45),
-        (0.50, 0.25),
-        (0.82, 0.50),
-        (0.38, 0.72),
-        (0.68, 0.78),
-        (0.50, 0.52),
+    # Single origin — bottom left
+    nodes, parents, depths = space_colonize(
+        att, (0.08, 0.12),
+        step=0.005,
+        influence=0.10,
+        kill=0.005,
+        max_iter=1000
+    )
+
+    # Nutrient zones: network shifts color as it finds each one
+    zone_specs = [
+        (0.35, 0.55, 0.14, AMBER),
+        (0.60, 0.35, 0.12, WARM_OCHRE),
+        (0.75, 0.70, 0.13, GOLD),
+        (0.45, 0.82, 0.11, LIME),
+        (0.85, 0.50, 0.12, TEAL),
     ]
+    palette = make_nutrient_palette(
+        [DEEP_MOSS, DARK_GREEN, FOREST, SPRING], zone_specs
+    )
 
-    # Color pairs: dark trunk → light tips
-    color_pairs = [
-        ('#2A4A1A', '#C8D8A8'),   # deep green → pale green
-        ('#4A7A3A', '#E8D898'),   # moss → pale amber
-        ('#7A5A2A', '#D4A832'),   # umber → amber
-        ('#3A8A6A', '#7A9A6A'),   # teal → sage
-        ('#2A4A1A', '#8AB84A'),   # dark → spring green
-        ('#C06030', '#B87A2A'),   # sienna → ochre
-    ]
+    render_network(ax, nodes, parents, depths, palette,
+                   lw_max=5.0, lw_min=0.08,
+                   alpha_trunk=0.92, alpha_tip=0.12)
 
-    for (sx, sy), (col_d, col_l) in zip(seeds, color_pairs):
-        # Each seed colonizes attractors within reach
-        dists = np.sqrt((att_all[:, 0] - sx)**2 + (att_all[:, 1] - sy)**2)
-        local = att_all[dists < 0.30]
-        if len(local) < 20:
-            continue
-        if len(local) > 400:
-            idx = rng.choice(len(local), 400, replace=False)
-            local = local[idx]
-
-        nodes, parents = space_colonize(
-            local, (sx, sy),
-            step=0.006,
-            influence=0.10,
-            kill=0.006,
-            max_iter=600
-        )
-
-        render_network(ax, nodes, parents, col_d, col_l,
-                       lw_max=3.0, alpha_base=0.08, alpha_max=0.78)
+    add_signature(fig, ax, BG_COLOR)
 
     os.makedirs(OUTPUT_DIR, exist_ok=True)
     pdf_path = os.path.join(OUTPUT_DIR, "growth_mycelium.pdf")
-    add_signature(fig, ax, BG_COLOR)
     fig.savefig(pdf_path, facecolor=BG_COLOR, dpi=DPI)
-    plt.close(fig)
     print(f"saved {pdf_path}")
+
+    # Also save JPG for site
+    os.makedirs(PRINT_DIR, exist_ok=True)
+    jpg_path = os.path.join(PRINT_DIR, "growth_mycelium.jpg")
+    fig.savefig(jpg_path, facecolor=BG_COLOR, dpi=DPI, format='jpg')
+    print(f"saved {jpg_path}")
+
+    plt.close(fig)
     return pdf_path
+
 
 if __name__ == '__main__':
     render()
