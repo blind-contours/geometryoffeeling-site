@@ -72,7 +72,7 @@ def render():
     line_bottom_y = 0.152
     n_lines = 40
     curve_power = 2.15
-    point_glow = 1.25
+    point_glow = 1.10
     body_alpha = 0.25
     glow_alpha = 0.22
 
@@ -118,7 +118,7 @@ def render():
 
     scar_x = np.linspace(x0 + 0.06, x1 - 0.06, 700)
     scar_y = np.full_like(scar_x, line_bottom_y) + 0.002 * np.sin(np.linspace(0, 9 * np.pi, len(scar_x)))
-    ax.plot(scar_x, scar_y, color=rgba("#D09040", 0.08), lw=1.1, zorder=1)
+    ax.plot(scar_x, scar_y, color=rgba("#D09040", 0.18), lw=1.4, zorder=1)
 
     add_signature(fig, ax, MARGIN, margin_piece=True, margin_bottom=FIG_H * 0.08)
 

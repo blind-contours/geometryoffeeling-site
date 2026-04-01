@@ -296,10 +296,29 @@ export const series: Series[] = [
       { id: "wonder-strange-attractor", title: "Strange Attractor", series: "wonder", equation: "dx=−y−z, dy=x+ay, dz=b+z(x−c)", description: "I let it run and the trajectory never repeated, never diverged, never settled. Just kept finding new paths through the same region of space, forever. Three variables pulling on each other — everything about its future already decided by the equations, and yet you could watch it for a lifetime and never see the same moment twice. The kind of wonder that makes you quiet, like staring at a fire.", emotionalNote: "Determined and yet never the same twice", background: "#DDD9D2", imageUrl: "/prints/wonder/wonder_strange_attractor.jpg", gumroadUrl: "https://gumroad.com/l/placeholder", price: 45 },
       { id: "wonder-transform", title: "Transform", series: "wonder", equation: "w = z + a/(z − z₀)", description: "The small circle is you, the viewer. Looking right, you take in the world — information flowing outward, sweeping wide. But the curves loop back, returning to reshape the observer. Perception becomes reality becomes perception again. A conformal mapping as feedback loop.", emotionalNote: "Perception shapes reality shapes perception", background: "#DDD9D2", imageUrl: "/prints/wonder/wonder_transform.jpg", gumroadUrl: "https://gumroad.com/l/placeholder", price: 45 },
       { id: "wonder-apollonian-gasket", title: "Apollonian Gasket", series: "wonder", equation: "k₄ = k₁+k₂+k₃ + 2√(k₁k₂+k₂k₃+k₁k₃)", description: "Infinity nested in the cracks between things. Three circles touching inside a fourth, and in every gap, the largest circle that fits. Repeat. The gaps never fill completely — there's always room for one more, smaller and smaller, forever. The deeper you look, the more there is. Built from Apollonian circle packing, where infinity hides in the spaces between.", emotionalNote: "Infinity nested in the cracks between things", background: "#4d476d", imageUrl: "/prints/wonder/wonder_apollonian_gasket.jpg", gumroadUrl: "https://gumroad.com/l/placeholder", price: 45 },
-      { id: "wonder-strata", title: "Strata", series: "wonder", equation: "y_i(x) = Σ_k A_k·sin(ω_k·x + φ_i) + Σ_f D_f·tanh((x − x_f)/s_f)", description: "On the John Muir Trail you walk on granite that was molten rock a hundred million years ago. Your boots are on deep time and you can't feel it at all. That gap is what I wanted to render — a hundred layers, each one an entire era, the faults where everything shifted and then went quiet again. The gold is a single event buried between epochs. Hours between forevers.", emotionalNote: "A billion years in your field of vision", background: "#CCC2AA", imageUrl: "/prints/wonder/wonder_strata.jpg", gumroadUrl: "https://gumroad.com/l/placeholder", price: 45 },
     ],
     bundleGumroadUrl: "https://gumroad.com/l/placeholder-wonder-bundle",
     bundlePrice: 169,
+  },
+
+  // ── HUMILITY ───────────────────────────────────────────
+  {
+    id: "humility",
+    name: "HUMILITY",
+    emotion: "proportion restored, the self in context of vastness",
+    tagline: "The mathematics of smallness. Convergence, deep time, and the quiet that comes from knowing your scale.",
+    description: "Converging field lines, geological strata, plumb lines. Systems that locate a single point inside something immeasurably larger — and find peace there.",
+    story: "Humility isn't self-erasure. It's proportion. A plumb line finds true vertical — not by assertion but by letting gravity decide. Geological strata compress a billion years into visible layers. These pieces render the mathematics of locating yourself accurately inside something vast.",
+    mathematicalPrimitive: "convergence, geological stratification, gravitational alignment",
+    background: "#CCC2AA",
+    palette: ["#50A0D0", "#7868D0", "#C06060", "#D09040", "#F0D040"],
+    makingOf: "40 renders. 2 survived.",
+    pieces: [
+      { id: "humility-plumb", title: "Plumb", series: "humility", equation: "lim_{n→∞} x_n = c, ∇·g = −4πGρ", description: "Forty lines converging on a single point of light, then a plumb line dropping from it. Everything above is searching; everything below has found its answer. I wanted to render the moment proportion is restored — when the self stops asserting and lets gravity decide what's true.", emotionalNote: "Letting gravity decide what's true", background: "#CCC2AA", imageUrl: "/prints/humility/humility_plumb.jpg", gumroadUrl: "https://gumroad.com/l/placeholder", price: 45 },
+      { id: "humility-strata", title: "Strata", series: "humility", equation: "y_i(x) = Σ_k A_k·sin(ω_k·x + φ_i) + Σ_f D_f·tanh((x − x_f)/s_f)", description: "On the John Muir Trail you walk on granite that was molten rock a hundred million years ago. Your boots are on deep time and you can't feel it at all. That gap is what I wanted to render — a hundred layers, each one an entire era, the faults where everything shifted and then went quiet again. The gold is a single event buried between epochs. Hours between forevers.", emotionalNote: "A billion years in your field of vision", background: "#CCC2AA", imageUrl: "/prints/humility/humility_strata.jpg", gumroadUrl: "https://gumroad.com/l/placeholder", price: 45 },
+    ],
+    bundleGumroadUrl: "https://gumroad.com/l/placeholder-humility-bundle",
+    bundlePrice: 79,
   },
 
   // ── PEACE ───────────────────────────────────────────────
