@@ -82,26 +82,27 @@ def spawn_clusters(ax, cx, cy, r, depth, rng, _is_root=True):
     col_rgb = hex_to_rgb(col_hex)
 
     # ── Pool body layers (original structure: r*1.6 halo, r*0.9 body) ──
-    for rr_scale, alpha in [(1.6, 0.018), (0.9, 0.032)]:
+    # Balanced pop: pool alpha x1.2
+    for rr_scale, alpha in [(1.6, 0.022), (0.9, 0.038)]:
         rr = r * rr_scale
         wa = 0.035 * (0.4 if rr_scale > 1.2 else 1.0)
         wx, wy = wobble_contour(cx, cy, rr, rng, wobble_amp=wa)
         ax.fill(wx, wy, color=rgba(col_hex, alpha), zorder=1)
 
-    # ── Green/teal glow at overlap zones ──
+    # ── Green/teal glow at overlap zones (green x1.8) ──
     for glow_hex, glow_r, glow_a in [
-        (GREEN_DEEP, r * 0.85, 0.017),
-        (TEAL_GLOW,  r * 0.65, 0.024),
-        (TEAL_GLOW,  r * 0.45, 0.022),
-        (GREEN_DEEP, r * 0.30, 0.014),
+        (GREEN_DEEP, r * 0.85, 0.031),
+        (TEAL_GLOW,  r * 0.65, 0.043),
+        (TEAL_GLOW,  r * 0.45, 0.040),
+        (GREEN_DEEP, r * 0.30, 0.025),
     ]:
         ax.add_patch(Circle((cx, cy), glow_r,
                             facecolor=rgba(glow_hex, glow_a),
                             edgecolor="none", zorder=2))
 
-    # ── Warm gold whisper at root pool center ──
+    # ── Warm gold whisper at root pool center (gold x1.5) ──
     if _is_root:
-        for glow_r, glow_a in [(r * 0.5, 0.010), (r * 0.3, 0.007)]:
+        for glow_r, glow_a in [(r * 0.5, 0.015), (r * 0.3, 0.011)]:
             ax.add_patch(Circle((cx, cy), glow_r,
                                 facecolor=rgba(WARM_GOLD, glow_a),
                                 edgecolor="none", zorder=2))
@@ -113,14 +114,14 @@ def spawn_clusters(ax, cx, cy, r, depth, rng, _is_root=True):
     x = cx + rad * np.cos(ang)
     y = cy + rad * np.sin(ang)
 
-    # Power-law sizes
+    # Power-law sizes (size x1.2)
     raw = rng.power(0.45, count)
-    sizes = (0.6 + 12.0 * raw) * (1.0 + depth * 0.2)
+    sizes = (0.6 + 12.0 * raw) * (1.0 + depth * 0.2) * 1.2
 
     # Per-particle color: blue base + gold fraction + teal fraction
     p_colors = []
     for i in range(count):
-        alpha_val = 0.14 + 0.28 * rng.random()
+        alpha_val = (0.14 + 0.28 * rng.random()) * 1.4  # particle alpha x1.4
         roll = rng.random()
         if roll < 0.12:
             # Gold-tinted
@@ -145,11 +146,11 @@ def spawn_clusters(ax, cx, cy, r, depth, rng, _is_root=True):
     s_rad = r * (1.05 + 0.6 * rng.random(n_strays))
     sx = cx + s_rad * np.cos(s_ang)
     sy = cy + s_rad * np.sin(s_ang)
-    s_sizes = (0.3 + 3.0 * rng.power(0.4, n_strays)) * (0.8 + depth * 0.15)
+    s_sizes = (0.3 + 3.0 * rng.power(0.4, n_strays)) * (0.8 + depth * 0.15) * 1.2
     s_colors = []
     for _ in range(n_strays):
         sc = shift_color(col_rgb, rng, 0.03, 0.06)
-        s_colors.append(sc + (float(np.clip(0.06 + 0.10 * rng.random(), 0, 1)),))
+        s_colors.append(sc + (float(np.clip((0.06 + 0.10 * rng.random()) * 1.4, 0, 1)),))
     ax.scatter(sx, sy, s=s_sizes, c=s_colors, linewidths=0, zorder=3)
 
     # ── Children (same recursion as original) ──
