@@ -7,6 +7,7 @@ export interface Piece {
   emotionalNote: string;
   background: string;
   imageUrl: string;
+  pdfUrl?: string;
   gumroadUrl: string;
   price: number;
 }
@@ -283,10 +284,10 @@ export const series: Series[] = [
     id: "wonder",
     name: "WONDER",
     emotion: "awe at structure, the surprise of hidden order",
-    tagline: "The feeling of going deeper and finding no end. Recursive depth, strange attractors, patterns that never repeat.",
-    description: "Recursive landscapes, strange attractors, conformal transformations, and infinite circle packings. Mathematics that reveals unexpected beauty — order emerging from simple rules.",
-    story: "Wonder is the feeling of encountering structure where you expected chaos. A fractal that generates infinite complexity from three lines of code. A strange attractor that never repeats but always stays bounded. This series renders the mathematics that provokes that feeling.",
-    mathematicalPrimitive: "fractals, strange attractors, recursive geometry",
+    tagline: "The feeling of going deeper and finding no end. Recursive depth, impossible spaces, patterns that never quite repeat.",
+    description: "Recursive landscapes, strange attractors, conformal transformations, circle packings, and bounded infinities. Mathematics that reveals unexpected beauty — order emerging from simple rules and opening onto something larger than comprehension.",
+    story: "Across the history of wonder — from cathedral vaults to celestial charts to Escher's impossible spaces — the feeling arrives when structure keeps unfolding past the limits of ordinary sense. A fractal generates complexity from a tiny rule. A strange attractor never repeats but never escapes. A hyperbolic plane fits inside a circle. This series renders the mathematics that makes the mind go quiet and keep looking.",
+    mathematicalPrimitive: "fractals, strange attractors, recursive geometry, hyperbolic space",
     background: "#0A0A18",
     palette: ["#4080C0", "#60A0E0", "#80C0FF", "#2060A0", "#A0D0FF"],
     makingOf: "72 renders. 5 survived.",
@@ -295,10 +296,30 @@ export const series: Series[] = [
       { id: "wonder-strange-attractor", title: "Strange Attractor", series: "wonder", equation: "dx=−y−z, dy=x+ay, dz=b+z(x−c)", description: "I let it run and the trajectory never repeated, never diverged, never settled. Just kept finding new paths through the same region of space, forever. Three variables pulling on each other — everything about its future already decided by the equations, and yet you could watch it for a lifetime and never see the same moment twice. The kind of wonder that makes you quiet, like staring at a fire.", emotionalNote: "Determined and yet never the same twice", background: "#DDD9D2", imageUrl: "/prints/wonder/wonder_strange_attractor.jpg", gumroadUrl: "https://gumroad.com/l/placeholder", price: 45 },
       { id: "wonder-transform", title: "Transform", series: "wonder", equation: "w = z + a/(z − z₀)", description: "The small circle is you, the viewer. Looking right, you take in the world — information flowing outward, sweeping wide. But the curves loop back, returning to reshape the observer. Perception becomes reality becomes perception again. A conformal mapping as feedback loop.", emotionalNote: "Perception shapes reality shapes perception", background: "#DDD9D2", imageUrl: "/prints/wonder/wonder_transform.jpg", gumroadUrl: "https://gumroad.com/l/placeholder", price: 45 },
       { id: "wonder-apollonian-gasket", title: "Apollonian Gasket", series: "wonder", equation: "k₄ = k₁+k₂+k₃ + 2√(k₁k₂+k₂k₃+k₁k₃)", description: "Infinity nested in the cracks between things. Three circles touching inside a fourth, and in every gap, the largest circle that fits. Repeat. The gaps never fill completely — there's always room for one more, smaller and smaller, forever. The deeper you look, the more there is. Built from Apollonian circle packing, where infinity hides in the spaces between.", emotionalNote: "Infinity nested in the cracks between things", background: "#4d476d", imageUrl: "/prints/wonder/wonder_apollonian_gasket.jpg", gumroadUrl: "https://gumroad.com/l/placeholder", price: 45 },
-      { id: "wonder-strata", title: "Strata", series: "wonder", equation: "y_i(x) = Σ_k A_k·sin(ω_k·x + φ_i) + Σ_f D_f·tanh((x − x_f)/s_f)", description: "On the John Muir Trail you walk on granite that was molten rock a hundred million years ago. Your boots are on deep time and you can't feel it at all. That gap is what I wanted to render — a hundred layers, each one an entire era, the faults where everything shifted and then went quiet again. The gold is a single event buried between epochs. Hours between forevers.", emotionalNote: "A billion years in your field of vision", background: "#CCC2AA", imageUrl: "/prints/wonder/wonder_strata.jpg", gumroadUrl: "https://gumroad.com/l/placeholder", price: 45 },
+      { id: "wonder-poincare-disk", title: "Poincare Disk", series: "wonder", equation: "ds² = 4(dx² + dy²)/(1 − x² − y²)²", description: "An infinite plane inside a finite circle. Hyperbolic geodesics bend across the disk like a geometry that should not fit on paper and yet does. Medieval cosmologies put the infinite beyond the edge of the visible world; this does something stranger and more modern. It brings infinity inside the frame and lets it keep receding anyway.", emotionalNote: "Holding infinity inside a boundary", background: "#DDD9D2", imageUrl: "/prints/wonder/wonder_poincare_disk.jpg", pdfUrl: "/prints/wonder/wonder_poincare_disk.pdf", gumroadUrl: "https://gumroad.com/l/placeholder", price: 45 },
     ],
     bundleGumroadUrl: "https://gumroad.com/l/placeholder-wonder-bundle",
     bundlePrice: 169,
+  },
+
+  // ── HUMILITY ────────────────────────────────────────────
+  {
+    id: "humility",
+    name: "HUMILITY",
+    emotion: "smallness in right proportion, bowing before what is larger",
+    tagline: "Deep time and a single point under converging waves. The mathematics of being restored to scale.",
+    description: "Geological layers and converging fields. Systems that widen the frame, narrow the self, and place a human life back inside something older, larger, and indifferent.",
+    story: "Humility is not humiliation and it is not self-erasure. It is proportion restored. In monastic practice the body lowers to remind the mind it is not the center. In sacred painting and landscape traditions, the human figure is made small before mountain, sky, or time. The word itself comes from humus: earth. This series renders that feeling mathematically: strata older than memory, and a whole field of motion narrowing toward a single point of light.",
+    mathematicalPrimitive: "deep time layering, convergent fields, asymptotic collapse",
+    background: "#D7D0C4",
+    palette: ["#6D7686", "#857995", "#A19787", "#B89A57", "#C9C3BA"],
+    makingOf: "New series — beginning with two anchors.",
+    pieces: [
+      { id: "humility-strata", title: "Strata", series: "humility", equation: "y_i(x) = Σ_k A_k·sin(ω_k·x + φ_i) + Σ_f D_f·tanh((x − x_f)/s_f)", description: "On the trail, the rock under your feet is older than language, empire, memory, and every private urgency you brought with you. A hundred thin layers, each one an era, interrupted by faults and singular events that do not care that anyone is looking. The image is beautiful, but its real work is corrective: it returns the self to scale.", emotionalNote: "Deep time restoring proportion", background: "#CCC2AA", imageUrl: "/prints/humility/humility_strata.jpg", pdfUrl: "/prints/humility/humility_strata.pdf", gumroadUrl: "https://gumroad.com/l/placeholder", price: 45 },
+      { id: "humility-plumb", title: "Plumb", series: "humility", equation: "x(y;x₀) = c + (x₀ − c)((y − y*)/(y₀ − y*))^p,  y_line(t) = y* − vt", description: "A whole field narrows toward one illuminated point, and from that point a single line continues downward into the dark. That's what humility feels like to me when it's healthy: not disappearing, not self-contempt, just realizing how small a life is inside forces that were already moving before you arrived and will keep moving after. You are still there. You are just no longer mistaken for the center.", emotionalNote: "A single point inside forces much larger than itself", background: "#CCC2AA", imageUrl: "/prints/humility/humility_plumb.jpg", pdfUrl: "/prints/humility/humility_plumb.pdf", gumroadUrl: "https://gumroad.com/l/placeholder", price: 45 },
+    ],
+    bundleGumroadUrl: "https://gumroad.com/l/placeholder-humility-bundle",
+    bundlePrice: 129,
   },
 
   // ── PEACE ───────────────────────────────────────────────
@@ -486,6 +507,7 @@ export const featuredSeriesIds = [
   "awe",
   "connection",
   "grief",
+  "humility",
   "pride",
   "peace",
   "wonder",
