@@ -455,6 +455,7 @@ export const heroSlides: HeroSlide[] = [
   { pieceId: "pride-waves", textColor: "black" },
   { pieceId: "grief-void", textColor: "black" },
   { pieceId: "wonder-strange-attractor", textColor: "white" },
+  { pieceId: "humility-plumb", textColor: "white" },
 ];
 
 export const featuredSeriesIds = [
@@ -477,7 +478,7 @@ export const featuredPieceIds = [
   "peace-horizon",
   "wonder-apollonian-gasket",
   "pride-waves",
-  "connection-orbit-pair",
+  "humility-plumb",
   "desire-pursuit",
 ];
 
