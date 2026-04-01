@@ -14,6 +14,7 @@ from signature_utils import add_signature
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 from matplotlib.patches import FancyBboxPatch, Rectangle, Circle
+from matplotlib.colors import LinearSegmentedColormap
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 OUTPUT_DIR = os.path.join(SCRIPT_DIR, "..", "..", "output")
@@ -61,6 +62,37 @@ def make_fig():
     return fig, ax, (x0, x1, y0, y1)
 
 
+def add_radial_glow(ax, center_x, center_y, bounds):
+    """Soft radial gradient emanating from the convergence point."""
+    x0, x1, y0, y1 = bounds
+    nx, ny = 300, 200
+    xs = np.linspace(x0, x1, nx)
+    ys = np.linspace(y0, y1, ny)
+    X, Y = np.meshgrid(xs, ys)
+
+    dx = (X - center_x) / (x1 - x0)
+    dy = (Y - center_y) / (y1 - y0)
+    dist = np.sqrt(dx**2 + dy**2)
+
+    sigma = 0.18 * 0.85
+    glow = np.exp(-dist**2 / (2 * sigma**2))
+
+    # Vertical bias — more glow along the funnel than sideways
+    vert_factor = np.exp(-dx**2 / (2 * 0.12**2))
+    glow = glow * (0.5 + 0.5 * vert_factor)
+
+    cmap = LinearSegmentedColormap.from_list("glow", [
+        (0, 0, 0, 0),
+        (0.08, 0.06, 0.18, 1),
+    ])
+
+    ax.imshow(
+        glow, extent=[x0, x1, y0, y1], origin="lower",
+        cmap=cmap, alpha=0.595, aspect="auto", zorder=-5,
+        interpolation="bilinear",
+    )
+
+
 def render():
     fig, ax, bounds = make_fig()
     x0, x1, y0, y1 = bounds
@@ -70,11 +102,16 @@ def render():
     top_y = 0.01
     point_y = 0.205
     line_bottom_y = 0.152
-    n_lines = 40
+    n_lines = 80
     curve_power = 2.15
-    point_glow = 1.10
-    body_alpha = 0.25
-    glow_alpha = 0.22
+    point_glow = 1.25
+    body_alpha = 0.32
+    glow_alpha = 0.26
+    color_boost = 1.2
+    lw_mult = 0.85
+
+    # Background radial glow around convergence point
+    add_radial_glow(ax, center, point_y, bounds)
 
     rng = np.random.default_rng(1427)
     xs0 = np.linspace(center - fan_width, center + fan_width, n_lines)
@@ -88,12 +125,12 @@ def render():
 
         x = center + (start_x - center) * (p ** curve_power)
         x += 0.006 * np.sin((1 - p) * 4.2 * np.pi + i * 0.33) * (0.35 + 0.65 * p)
-        x += rng.normal(0.0, 0.0003, len(x))
+        # No noise — clean curves for smooth rendering at all sizes
 
         palette_idx = int(np.clip(center_bias, 0.0, 0.999) * len(PALETTE))
         color = PALETTE[min(palette_idx, len(PALETTE) - 1)]
-        alpha = body_alpha * (0.42 + 0.9 * center_bias)
-        lw = 0.32 + 1.02 * (0.35 + 0.65 * center_bias)
+        alpha = body_alpha * (0.42 + 0.9 * center_bias) * color_boost
+        lw = (0.32 + 1.02 * (0.35 + 0.65 * center_bias)) * lw_mult
 
         ax.plot(
             x,
