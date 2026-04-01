@@ -168,28 +168,6 @@ export const series: Series[] = [
     bundlePrice: 169,
   },
 
-  // ── SHAME ───────────────────────────────────────────────
-  {
-    id: "shame",
-    name: "SHAME",
-    emotion: "contraction, withdrawal, making oneself small",
-    tagline: "The geometry of making yourself disappear. Surfaces folding inward. Amplitude decaying until no one can see you.",
-    description: "Contracting forms, crumpling surfaces, folding manifolds, and shrinking signals. The mathematics of systems that collapse toward their own center — not breaking, but hiding.",
-    story: "Shame is a contraction. The body language is universal — shoulders curve inward, the head drops, the self tries to occupy less space. This series renders that inward collapse mathematically: surfaces that fold, envelopes that shrink, forms that hide behind their own geometry.",
-    mathematicalPrimitive: "contraction mappings, surface folding, envelope collapse",
-    background: "#E0DCE4",
-    palette: ["#8A7090", "#706080", "#9080A0", "#604870", "#A090B0"],
-    makingOf: "44 renders. 5 survived.",
-    pieces: [
-      { id: "shame-contraction", title: "Contraction", series: "shame", equation: "T(x) : ||T(x)-T(y)|| < ||x-y||", description: "The instinct is to take up less space. Every part of you pulls inward — shoulders, voice, presence — until what's left occupies almost nothing. Everything converging toward a single point you can't avoid. Built from a contraction mapping, where each iteration pulls all points closer together.", emotionalNote: "Collapsing inward toward a point you can't avoid", background: "#E0DCE4", imageUrl: "/prints/shame/shame_contraction.jpg", gumroadUrl: "https://gumroad.com/l/placeholder", price: 45 },
-      { id: "shame-crumple", title: "Crumple", series: "shame", equation: "κ(s) → ∞ at fold lines", description: "A smooth surface that folded in on itself and can't get back. The creases are permanent — not tears, not breaks, just places where the pressure left a mark that won't come out. I've felt that. The memory of the folding stays in the material.", emotionalNote: "Once folded, the creases never fully come out", background: "#E0DCE4", imageUrl: "/prints/shame/shame_crumple.jpg", gumroadUrl: "https://gumroad.com/l/placeholder", price: 45 },
-      { id: "shame-fold", title: "Fold", series: "shame", equation: "f(x) = f(−x), x → 0", description: "Everything that was on the outside gets tucked away. Two halves meeting, the visible becoming hidden, the open becoming shut. I tried to find the shape of that moment when you stop showing yourself. This was it.", emotionalNote: "Folding inward until the outside disappears", background: "#E0DCE4", imageUrl: "/prints/shame/shame_fold.jpg", gumroadUrl: "https://gumroad.com/l/placeholder", price: 45 },
-      { id: "shame-shrink", title: "Shrink", series: "shame", equation: "A(t) = A₀ · e^{-λt}", description: "Getting smaller until no one can see you. The signal is still there — technically — but the amplitude has decayed to nothing visible. Present and invisible at the same time. Built from an exponentially decaying envelope, the mathematics of vanishing without disappearing.", emotionalNote: "Getting smaller until no one can see you", background: "#E0DCE4", imageUrl: "/prints/shame/shame_shrink.jpg", gumroadUrl: "https://gumroad.com/l/placeholder", price: 45 },
-    ],
-    bundleGumroadUrl: "https://gumroad.com/l/placeholder-shame-bundle",
-    bundlePrice: 169,
-  },
-
   // ── SOLITUDE ────────────────────────────────────────────
   {
     id: "solitude",

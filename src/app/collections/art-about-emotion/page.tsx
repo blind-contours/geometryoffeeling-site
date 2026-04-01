@@ -44,7 +44,6 @@ const heavyEmotions = [
   "longing",
   "nostalgia",
   "solitude",
-  "shame",
 ];
 const tenseEmotions = [
   "tension",
