@@ -16,8 +16,8 @@ from matplotlib.patches import Circle
 import os
 
 DPI = 300; FIG_W = 12; FIG_H = 8
-BG = "#0A0A14"
-MARGIN_COLOR = "#4d476d"
+BG = "#1a2540"
+MARGIN_COLOR = "#DDD9D2"
 
 # Palette: cosmic -- deep indigo, gold, pale violet, white accent
 INDIGO = "#2838A0"; DEEP_BLUE = "#182868"; GOLD = "#C8A030"
@@ -84,12 +84,6 @@ def draw_lc(ax, xs, ys, col, lw, alpha, zo=4, smooth=0):
     lc = mc.LineCollection(segs, linewidths=lw, colors=[rgba(col, alpha)],
                            capstyle='round', joinstyle='round', zorder=zo)
     ax.add_collection(lc)
-
-def save(fig, name):
-    fig.subplots_adjust(left=0, right=1, top=1, bottom=0)
-    fig.savefig(os.path.join(OUTPUT_DIR, name),
-                format='pdf', facecolor=MARGIN_COLOR)
-    plt.close(fig); print(f"saved {name}")
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 OUTPUT_DIR = os.path.join(SCRIPT_DIR, '..', '..', 'output')
@@ -286,15 +280,15 @@ def render():
 
         depth_frac = d / max(max_d, 1)
 
-        # Color interpolation: deep indigo (d=0) -> pale violet (mid) -> bright gold (deep)
+        # Color interpolation: dark navy (d=0) -> steel blue (mid) -> bright gold (deep)
         if depth_frac < 0.3:
-            col = DEEP_BLUE
+            col = "#1a2a4a"
         elif depth_frac < 0.5:
-            col = INDIGO
+            col = "#2a4a6a"
         elif depth_frac < 0.7:
-            col = PALE_VIOLET
+            col = "#5080a0"
         elif depth_frac < 0.85:
-            col = WARM_GOLD
+            col = GOLD
         else:
             col = BRIGHT_GOLD
 
@@ -331,7 +325,20 @@ def render():
             ax.add_patch(circle_patch)
 
     add_signature(fig, ax, MARGIN_COLOR, margin_piece=True, margin_bottom=FIG_H * 0.08)
-    save(fig, "wonder_apollonian_gasket.pdf")
+
+    PRINT_DIR = os.path.join(SCRIPT_DIR, '..', '..', '..', 'public', 'prints', 'wonder')
+    os.makedirs(OUTPUT_DIR, exist_ok=True)
+    os.makedirs(PRINT_DIR, exist_ok=True)
+
+    fig.subplots_adjust(left=0, right=1, top=1, bottom=0)
+    pdf_path = os.path.join(OUTPUT_DIR, "wonder_apollonian_gasket.pdf")
+    fig.savefig(pdf_path, format='pdf', facecolor=MARGIN_COLOR)
+    print(f"saved {pdf_path}")
+
+    jpg_path = os.path.join(PRINT_DIR, "wonder_apollonian_gasket.jpg")
+    fig.savefig(jpg_path, facecolor=MARGIN_COLOR, dpi=DPI, pil_kwargs={"quality": 96})
+    print(f"saved {jpg_path}")
+    plt.close(fig)
 
 if __name__ == '__main__':
     render()
