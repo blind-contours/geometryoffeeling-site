@@ -54,7 +54,6 @@ const warmEmotions = [
   "desire",
   "trust",
   "pride",
-  "anticipation",
 ];
 const lightEmotions = [
   "wonder",

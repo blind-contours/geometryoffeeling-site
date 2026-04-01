@@ -417,27 +417,6 @@ export const series: Series[] = [
     bundlePrice: 169,
   },
 
-  // ── ANTICIPATION ────────────────────────────────────────
-  {
-    id: "anticipation",
-    name: "ANTICIPATION",
-    emotion: "building, gathering, the moment before",
-    tagline: "The held breath. Systems approaching a threshold they haven't yet crossed.",
-    description: "Charging curves, counting steps, and rising temperatures. The mathematics of 'almost' — convergent systems approaching but not yet reaching the moment everything changes.",
-    story: "Anticipation is potential energy. The mathematics of 'almost' — convergent sequences, charging capacitors, systems approaching but not yet reaching a critical threshold. This series renders the geometry of the moment before.",
-    mathematicalPrimitive: "convergence, accumulation, threshold approach, potential energy",
-    background: "#E8E4DC",
-    palette: ["#8A7A50", "#A09060", "#706840", "#B8A878", "#605830"],
-    makingOf: "46 renders. 5 survived.",
-    pieces: [
-      { id: "anticipation-charge", title: "Charge", series: "anticipation", equation: "V(t) = V₀(1 - e^{-t/RC})", description: "So close you'd swear it's there, but it never arrives. Voltage rising toward maximum, each moment adding less than the last — the gap closing but never closing completely. The mathematics of almost.", emotionalNote: "So close you'd swear it's there, but it never arrives", background: "#E8E4DC", imageUrl: "/prints/anticipation/anticipation_charge.jpg", gumroadUrl: "https://gumroad.com/l/placeholder", price: 45 },
-      { id: "anticipation-countdown", title: "Countdown", series: "anticipation", equation: "f(t) = N - ⌊t/Δt⌋", description: "The last step looks the same but changes everything. Identical intervals counting down — each one indistinguishable from the others, right up to the one that isn't. The geometry of a held breath. Built from a step function descending toward zero.", emotionalNote: "The last step looks the same but changes everything", background: "#E8E4DC", imageUrl: "/prints/anticipation/anticipation_countdown.jpg", gumroadUrl: "https://gumroad.com/l/placeholder", price: 45 },
-      { id: "anticipation-kindling", title: "Kindling", series: "anticipation", equation: "T(t) = T_ign - ΔT·e^{-t/τ}", description: "Almost. Almost. Not yet. Temperature approaching ignition — exponentially closing the gap, the threshold right there, the air thick with what's about to happen. I wanted to hold that moment — the instant before everything catches.", emotionalNote: "Almost. Almost. Not yet.", background: "#E8E4DC", imageUrl: "/prints/anticipation/anticipation_kindling.jpg", gumroadUrl: "https://gumroad.com/l/placeholder", price: 45 },
-    ],
-    bundleGumroadUrl: "https://gumroad.com/l/placeholder-anticipation-bundle",
-    bundlePrice: 169,
-  },
-
   // ── LONGING ─────────────────────────────────────────────
   {
     id: "longing",
