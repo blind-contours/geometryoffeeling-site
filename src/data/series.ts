@@ -412,7 +412,6 @@ export const series: Series[] = [
       { id: "pride-waves", title: "Waves", series: "pride", equation: "h = ΣAᵢcos(kᵢx−ωᵢt)", description: "Many waves, one sea. Seventy-eight ocean lines moving through the full LGBTQ+ spectrum — trans blue, pink, and white woven through the classic rainbow. Every color its own frequency, every frequency part of the same water.", emotionalNote: "Many waves, one sea", background: "#f3eee7", imageUrl: "/prints/pride/pride_waves.jpg", gumroadUrl: "https://gumroad.com/l/placeholder", price: 45 },
       { id: "pride-unfurling", title: "Unfurling", series: "pride", equation: "x = x₀ + A·sⁿ·sin(ωs)", description: "Something contained, choosing to open. Sixty-two lines rooted at a single point, unfurling upward through the full LGBTQ+ spectrum — each one finding its own path from the same origin. Different destinations, one beginning.", emotionalNote: "Something contained, choosing to open", background: "#f3eee7", imageUrl: "/prints/pride/pride_unfurling.jpg", gumroadUrl: "https://gumroad.com/l/placeholder", price: 45 },
       { id: "pride-woven-resilience", title: "Woven Resilience", series: "pride", equation: "f(x,y) = A·sin(ω₁x+φ)·sin(ω₂y+ψ)", description: "Trans palette woven through rainbow — eighteen horizontal strands interlocking with eighteen vertical strands, each one visible and distinct. Fabric doesn't work as individual threads. It only holds when they cross. That's the whole point.", emotionalNote: "The strength is in the crossing", background: "#f3eee7", imageUrl: "/prints/pride/pride_woven_resilience.jpg", gumroadUrl: "https://gumroad.com/l/placeholder", price: 45 },
-      { id: "pride-flourish", title: "Flourish", series: "pride", equation: "x(t) = t + a·sin(2πt), y(t) = b·sin(πt)^c", description: "Sixteen calligraphic sweeps rising to a peak — each line thickens at the crest like a brushstroke pressed into paper. The full LGBTQ+ spectrum from trans pink to deep violet, every color confident and unapologetic.", emotionalNote: "Every color confident and unapologetic", background: "#f3eee7", imageUrl: "/prints/pride/pride_flourish.jpg", gumroadUrl: "https://gumroad.com/l/placeholder", price: 45 },
     ],
     bundleGumroadUrl: "https://gumroad.com/l/placeholder-pride-bundle",
     bundlePrice: 169,
@@ -499,7 +498,7 @@ export const featuredPieceIds = [
   "growth-branch",
   "peace-horizon",
   "wonder-apollonian-gasket",
-  "pride-flourish",
+  "pride-waves",
   "connection-orbit-pair",
   "desire-pursuit",
 ];
