@@ -136,15 +136,15 @@ export default function HomeSeriesGrid({ series, index }: HomeSeriesGridProps) {
         )}
       </div>
 
-      {/* Mobile: horizontal scroll row (unchanged) */}
+      {/* Mobile: horizontal scroll carousel */}
       <div className="md:hidden relative">
-        <div className="flex overflow-x-auto gap-3 scrollbar-hide -mx-6 px-6 snap-x snap-mandatory">
+        <div className="flex overflow-x-auto gap-4 scrollbar-hide -mx-6 px-6 snap-x snap-mandatory">
           {series.pieces.map((piece) => (
             <Link
               key={piece.id}
               href={`/piece/${piece.id}`}
               className="flex-shrink-0 block snap-start"
-              style={{ width: "65vw" }}
+              style={{ width: "80vw" }}
             >
               <div
                 className="overflow-hidden"
@@ -153,19 +153,24 @@ export default function HomeSeriesGrid({ series, index }: HomeSeriesGridProps) {
                 <Image
                   src={piece.imageUrl}
                   alt={`${piece.title} — mathematical art print from the ${series.name} series by Geometry of Feeling`}
-                  width={240}
-                  height={165}
+                  width={600}
+                  height={413}
                   className="w-full h-auto block"
                 />
               </div>
-              <p className="text-center text-caption text-secondary mt-1 truncate px-1">
-                {piece.title}
-              </p>
+              <div className="flex items-baseline justify-between mt-2 px-1">
+                <p className="text-caption text-secondary truncate">
+                  {piece.title}
+                </p>
+                <p className="text-caption text-muted flex-shrink-0 ml-2">
+                  From ${piece.price}
+                </p>
+              </div>
             </Link>
           ))}
         </div>
         {/* Right-edge gradient to signal scrollability */}
-        <div className="absolute right-0 top-0 bottom-6 w-8 bg-gradient-to-l from-bg to-transparent pointer-events-none" />
+        <div className="absolute right-0 top-0 bottom-8 w-12 bg-gradient-to-l from-bg to-transparent pointer-events-none" />
       </div>
 
       <div className={`mt-10 ${isRight ? "md:text-right" : ""}`}>
