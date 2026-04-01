@@ -187,11 +187,11 @@ def render():
         )
     )
 
-    # Root pools — R7 V10 layout
-    spawn_clusters(ax, 0.47, 0.50, 0.19, 3, rng, _is_root=True)
-    spawn_clusters(ax, 0.28, 0.64, 0.11, 2, rng, _is_root=True)
-    spawn_clusters(ax, 0.71, 0.37, 0.12, 2, rng, _is_root=True)
-    spawn_clusters(ax, 0.68, 0.63, 0.06, 1, rng, _is_root=False)
+    # Root pools — Balanced Fill layout
+    spawn_clusters(ax, 0.46, 0.50, 0.25, 3, rng, _is_root=True)
+    spawn_clusters(ax, 0.25, 0.66, 0.14, 2, rng, _is_root=True)
+    spawn_clusters(ax, 0.74, 0.35, 0.15, 2, rng, _is_root=True)
+    spawn_clusters(ax, 0.70, 0.66, 0.08, 1, rng, _is_root=False)
 
     # Save
     os.makedirs(OUTPUT_DIR, exist_ok=True)
