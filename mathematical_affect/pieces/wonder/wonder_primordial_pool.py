@@ -27,6 +27,8 @@ BG = "#263B59"
 PALETTE = ["#2060A0", "#4080C0", "#60A0E0", "#80C0FF", "#A0D0FF"]
 TEAL_GLOW = "#50B898"
 GREEN_DEEP = "#3A9878"
+WARM_TEAL = "#60C070"
+WARM_GREEN = "#70B850"
 WARM_GOLD = "#D8B840"
 PALE_GOLD = "#C8A848"
 ML, MR, MB, MT = 0.07, 0.07, 0.08, 0.08
@@ -55,6 +57,19 @@ def shift_color(base_rgb, rng, hue_var=0.03, lum_var=0.06):
     return (r, g, b)
 
 
+def blend_hex(h1, h2, t):
+    """Blend two hex colors. t=0 returns h1, t=1 returns h2."""
+    r1, g1, b1 = hex_to_rgb(h1)
+    r2, g2, b2 = hex_to_rgb(h2)
+    return (np.clip(r1 + (r2 - r1) * t, 0, 1),
+            np.clip(g1 + (g2 - g1) * t, 0, 1),
+            np.clip(b1 + (b2 - b1) * t, 0, 1))
+
+
+def lerp(a, b, t):
+    return a + (b - a) * t
+
+
 def wobble_contour(cx, cy, r, rng, wobble_amp=0.035, n_points=180):
     """Wobbly circle — subtle organic edges."""
     theta = np.linspace(0, 2 * np.pi, n_points)
@@ -68,43 +83,50 @@ def wobble_contour(cx, cy, r, rng, wobble_amp=0.035, n_points=180):
     return x, y
 
 
-def spawn_clusters(ax, cx, cy, r, depth, rng, _is_root=True):
+def spawn_clusters(ax, cx, cy, r, depth, rng, _is_root=True,
+                   warmth=0.0, warmth_decay=0.6, child_warmths=None):
     """
-    Recursive cluster spawning with targeted beauty enhancements.
-    Based on the original spawn_clusters with:
-    - Organic wobble on circle edges
-    - Green/teal glow at density zones
-    - Gold-tinted particles mixed in
-    - Per-particle hue/luminosity variation
-    - Power-law particle size distribution
+    Recursive cluster spawning with warmth gradient for visual hierarchy.
+    warmth (0.0–1.0) controls glow brightness, color temperature
+    (teal → warm green), and gold particle fraction per pool.
     """
     col_hex = PALETTE[min(len(PALETTE) - 1, depth % len(PALETTE))]
     col_rgb = hex_to_rgb(col_hex)
 
-    # ── Pool body layers (original structure: r*1.6 halo, r*0.9 body) ──
-    # Balanced pop: pool alpha x1.2
+    # ── Pool body layers ──
     for rr_scale, alpha in [(1.6, 0.022), (0.9, 0.038)]:
         rr = r * rr_scale
         wa = 0.035 * (0.4 if rr_scale > 1.2 else 1.0)
         wx, wy = wobble_contour(cx, cy, rr, rng, wobble_amp=wa)
         ax.fill(wx, wy, color=rgba(col_hex, alpha), zorder=1)
 
-    # ── Green/teal glow at overlap zones (green x1.8) ──
-    for glow_hex, glow_r, glow_a in [
-        (GREEN_DEEP, r * 0.85, 0.031),
-        (TEAL_GLOW,  r * 0.65, 0.043),
-        (TEAL_GLOW,  r * 0.45, 0.040),
-        (GREEN_DEEP, r * 0.30, 0.025),
+    # ── Green/teal glow — warmth shifts brightness and color ──
+    glow_alpha_mult = lerp(1.0, 2.5, warmth)
+    for glow_hex_cool, glow_hex_warm, glow_r, glow_a in [
+        (GREEN_DEEP, WARM_GREEN, r * 0.85, 0.031),
+        (TEAL_GLOW,  WARM_TEAL,  r * 0.65, 0.043),
+        (TEAL_GLOW,  WARM_TEAL,  r * 0.45, 0.040),
+        (GREEN_DEEP, WARM_GREEN, r * 0.30, 0.025),
     ]:
+        blended = blend_hex(glow_hex_cool, glow_hex_warm, warmth)
+        fc = blended + (float(np.clip(glow_a * glow_alpha_mult, 0, 1)),)
         ax.add_patch(Circle((cx, cy), glow_r,
-                            facecolor=rgba(glow_hex, glow_a),
-                            edgecolor="none", zorder=2))
+                            facecolor=fc, edgecolor="none", zorder=2))
 
-    # ── Warm gold whisper at root pool center (gold x1.5) ──
+    # Extra glow layers at high warmth
+    if warmth > 0.15:
+        extra_alpha = warmth * 0.04
+        for er, ea in [(r * 0.55, extra_alpha), (r * 0.35, extra_alpha * 0.8)]:
+            blended = blend_hex(TEAL_GLOW, WARM_TEAL, warmth)
+            fc = blended + (float(np.clip(ea, 0, 1)),)
+            ax.add_patch(Circle((cx, cy), er, facecolor=fc, edgecolor="none", zorder=2))
+
+    # ── Gold center glow ──
     if _is_root:
+        gold_mult = lerp(1.0, 3.5, warmth)
         for glow_r, glow_a in [(r * 0.5, 0.015), (r * 0.3, 0.011)]:
             ax.add_patch(Circle((cx, cy), glow_r,
-                                facecolor=rgba(WARM_GOLD, glow_a),
+                                facecolor=rgba(WARM_GOLD, glow_a * gold_mult),
                                 edgecolor="none", zorder=2))
 
     # ── Particles ──
@@ -114,27 +136,25 @@ def spawn_clusters(ax, cx, cy, r, depth, rng, _is_root=True):
     x = cx + rad * np.cos(ang)
     y = cy + rad * np.sin(ang)
 
-    # Power-law sizes (size x1.2)
     raw = rng.power(0.45, count)
     sizes = (0.6 + 12.0 * raw) * (1.0 + depth * 0.2) * 1.2
 
-    # Per-particle color: blue base + gold fraction + teal fraction
+    gold_frac = lerp(0.12, 0.25, warmth)
+    teal_frac = 0.12
+
     p_colors = []
     for i in range(count):
-        alpha_val = (0.14 + 0.28 * rng.random()) * 1.4  # particle alpha x1.4
+        alpha_val = (0.14 + 0.28 * rng.random()) * 1.4
         roll = rng.random()
-        if roll < 0.12:
-            # Gold-tinted
+        if roll < gold_frac:
             gc = hex_to_rgb(PALE_GOLD if rng.random() < 0.5 else WARM_GOLD)
             gc = shift_color(gc, rng, 0.015, 0.06)
             p_colors.append(gc + (float(np.clip(alpha_val * 0.8, 0, 1)),))
-        elif roll < 0.24:
-            # Teal-tinted
+        elif roll < gold_frac + teal_frac:
             tc = hex_to_rgb(TEAL_GLOW)
             tc = shift_color(tc, rng, 0.03, 0.06)
             p_colors.append(tc + (float(np.clip(alpha_val * 0.7, 0, 1)),))
         else:
-            # Base blue with variation
             bc = shift_color(col_rgb, rng, 0.03, 0.06)
             p_colors.append(bc + (float(np.clip(alpha_val, 0, 1)),))
 
@@ -153,13 +173,17 @@ def spawn_clusters(ax, cx, cy, r, depth, rng, _is_root=True):
         s_colors.append(sc + (float(np.clip((0.06 + 0.10 * rng.random()) * 1.4, 0, 1)),))
     ax.scatter(sx, sy, s=s_sizes, c=s_colors, linewidths=0, zorder=3)
 
-    # ── Children (same recursion as original) ──
+    # ── Children ──
     if depth == 0:
         return
     child_n = 2 + (1 if depth > 2 else 0)
     for i in range(child_n):
         angle = (2 * np.pi * i / child_n) + rng.uniform(-0.45, 0.45)
         dist = r * (0.46 + 0.16 * rng.random())
+        if child_warmths is not None and i < len(child_warmths):
+            cw = child_warmths[i]
+        else:
+            cw = warmth * warmth_decay
         spawn_clusters(
             ax,
             cx + dist * np.cos(angle),
@@ -167,6 +191,8 @@ def spawn_clusters(ax, cx, cy, r, depth, rng, _is_root=True):
             r * (0.42 + 0.06 * rng.random()),
             depth - 1, rng,
             _is_root=False,
+            warmth=cw,
+            warmth_decay=warmth_decay,
         )
 
 
@@ -187,11 +213,12 @@ def render():
         )
     )
 
-    # Root pools — Balanced Fill layout
-    spawn_clusters(ax, 0.46, 0.50, 0.25, 3, rng, _is_root=True)
-    spawn_clusters(ax, 0.25, 0.66, 0.14, 2, rng, _is_root=True)
-    spawn_clusters(ax, 0.74, 0.35, 0.15, 2, rng, _is_root=True)
-    spawn_clusters(ax, 0.70, 0.66, 0.08, 1, rng, _is_root=False)
+    # Root pools — Balanced Fill layout with warmth gradient
+    spawn_clusters(ax, 0.46, 0.50, 0.25, 3, rng, _is_root=True,
+                   warmth=0.12, child_warmths=[0.9, 0.0, 0.0])
+    spawn_clusters(ax, 0.25, 0.66, 0.14, 2, rng, _is_root=True, warmth=0.0)
+    spawn_clusters(ax, 0.74, 0.35, 0.15, 2, rng, _is_root=True, warmth=0.0)
+    spawn_clusters(ax, 0.70, 0.66, 0.08, 1, rng, _is_root=False, warmth=0.0)
 
     # Save
     os.makedirs(OUTPUT_DIR, exist_ok=True)
