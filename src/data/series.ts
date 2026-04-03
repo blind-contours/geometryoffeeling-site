@@ -314,6 +314,7 @@ export const series: Series[] = [
     background: "#F0EDE8",
     palette: ["#B0C8B8", "#90B0A0", "#A8C0B0", "#78A090", "#D0E0D0"],
     makingOf: "20 renders. 7 survived.",
+    homePieceIds: ["peace-horizon", "peace-field-guardian"],
     pieces: [
       { id: "peace-horizon", title: "Horizon", series: "peace", equation: "y → c as x → ±∞", description: "Everything stripped down to one line. Layered atmospheric bands resolving into the single boundary between sky and earth — the simplest possible landscape. I kept removing things until only the horizon was left.", emotionalNote: "Everything stripped down to one line", background: "#F0EDE8", imageUrl: "/prints/peace/peace_horizon.jpg", gumroadUrl: "https://gumroad.com/l/placeholder", price: 45 },
       { id: "peace-breath", title: "Breath", series: "peace", equation: "A(t) = A₀·sin(2πt/T)", description: "Concentric rings expanding on the inhale, contracting on the exhale. I timed them to a breathing rhythm — the simplest cycle the body knows. There's nothing else in the frame because nothing else is needed.", emotionalNote: "Breathing made visible", background: "#F0EDE8", imageUrl: "/prints/peace/peace_breath.jpg", gumroadUrl: "https://gumroad.com/l/placeholder", price: 45 },
