@@ -156,6 +156,7 @@ export const series: Series[] = [
     background: "#F0E8DA",
     palette: ["#5A9A50", "#C8A030", "#B85A30", "#4A6A90"],
     makingOf: "60 renders. 11 survived.",
+    homePieceIds: ["cycles-moebius", "cycles-seasons"],
     pieces: [
       { id: "cycles-seasons", title: "Seasons", series: "cycles", equation: "T(t) = T̄ + A·sin(2πt/P + φ)", description: "Layers of years stacked on top of each other — warming and cooling, warming and cooling. The same shape every time, but none identical. I grew up in a place with real seasons, and the thing about them is you think you remember what winter feels like until it comes back and surprises you again.", emotionalNote: "The same rhythm, never the same amplitude", background: "#F0E8DA", imageUrl: "/prints/cycles/cycles_seasons.jpg", gumroadUrl: "https://gumroad.com/l/placeholder", price: 45 },
 
