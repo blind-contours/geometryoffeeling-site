@@ -23,6 +23,7 @@ export interface Series {
   background: string;
   palette: string[];
   pieces: Piece[];
+  homePieceIds?: string[];
   bundleGumroadUrl: string;
   bundlePrice: number;
   makingOf: string;
@@ -132,8 +133,11 @@ export const series: Series[] = [
     background: "#F5F0E6",
     palette: ["#1A4D2E", "#2E8B4A", "#6BBF6E", "#A8D86E", "#E8D878"],
     makingOf: "182 renders. 6 survived.",
+    homePieceIds: ["growth-branch", "growth-strata"],
     pieces: [
       { id: "growth-branch", title: "Branch", series: "growth", equation: "A→F[−θA][+θA], 13 levels, θ=35°, r=0.82", description: "One rule, applied again and again: branch left, branch right. Thirteen levels deep, and a canopy emerges — alive, complex, unmistakably a tree. All of it from three characters of code. I watched it build itself and thought: that's how growth works.", emotionalNote: "Three characters of code, infinite complexity", background: "#F5F0E6", imageUrl: "/prints/growth/growth_branch.jpg", gumroadUrl: "https://gumroad.com/l/placeholder", price: 45 },
+      { id: "growth-arise", title: "Arise", series: "growth", equation: "x(t) = x₀ − d·α·t, y(t) = y₀ + H·t", description: "Thirty-four lines rising from a spread base, each one leaning a little closer to center as it climbs. Something reaching upward, converging toward a light it can sense but not see. I didn't plan the convergence — the phototropism equation just does that. Things that are growing lean toward what nurtures them.", emotionalNote: "Reaching upward, converging toward light", background: "#F5F0E6", imageUrl: "/prints/growth/growth_arise.jpg", gumroadUrl: "https://gumroad.com/l/placeholder", price: 45 },
+      { id: "growth-mycelium", title: "Mycelium", series: "growth", equation: "SC(attract, kill, step) + nutrient zones", description: "A single spore finds its way. One origin point sends hyphae branching outward, thick trunks tapering to gossamer tips, shifting color each time the network discovers a new nutrient zone. Built from the space colonization algorithm — the same logic real fungi use to claim territory underground.", emotionalNote: "The hidden network that connects everything underground", background: "#F5F0E6", imageUrl: "/prints/growth/growth_mycelium.jpg", gumroadUrl: "https://gumroad.com/l/placeholder", price: 45 },
       { id: "growth-strata", title: "Strata", series: "growth", equation: "h(n) = 0.1 + H·(n/N)^1.3, color(n) = palette[(n/N)^0.65]", description: "I struggled with this one. Most generative art about growth follows L-systems or reaction-diffusion — branching corals, fractal ferns, cellular automata. Beautiful, but it renders more as science than feeling. I wanted something that gives a sense of expansion, something radiating from a core heat that ripples outward like the earth itself — molten center pushing through strata of rock and soil toward the surface. That's what I got here. Thirty-five arcs, yellow fire at the center decaying through amber and earth into green and teal. The reverberations push out unevenly, deeper on one side than the other. It feels like growth to me — not the textbook kind, but the kind with real movement in it.", emotionalNote: "Reverberations pushing out from a core", background: "#F5F0E6", imageUrl: "/prints/growth/growth_strata.jpg", gumroadUrl: "https://gumroad.com/l/placeholder", price: 45 },
     ],
     bundleGumroadUrl: "https://gumroad.com/l/placeholder-growth-bundle",

@@ -9,9 +9,14 @@ interface HomeSeriesGridProps {
 
 export default function HomeSeriesGrid({ series, index }: HomeSeriesGridProps) {
   const isRight = index % 2 === 1;
-  const pieces = series.pieces.slice(0, 5);
-  const heroPiece = pieces[0];
-  const supportingPieces = pieces.slice(1);
+
+  // Use homePieceIds if defined, otherwise first 5 pieces
+  const homePieces = series.homePieceIds
+    ? series.homePieceIds.map(id => series.pieces.find(p => p.id === id)!).filter(Boolean)
+    : series.pieces.slice(0, 5);
+  const heroPiece = homePieces[0];
+  const supportingPieces = homePieces.slice(1);
+  const twoUpLayout = homePieces.length === 2;
 
   return (
     <div className="mb-32">
@@ -22,7 +27,37 @@ export default function HomeSeriesGrid({ series, index }: HomeSeriesGridProps) {
         <p className="text-body text-secondary italic mb-6">{series.tagline}</p>
       </div>
 
-      {/* Desktop: hero + supporting grid */}
+      {/* Desktop: two equal images when only 2 featured pieces */}
+      {twoUpLayout ? (
+        <div className="hidden md:grid grid-cols-2 gap-gallery-gap">
+          {homePieces.map((piece) => (
+            <Link
+              key={piece.id}
+              href={`/piece/${piece.id}`}
+              className="relative block group"
+            >
+              <div
+                className="relative overflow-hidden"
+                style={{ backgroundColor: series.background }}
+              >
+                <Image
+                  src={piece.imageUrl}
+                  alt={`${piece.title} — mathematical art print from the ${series.name} series by Geometry of Feeling`}
+                  width={800}
+                  height={550}
+                  className="w-full h-auto block transition-transform duration-500 group-hover:scale-[1.03]"
+                />
+                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-colors duration-500 flex items-end justify-center pb-6">
+                  <span className="text-caption uppercase tracking-widest text-white opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                    {piece.title}
+                  </span>
+                </div>
+              </div>
+            </Link>
+          ))}
+        </div>
+      ) : (
+      /* Desktop: hero + supporting grid */
       <div className="hidden md:grid grid-cols-4 gap-gallery-gap">
         {/* Hero piece — 2 cols, 2 rows */}
         {isRight ? (
@@ -135,6 +170,7 @@ export default function HomeSeriesGrid({ series, index }: HomeSeriesGridProps) {
           </>
         )}
       </div>
+      )}
 
       {/* Mobile: horizontal scroll carousel */}
       <div className="md:hidden relative">
