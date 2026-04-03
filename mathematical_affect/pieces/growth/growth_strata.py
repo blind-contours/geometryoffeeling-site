@@ -71,9 +71,20 @@ def interp_color(pal, u):
     f = pos - i
     return tuple((1 - f) * rgbs[i] + f * rgbs[min(i + 1, len(rgbs) - 1)])
 
+BG_RGB = np.array(hex_to_rgb(BG_COLOR))
+
 def interp_rgba(pal, u, a):
+    """Return color with real alpha (for fill bands that need transparency)."""
     r, g, b = interp_color(pal, u)
     return (r, g, b, float(np.clip(a, 0, 1)))
+
+def interp_opaque(pal, u, a):
+    """Blend color with background — fully opaque, no compositing dots."""
+    r, g, b = interp_color(pal, u)
+    col = np.array([r, g, b])
+    a = float(np.clip(a, 0, 1))
+    blended = a * col + (1 - a) * BG_RGB
+    return (blended[0], blended[1], blended[2], 1.0)
 
 def lc_from_xy(xs, ys, colors, widths, zo=4):
     pts = np.array([xs, ys]).T.reshape(-1, 1, 2)
@@ -146,7 +157,7 @@ def draw_piece(ax, n, ox, oy, n_pts=700):
         for j in range(n_pts - 1):
             cu = frac ** 0.65
             al = base_alpha * (0.55 + 0.45 * apex[j])
-            seg_colors.append(interp_rgba(PALETTE, cu, al))
+            seg_colors.append(interp_opaque(PALETTE, cu, al))
             seg_widths.append(base_lw * (0.40 + 0.60 * apex[j]))
 
         lc = lc_from_xy(xs, ys, seg_colors, seg_widths)
