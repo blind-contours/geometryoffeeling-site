@@ -109,10 +109,57 @@ def pipe_model(parents, n_nodes):
     return cc
 
 
+def trace_paths(parents, n_nodes):
+    """Trace continuous paths through the network (root-to-tip, split at forks).
+    Returns list of paths, each a list of node indices."""
+    from collections import defaultdict
+    children = defaultdict(list)
+    for i in range(1, n_nodes):
+        if parents[i] >= 0:
+            children[parents[i]].append(i)
+
+    paths = []
+    # BFS from root, building paths that split at forks
+    stack = [(0, [0])]  # (current_node, current_path)
+    while stack:
+        node, path = stack.pop()
+        kids = children[node]
+        if len(kids) == 0:
+            # Tip — finalize path
+            if len(path) >= 2:
+                paths.append(path)
+        elif len(kids) == 1:
+            # Continue path
+            path.append(kids[0])
+            stack.append((kids[0], path))
+        else:
+            # Fork — finalize current path, start new ones
+            if len(path) >= 2:
+                paths.append(path)
+            for kid in kids:
+                stack.append((kid, [node, kid]))
+    return paths
+
+
+def smooth_path(xs, ys, n_out=200):
+    """Resample a path through spline interpolation for smooth curves."""
+    from scipy.interpolate import splprep, splev
+    if len(xs) < 4:
+        return np.array(xs), np.array(ys)
+    try:
+        # Parametric spline through the path points
+        tck, u = splprep([xs, ys], s=0, k=min(3, len(xs) - 1))
+        u_new = np.linspace(0, 1, n_out)
+        sx, sy = splev(u_new, tck)
+        return np.array(sx), np.array(sy)
+    except Exception:
+        return np.array(xs), np.array(ys)
+
+
 def render_network(ax, nodes, parents, depths, palette_func,
                    lw_max=5.0, lw_min=0.08, alpha_trunk=0.92,
-                   alpha_tip=0.12):
-    """Render network with pipe-model thickness and zone-aware color."""
+                   alpha_tip=0.12, bg_rgb=(0.96, 0.94, 0.90)):
+    """Render network as spline-smoothed polylines, opaque (no alpha artifacts)."""
     n = len(nodes)
     if n < 2:
         return
@@ -120,26 +167,33 @@ def render_network(ax, nodes, parents, depths, palette_func,
     cc = pipe_model(parents, n)
     max_cc = cc.max()
     max_depth = max(depths) if depths else 1
+    bg = np.array(bg_rgb)
 
-    for i in range(1, n):
-        p = parents[i]
-        if p < 0:
-            continue
+    paths = trace_paths(parents, n)
 
-        frac = (cc[i] / max_cc) ** 0.4
+    for path in paths:
+        raw_xs = [nodes[i][0] for i in path]
+        raw_ys = [nodes[i][1] for i in path]
+
+        # Smooth the path via spline interpolation
+        n_smooth = max(50, len(path) * 3)
+        xs, ys = smooth_path(raw_xs, raw_ys, n_out=n_smooth)
+
+        # Use midpoint node for representative color/width
+        mid_idx = path[len(path) // 2]
+        frac = (cc[mid_idx] / max_cc) ** 0.4
         lw = lw_min + (lw_max - lw_min) * (frac ** 0.7)
-
-        depth_frac = depths[i] / max_depth if max_depth > 0 else 0
-        col = palette_func(depth_frac, nodes[i])
-
+        depth_frac = depths[mid_idx] / max_depth if max_depth > 0 else 0
+        col = np.array(palette_func(depth_frac, nodes[mid_idx]))
         alpha = alpha_tip + (alpha_trunk - alpha_tip) * frac
+        zo = max(1, int(frac * 10))
 
-        ax.plot([nodes[p][0], nodes[i][0]],
-                [nodes[p][1], nodes[i][1]],
-                color=(*col, alpha),
-                linewidth=lw,
-                solid_capstyle='round',
-                zorder=max(1, int(frac * 10)))
+        # Blend with background instead of using alpha — eliminates compositing dots
+        blended = alpha * col + (1 - alpha) * bg
+
+        ax.plot(xs, ys, color=tuple(blended), linewidth=lw,
+                solid_capstyle='round', solid_joinstyle='round',
+                zorder=zo)
 
 
 def make_nutrient_palette(base_colors_hex, zone_specs):
@@ -227,9 +281,11 @@ def render():
         [DEEP_MOSS, DARK_GREEN, FOREST, SPRING], zone_specs
     )
 
+    bg_rgb = hex_to_rgb01(BG_COLOR)
     render_network(ax, nodes, parents, depths, palette,
                    lw_max=5.0, lw_min=0.08,
-                   alpha_trunk=0.92, alpha_tip=0.12)
+                   alpha_trunk=0.92, alpha_tip=0.12,
+                   bg_rgb=tuple(bg_rgb))
 
     add_signature(fig, ax, BG_COLOR)
 
