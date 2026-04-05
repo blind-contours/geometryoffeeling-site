@@ -50,7 +50,7 @@ def rgba(h, a):
     return (c[0], c[1], c[2], float(np.clip(a, 0, 1)))
 
 
-def render():
+def render(alpha_boost=1.0, lw_boost=1.0):
     content_bg = "#1a2540"
 
     fig, ax = plt.subplots(figsize=(FIG_W, FIG_H), dpi=DPI, facecolor=MARGIN_COLOR)
@@ -135,17 +135,17 @@ def render():
 
         if t_norm < 0.3:
             col = PALE_VIOLET
-            alpha = 0.04 + t_norm * 0.45
-            lw_base = 0.2 + t_norm * 0.6
+            alpha = (0.04 + t_norm * 0.45) * alpha_boost
+            lw_base = (0.2 + t_norm * 0.6) * lw_boost
         elif t_norm < 0.6:
             col = ICE
-            alpha = 0.25 + (t_norm - 0.3) * 0.4
-            lw_base = 0.6 + (t_norm - 0.3) * 0.8
+            alpha = (0.25 + (t_norm - 0.3) * 0.4) * alpha_boost
+            lw_base = (0.6 + (t_norm - 0.3) * 0.8) * lw_boost
         else:
             col = WARM_GOLD
             outer_fade = min(1.0, (1.0 - t_norm) / 0.12) if t_norm > 0.88 else 1.0
-            alpha = (0.40 + (t_norm - 0.6) * 0.4) * outer_fade
-            lw_base = 1.0 + (t_norm - 0.6) * 1.0
+            alpha = (0.40 + (t_norm - 0.6) * 0.4) * outer_fade * alpha_boost
+            lw_base = (1.0 + (t_norm - 0.6) * 1.0) * lw_boost
 
         for seg_x, seg_y in segments:
             pts = np.array([seg_x, seg_y]).T.reshape(-1, 1, 2)
@@ -193,21 +193,25 @@ def render():
     add_signature(fig, ax, MARGIN_COLOR, margin_piece=True,
                   margin_bottom=FIG_H * 0.08)
 
-    # Save PDF
-    pdf_path = os.path.join(OUTPUT_DIR, "wonder_meditation.pdf")
-    fig.savefig(pdf_path, format='pdf', facecolor=MARGIN_COLOR, dpi=DPI)
-    print(f"  saved {pdf_path}")
-
-    # Save JPG
-    jpg_path = os.path.join(PRINT_DIR, "wonder_meditation.jpg")
-    fig.savefig(jpg_path, facecolor=MARGIN_COLOR, dpi=DPI,
-                pil_kwargs={"quality": 96})
-    print(f"  saved {jpg_path}")
-
-    plt.close(fig)
+    return fig
 
 
 if __name__ == '__main__':
     print("═══ Wonder: Meditation ═══")
-    render()
+
+    # Delicate version for print PDF
+    fig = render()
+    pdf_path = os.path.join(OUTPUT_DIR, "wonder_meditation.pdf")
+    fig.savefig(pdf_path, format='pdf', facecolor=MARGIN_COLOR, dpi=DPI)
+    print(f"  saved {pdf_path}")
+    plt.close(fig)
+
+    # Punchier version for web thumbnail
+    fig = render(alpha_boost=1.4, lw_boost=1.3)
+    jpg_path = os.path.join(PRINT_DIR, "wonder_meditation.jpg")
+    fig.savefig(jpg_path, facecolor=MARGIN_COLOR, dpi=DPI,
+                pil_kwargs={"quality": 96})
+    print(f"  saved {jpg_path}")
+    plt.close(fig)
+
     print("═══ Done ═══")
