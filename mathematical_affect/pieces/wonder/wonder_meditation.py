@@ -189,6 +189,32 @@ def render(alpha_boost=1.0, lw_boost=1.0):
                                    zorder=3 + int(t_norm * 5))
             ax.add_collection(lc)
 
+    # Horizon line — the passage between body and mind
+    horizon_y = inv_cy
+    hz_x = np.linspace(content_l, content_r, 2000)
+    hz_pts = np.array([hz_x, np.full_like(hz_x, horizon_y)]).T.reshape(-1, 1, 2)
+    hz_segs = np.concatenate([hz_pts[:-1], hz_pts[1:]], axis=1)
+    hz_mid_x = (hz_x[:-1] + hz_x[1:]) / 2
+    hz_dist = np.abs(hz_mid_x - inv_cx)
+    hz_max = (content_r - content_l) / 2
+    hz_norm = np.clip(hz_dist / hz_max, 0, 1)
+    # Bright at center, fading to edges
+    hz_colors = []
+    gold_rgb = hex_to_rgb(BRIGHT_GOLD)
+    ice_rgb = hex_to_rgb(ICE)
+    for i in range(len(hz_segs)):
+        t = 1.0 - hz_norm[i]  # 1 at center, 0 at edges
+        # Blend from ice at edges to bright gold at center
+        r = ice_rgb[0] + (gold_rgb[0] - ice_rgb[0]) * t ** 0.8
+        g = ice_rgb[1] + (gold_rgb[1] - ice_rgb[1]) * t ** 0.8
+        b = ice_rgb[2] + (gold_rgb[2] - ice_rgb[2]) * t ** 0.8
+        a = (0.03 + 0.35 * t ** 1.5) * alpha_boost
+        hz_colors.append((r, g, b, min(a, 0.95)))
+    hz_lw = (0.3 + 1.2 * (1.0 - hz_norm) ** 1.2) * lw_boost
+    hz_lc = mc.LineCollection(hz_segs, linewidths=hz_lw, colors=hz_colors,
+                              capstyle='round', zorder=2)
+    ax.add_collection(hz_lc)
+
     # Signature
     add_signature(fig, ax, MARGIN_COLOR, margin_piece=True,
                   margin_bottom=FIG_H * 0.08)
