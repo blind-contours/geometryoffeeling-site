@@ -9,11 +9,11 @@ export const metadata: Metadata = {
     title: "Commission a Custom Piece — Geometry of Feeling",
     description:
       "Commission a custom mathematical art print with your choice of colors, parameters, dimensions, or an entirely new composition.",
-    images: [{ url: "/prints/wonder/wonder_strange_attractor.jpg", width: 1680, height: 1155 }],
+    images: [{ url: "/prints/wonder/wonder_apollonian_gasket.jpg", width: 1680, height: 1155 }],
   },
   twitter: {
     card: "summary_large_image",
-    images: ["/prints/wonder/wonder_strange_attractor.jpg"],
+    images: ["/prints/wonder/wonder_apollonian_gasket.jpg"],
   },
 };
 
