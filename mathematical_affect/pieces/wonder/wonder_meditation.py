@@ -135,17 +135,17 @@ def render(alpha_boost=1.0, lw_boost=1.0):
 
         if t_norm < 0.3:
             col = PALE_VIOLET
-            alpha = (0.04 + t_norm * 0.45) * alpha_boost
-            lw_base = (0.2 + t_norm * 0.6) * lw_boost
+            alpha = (0.12 + t_norm * 0.50) * alpha_boost
+            lw_base = (0.4 + t_norm * 0.8) * lw_boost
         elif t_norm < 0.6:
             col = ICE
-            alpha = (0.25 + (t_norm - 0.3) * 0.4) * alpha_boost
-            lw_base = (0.6 + (t_norm - 0.3) * 0.8) * lw_boost
+            alpha = (0.35 + (t_norm - 0.3) * 0.4) * alpha_boost
+            lw_base = (0.8 + (t_norm - 0.3) * 1.0) * lw_boost
         else:
             col = WARM_GOLD
             outer_fade = min(1.0, (1.0 - t_norm) / 0.12) if t_norm > 0.88 else 1.0
-            alpha = (0.40 + (t_norm - 0.6) * 0.4) * outer_fade * alpha_boost
-            lw_base = (1.0 + (t_norm - 0.6) * 1.0) * lw_boost
+            alpha = (0.50 + (t_norm - 0.6) * 0.35) * outer_fade * alpha_boost
+            lw_base = (1.2 + (t_norm - 0.6) * 1.0) * lw_boost
 
         for seg_x, seg_y in segments:
             pts = np.array([seg_x, seg_y]).T.reshape(-1, 1, 2)
@@ -200,14 +200,14 @@ if __name__ == '__main__':
     print("═══ Wonder: Meditation ═══")
 
     # Print PDF — slightly boosted line density
-    fig = render(lw_boost=1.2)
+    fig = render(alpha_boost=1.1, lw_boost=1.4)
     pdf_path = os.path.join(OUTPUT_DIR, "wonder_meditation.pdf")
     fig.savefig(pdf_path, format='pdf', facecolor=MARGIN_COLOR, dpi=DPI)
     print(f"  saved {pdf_path}")
     plt.close(fig)
 
     # Punchier version for web thumbnail
-    fig = render(alpha_boost=1.4, lw_boost=1.3)
+    fig = render(alpha_boost=1.5, lw_boost=1.6)
     jpg_path = os.path.join(PRINT_DIR, "wonder_meditation.jpg")
     fig.savefig(jpg_path, facecolor=MARGIN_COLOR, dpi=DPI,
                 pil_kwargs={"quality": 96})
