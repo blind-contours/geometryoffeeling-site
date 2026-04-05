@@ -38,7 +38,7 @@ export default function HomeSeriesGrid({ series, index }: HomeSeriesGridProps) {
             >
               <div
                 className="relative overflow-hidden"
-                style={{ backgroundColor: series.background }}
+                style={{ backgroundColor: piece.background || series.background }}
               >
                 <Image
                   src={piece.imageUrl}
@@ -72,7 +72,7 @@ export default function HomeSeriesGrid({ series, index }: HomeSeriesGridProps) {
                 >
                   <div
                     className="relative overflow-hidden"
-                    style={{ backgroundColor: series.background }}
+                    style={{ backgroundColor: piece.background || series.background }}
                   >
                     <Image
                       src={piece.imageUrl}
@@ -97,7 +97,7 @@ export default function HomeSeriesGrid({ series, index }: HomeSeriesGridProps) {
             >
               <div
                 className="relative overflow-hidden h-full"
-                style={{ backgroundColor: series.background }}
+                style={{ backgroundColor: heroPiece.background || series.background }}
               >
                 <Image
                   src={heroPiece.imageUrl}
@@ -123,7 +123,7 @@ export default function HomeSeriesGrid({ series, index }: HomeSeriesGridProps) {
             >
               <div
                 className="relative overflow-hidden h-full"
-                style={{ backgroundColor: series.background }}
+                style={{ backgroundColor: heroPiece.background || series.background }}
               >
                 <Image
                   src={heroPiece.imageUrl}
@@ -149,7 +149,7 @@ export default function HomeSeriesGrid({ series, index }: HomeSeriesGridProps) {
                 >
                   <div
                     className="relative overflow-hidden"
-                    style={{ backgroundColor: series.background }}
+                    style={{ backgroundColor: piece.background || series.background }}
                   >
                     <Image
                       src={piece.imageUrl}
@@ -184,7 +184,7 @@ export default function HomeSeriesGrid({ series, index }: HomeSeriesGridProps) {
             >
               <div
                 className="overflow-hidden"
-                style={{ backgroundColor: series.background }}
+                style={{ backgroundColor: piece.background || series.background }}
               >
                 <Image
                   src={piece.imageUrl}

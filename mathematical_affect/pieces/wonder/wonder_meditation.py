@@ -1,5 +1,5 @@
 """
-Geometry of Feeling — Wonder: Inversion
+Geometry of Feeling — Wonder: Meditation
 Circle inversion transforms parallel lines into a family of circles
 converging through a focal point. Two unequal bodies — one circular,
 one elliptical — meet at a luminous passage. The lines taper from
@@ -194,12 +194,12 @@ def render():
                   margin_bottom=FIG_H * 0.08)
 
     # Save PDF
-    pdf_path = os.path.join(OUTPUT_DIR, "wonder_inversion.pdf")
+    pdf_path = os.path.join(OUTPUT_DIR, "wonder_meditation.pdf")
     fig.savefig(pdf_path, format='pdf', facecolor=MARGIN_COLOR, dpi=DPI)
     print(f"  saved {pdf_path}")
 
     # Save JPG
-    jpg_path = os.path.join(PRINT_DIR, "wonder_inversion.jpg")
+    jpg_path = os.path.join(PRINT_DIR, "wonder_meditation.jpg")
     fig.savefig(jpg_path, facecolor=MARGIN_COLOR, dpi=DPI,
                 pil_kwargs={"quality": 96})
     print(f"  saved {jpg_path}")
@@ -208,6 +208,6 @@ def render():
 
 
 if __name__ == '__main__':
-    print("═══ Wonder: Inversion ═══")
+    print("═══ Wonder: Meditation ═══")
     render()
     print("═══ Done ═══")
