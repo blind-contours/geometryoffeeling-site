@@ -207,7 +207,7 @@ if __name__ == '__main__':
     plt.close(fig)
 
     # Punchier version for web thumbnail
-    fig = render(alpha_boost=1.5, lw_boost=1.6)
+    fig = render(alpha_boost=1.8, lw_boost=2.0)
     jpg_path = os.path.join(PRINT_DIR, "wonder_meditation.jpg")
     fig.savefig(jpg_path, facecolor=MARGIN_COLOR, dpi=DPI,
                 pil_kwargs={"quality": 96})
