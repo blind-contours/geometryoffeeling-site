@@ -65,8 +65,8 @@ def render(alpha_boost=1.0, lw_boost=1.0):
                                  boxstyle="square,pad=0",
                                  facecolor=content_bg, edgecolor='none', zorder=0))
 
-    inv_cx = ML + (1 - ML - MR) * 0.46
-    inv_cy = MB + (1 - MB - MT) * 0.42
+    inv_cx = ML + (1 - ML - MR) * 0.5
+    inv_cy = MB + (1 - MB - MT) * 0.5
     R_inv_upper = 0.23
     R_inv_lower = 0.17
 
@@ -199,8 +199,8 @@ def render(alpha_boost=1.0, lw_boost=1.0):
 if __name__ == '__main__':
     print("═══ Wonder: Meditation ═══")
 
-    # Delicate version for print PDF
-    fig = render()
+    # Print PDF — slightly boosted line density
+    fig = render(lw_boost=1.2)
     pdf_path = os.path.join(OUTPUT_DIR, "wonder_meditation.pdf")
     fig.savefig(pdf_path, format='pdf', facecolor=MARGIN_COLOR, dpi=DPI)
     print(f"  saved {pdf_path}")
