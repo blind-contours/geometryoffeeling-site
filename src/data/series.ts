@@ -441,6 +441,28 @@ export const series: Series[] = [
     bundleGumroadUrl: "https://gumroad.com/l/placeholder-longing-bundle",
     bundlePrice: 169,
   },
+
+  // ── COMPREHENDING ───────────────────────────────────────
+  {
+    id: "comprehending",
+    name: "COMPREHENDING",
+    emotion: "understanding as reduction, the simplifying mind meeting continuous reality",
+    tagline: "Every act of understanding is an act of reduction. The vortices are turned into squares. Comprehension and reduction are the same word.",
+    description: "Every act of understanding is an act of reduction. The universe is continuous and infinite in its detail; the mind that perceives it is finite. To make sense of complexity, we have to compress it — to take something that flows and twists and replace it with something we can hold in a single thought. We do not see the world directly. We see a model of it, built by the mind in the act of looking.",
+    story: "This series depicts that encounter. Each piece is generated from a single mathematical field, drawn twice: once as continuous flow lines (the world as it is), and once as averaged rectangular blocks (the world as the mind holds it). The vortices are turned into squares. Comprehension and reduction are the same word.",
+    mathematicalPrimitive: "paired vortex fields, streamline integration, recursive block averaging",
+    background: "#DDD9D2",
+    palette: ["#3870B0", "#957A42", "#9A4A2E", "#1C2838", "#F4ECD2"],
+    makingOf: "A single field, drawn twice.",
+    homePieceIds: ["comprehending-clarity", "comprehending-depth", "comprehending-gravity"],
+    pieces: [
+      { id: "comprehending-clarity", title: "Clarity", series: "comprehending", equation: "ψ(r) = -(Γ/2π)·log|r − r₀|", description: "The mind reaches toward complexity from the side. A dominant attractor sits at the edge of the canvas; the blocks accumulate along the bottom, gathering to meet what is coming. The moment before understanding — when the storm is still held at arm's length and the self is still mostly self. Built from a single point vortex, the simplest field that carries any structure at all.", emotionalNote: "The moment before understanding", background: "#DDD9D2", imageUrl: "/prints/comprehending/comprehending_clarity.jpg", gumroadUrl: "https://gumroad.com/l/placeholder", price: 45 },
+      { id: "comprehending-depth", title: "Depth", series: "comprehending", equation: "ψ(r) = Σᵢ -(Γᵢ/2π)·log|r − rᵢ|", description: "The mind enters the field. Multiple attractors press against the blocks; the flow lines wrap around the rectangles and the rectangles intrude into the spirals. There is no clean separation between the world and the model. The moment understanding is being built — when the continuous and the discrete are no longer separable, and every square holds a vortex and every vortex leaks into a square.", emotionalNote: "The moment understanding is being built", background: "#DDD9D2", imageUrl: "/prints/comprehending/comprehending_depth.jpg", gumroadUrl: "https://gumroad.com/l/placeholder", price: 45 },
+      { id: "comprehending-gravity", title: "Gravity", series: "comprehending", equation: "dr/dt = -∇Φ, Φ ∝ 1/|r − r₀|", description: "The mind releases. A single attractor drives a diagonal sweep that eventually dissolves into the rectangles. What was sharp becomes diffuse. What we keep is always less than what we encountered. I kept staring at the bottom of the frame — the black cells where the flow finally gives way to pure block, the place where the model takes over completely. That is the thing we walk away with.", emotionalNote: "What we keep is always less than what we encountered", background: "#DDD9D2", imageUrl: "/prints/comprehending/comprehending_gravity.jpg", gumroadUrl: "https://gumroad.com/l/placeholder", price: 45 },
+    ],
+    bundleGumroadUrl: "https://gumroad.com/l/placeholder-comprehending-bundle",
+    bundlePrice: 119,
+  },
 ];
 
 export const allPieces: Piece[] = series.flatMap((s) => s.pieces);
