@@ -485,11 +485,11 @@ export const heroSlides: HeroSlide[] = [
 ];
 
 export const featuredSeriesIds = [
-  "comprehending",
   "awe",
   "connection",
   "grief",
   "pride",
+  "comprehending",
   "peace",
   "wonder",
   "desire",
