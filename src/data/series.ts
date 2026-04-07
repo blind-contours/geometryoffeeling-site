@@ -454,7 +454,7 @@ export const series: Series[] = [
     background: "#DDD9D2",
     palette: ["#3870B0", "#957A42", "#9A4A2E", "#1C2838", "#F4ECD2"],
     makingOf: "A single field, drawn twice.",
-    homePieceIds: ["comprehending-clarity", "comprehending-depth", "comprehending-gravity"],
+    homePieceIds: ["comprehending-gravity", "comprehending-depth", "comprehending-clarity"],
     pieces: [
       { id: "comprehending-clarity", title: "Clarity", series: "comprehending", equation: "ψ(r) = -(Γ/2π)·log|r − r₀|", description: "The mind reaches toward complexity from the side. A dominant attractor sits at the edge of the canvas; the blocks accumulate along the bottom, gathering to meet what is coming. The moment before understanding — when the storm is still held at arm's length and the self is still mostly self. Built from a single point vortex, the simplest field that carries any structure at all.", emotionalNote: "The moment before understanding", background: "#DDD9D2", imageUrl: "/prints/comprehending/comprehending_clarity.jpg", gumroadUrl: "https://gumroad.com/l/placeholder", price: 45 },
       { id: "comprehending-depth", title: "Depth", series: "comprehending", equation: "ψ(r) = Σᵢ -(Γᵢ/2π)·log|r − rᵢ|", description: "The mind enters the field. Multiple attractors press against the blocks; the flow lines wrap around the rectangles and the rectangles intrude into the spirals. There is no clean separation between the world and the model. The moment understanding is being built — when the continuous and the discrete are no longer separable, and every square holds a vortex and every vortex leaks into a square.", emotionalNote: "The moment understanding is being built", background: "#DDD9D2", imageUrl: "/prints/comprehending/comprehending_depth.jpg", gumroadUrl: "https://gumroad.com/l/placeholder", price: 45 },
@@ -485,6 +485,7 @@ export const heroSlides: HeroSlide[] = [
 ];
 
 export const featuredSeriesIds = [
+  "comprehending",
   "awe",
   "connection",
   "grief",

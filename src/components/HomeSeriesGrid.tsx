@@ -17,6 +17,7 @@ export default function HomeSeriesGrid({ series, index }: HomeSeriesGridProps) {
   const heroPiece = homePieces[0];
   const supportingPieces = homePieces.slice(1);
   const twoUpLayout = homePieces.length === 2;
+  const threeUpLayout = homePieces.length === 3;
 
   return (
     <div className="mb-32">
@@ -48,6 +49,35 @@ export default function HomeSeriesGrid({ series, index }: HomeSeriesGridProps) {
                   className="w-full h-auto block transition-transform duration-500 group-hover:scale-[1.03]"
                 />
                 <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-colors duration-500 flex items-end justify-center pb-6">
+                  <span className="text-caption uppercase tracking-widest text-white opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                    {piece.title}
+                  </span>
+                </div>
+              </div>
+            </Link>
+          ))}
+        </div>
+      ) : threeUpLayout ? (
+        /* Desktop: three equal images for a triptych */
+        <div className="hidden md:grid grid-cols-3 gap-gallery-gap">
+          {homePieces.map((piece) => (
+            <Link
+              key={piece.id}
+              href={`/piece/${piece.id}`}
+              className="relative block group"
+            >
+              <div
+                className="relative overflow-hidden"
+                style={{ backgroundColor: piece.background || series.background }}
+              >
+                <Image
+                  src={piece.imageUrl}
+                  alt={`${piece.title} — mathematical art print from the ${series.name} series by Geometry of Feeling`}
+                  width={600}
+                  height={400}
+                  className="w-full h-auto block transition-transform duration-500 group-hover:scale-[1.03]"
+                />
+                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-colors duration-500 flex items-end justify-center pb-5">
                   <span className="text-caption uppercase tracking-widest text-white opacity-0 group-hover:opacity-100 transition-opacity duration-500">
                     {piece.title}
                   </span>
