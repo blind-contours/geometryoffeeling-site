@@ -58,33 +58,117 @@ export default function HomeSeriesGrid({ series, index }: HomeSeriesGridProps) {
           ))}
         </div>
       ) : threeUpLayout ? (
-        /* Desktop: three equal images for a triptych */
+        /* Desktop: hero + two stacked supporting pieces */
         <div className="hidden md:grid grid-cols-3 gap-gallery-gap">
-          {homePieces.map((piece) => (
-            <Link
-              key={piece.id}
-              href={`/piece/${piece.id}`}
-              className="relative block group"
-            >
-              <div
-                className="relative overflow-hidden"
-                style={{ backgroundColor: piece.background || series.background }}
-              >
-                <Image
-                  src={piece.imageUrl}
-                  alt={`${piece.title} — mathematical art print from the ${series.name} series by Geometry of Feeling`}
-                  width={600}
-                  height={400}
-                  className="w-full h-auto block transition-transform duration-500 group-hover:scale-[1.03]"
-                />
-                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-colors duration-500 flex items-end justify-center pb-5">
-                  <span className="text-caption uppercase tracking-widest text-white opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-                    {piece.title}
-                  </span>
-                </div>
+          {isRight ? (
+            <>
+              {/* Supporting pieces stacked on the left */}
+              <div className="col-span-1 grid grid-rows-2 gap-gallery-gap">
+                {supportingPieces.map((piece) => (
+                  <Link
+                    key={piece.id}
+                    href={`/piece/${piece.id}`}
+                    className="relative block group"
+                  >
+                    <div
+                      className="relative overflow-hidden h-full"
+                      style={{ backgroundColor: piece.background || series.background }}
+                    >
+                      <Image
+                        src={piece.imageUrl}
+                        alt={`${piece.title} — mathematical art print from the ${series.name} series by Geometry of Feeling`}
+                        width={400}
+                        height={275}
+                        className="w-full h-full object-cover block transition-transform duration-500 group-hover:scale-[1.03]"
+                      />
+                      <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-colors duration-500 flex items-end justify-center pb-4">
+                        <span className="text-caption uppercase tracking-widest text-white opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                          {piece.title}
+                        </span>
+                      </div>
+                    </div>
+                  </Link>
+                ))}
               </div>
-            </Link>
-          ))}
+              {/* Hero on the right */}
+              <Link
+                href={`/piece/${heroPiece.id}`}
+                className="col-span-2 relative block group"
+              >
+                <div
+                  className="relative overflow-hidden h-full"
+                  style={{ backgroundColor: heroPiece.background || series.background }}
+                >
+                  <Image
+                    src={heroPiece.imageUrl}
+                    alt={`${heroPiece.title} — mathematical art print from the ${series.name} series by Geometry of Feeling`}
+                    width={800}
+                    height={550}
+                    className="w-full h-full object-cover block transition-transform duration-500 group-hover:scale-[1.03]"
+                  />
+                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-colors duration-500 flex items-end justify-center pb-6">
+                    <span className="text-caption uppercase tracking-widest text-white opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                      {heroPiece.title}
+                    </span>
+                  </div>
+                </div>
+              </Link>
+            </>
+          ) : (
+            <>
+              {/* Hero on the left */}
+              <Link
+                href={`/piece/${heroPiece.id}`}
+                className="col-span-2 relative block group"
+              >
+                <div
+                  className="relative overflow-hidden h-full"
+                  style={{ backgroundColor: heroPiece.background || series.background }}
+                >
+                  <Image
+                    src={heroPiece.imageUrl}
+                    alt={`${heroPiece.title} — mathematical art print from the ${series.name} series by Geometry of Feeling`}
+                    width={800}
+                    height={550}
+                    className="w-full h-full object-cover block transition-transform duration-500 group-hover:scale-[1.03]"
+                  />
+                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-colors duration-500 flex items-end justify-center pb-6">
+                    <span className="text-caption uppercase tracking-widest text-white opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                      {heroPiece.title}
+                    </span>
+                  </div>
+                </div>
+              </Link>
+              {/* Supporting pieces stacked on the right */}
+              <div className="col-span-1 grid grid-rows-2 gap-gallery-gap">
+                {supportingPieces.map((piece) => (
+                  <Link
+                    key={piece.id}
+                    href={`/piece/${piece.id}`}
+                    className="relative block group"
+                  >
+                    <div
+                      className="relative overflow-hidden h-full"
+                      style={{ backgroundColor: piece.background || series.background }}
+                    >
+                      <Image
+                        src={piece.imageUrl}
+                        alt={`${piece.title} — mathematical art print from the ${series.name} series by Geometry of Feeling`}
+                        width={400}
+                        height={275}
+                        className="w-full h-full object-cover block transition-transform duration-500 group-hover:scale-[1.03]"
+                      />
+                      <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-colors duration-500 flex items-end justify-center pb-4">
+                        <span className="text-caption uppercase tracking-widest text-white opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                          {piece.title}
+                        </span>
+                      </div>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            </>
+          )}
         </div>
       ) : (
       /* Desktop: hero + supporting grid */
