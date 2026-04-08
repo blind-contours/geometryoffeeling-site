@@ -65,6 +65,7 @@ export const series: Series[] = [
     background: "#0A0A12",
     palette: ["#C8887A", "#E8C878", "#D4988A", "#B87A70", "#F0D890"],
     makingOf: "77 renders. 5 survived.",
+    homePieceIds: ["connection-magnetic", "connection-lorenz", "connection-phase-sync"],
     pieces: [
       { id: "connection-magnetic", title: "Magnetic", series: "connection", equation: "B = B₁ + B₂, ∇×B = μ₀J", description: "Two fields reaching toward each other across dark space. The pull between them is invisible, but it shapes everything — bending every line, curving every path. You can't see the force. You can feel it.", emotionalNote: "The invisible pull that shapes everything around it", background: "#E8D8B8", imageUrl: "/prints/connection/connection_magnetic.jpg", gumroadUrl: "https://gumroad.com/l/placeholder", price: 45 },
       { id: "connection-lorenz", title: "Lorenz", series: "connection", equation: "dx/dt = σ(y−x), dy/dt = x(ρ−z)−y", description: "Two paths starting from almost the same place, tracing the same strange attractor — then slowly, inevitably diverging. The butterfly shape isn't decorative. It's what happens when a system is sensitive to everything. Closeness doesn't guarantee staying close.", emotionalNote: "Starting together doesn't mean staying together", background: "#E8D8B8", imageUrl: "/prints/connection/connection_lorenz.jpg", gumroadUrl: "https://gumroad.com/l/placeholder", price: 45 },
