@@ -162,15 +162,15 @@ if __name__ == '__main__':
     os.makedirs(PRINT_DIR, exist_ok=True)
     print("═══ Awe: Eclipse ═══")
 
-    # Print PDF — faithful to the original
-    fig = render(alpha_boost=1.0, lw_boost=1.0)
+    # Print PDF — punchier so corona reads boldly at print size
+    fig = render(alpha_boost=1.9, lw_boost=1.9)
     fig.subplots_adjust(left=0, right=1, top=1, bottom=0)
     pdf_path = os.path.join(OUTPUT_DIR, "awe_eclipse.pdf")
     fig.savefig(pdf_path, format='pdf', facecolor=MARGIN_COLOR)
     print(f"  saved {pdf_path}")
     plt.close(fig)
 
-    # Punchier version for web thumbnail
+    # Web thumbnail — same punchy settings as print
     fig = render(alpha_boost=1.9, lw_boost=1.9)
     fig.subplots_adjust(left=0, right=1, top=1, bottom=0)
     jpg_path = os.path.join(PRINT_DIR, "awe_eclipse.jpg")
