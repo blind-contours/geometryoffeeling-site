@@ -19,6 +19,17 @@ export default function HomeSeriesGrid({ series, index }: HomeSeriesGridProps) {
   const twoUpLayout = homePieces.length === 2;
   const threeUpLayout = homePieces.length === 3;
 
+  // Mobile carousel order: homePieces first (so the lead piece matches the
+  // desktop hero), then any remaining pieces in their original series order.
+  const mobilePieces = series.homePieceIds
+    ? [
+        ...homePieces,
+        ...series.pieces.filter(
+          (p) => !series.homePieceIds!.includes(p.id)
+        ),
+      ]
+    : series.pieces;
+
   return (
     <div className="mb-32">
       <div className={`max-w-2xl ${isRight ? "md:ml-auto md:text-right" : "md:text-left"}`}>
@@ -300,7 +311,7 @@ export default function HomeSeriesGrid({ series, index }: HomeSeriesGridProps) {
       {/* Mobile: horizontal scroll carousel */}
       <div className="md:hidden relative">
         <div className="flex overflow-x-auto gap-4 scrollbar-hide -mx-6 px-6 snap-x snap-mandatory">
-          {series.pieces.map((piece) => (
+          {mobilePieces.map((piece) => (
             <Link
               key={piece.id}
               href={`/piece/${piece.id}`}
