@@ -539,10 +539,10 @@ export const featuredSeriesIds = [
 export const featuredPieceIds = [
   "grief-void",
   "awe-eclipse",
-  "growth-branch",
+  "comprehending-gravity",
   "peace-horizon",
   "wonder-apollonian-gasket",
-  "pride-waves",
+  "connection-magnetic",
   "humility-plumb",
   "desire-pursuit",
 ];
