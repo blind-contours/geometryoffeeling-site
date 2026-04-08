@@ -543,7 +543,7 @@ export const featuredPieceIds = [
   "peace-horizon",
   "wonder-apollonian-gasket",
   "connection-magnetic",
-  "humility-plumb",
+  "growth-branch",
   "desire-pursuit",
 ];
 
