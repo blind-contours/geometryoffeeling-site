@@ -102,18 +102,9 @@ def draw_tapered(ax, xs, ys, col, lw_start, lw_end, a_start, a_end, zo=4):
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 OUTPUT_DIR = os.path.join(SCRIPT_DIR, '..', '..', 'output')
+PRINT_DIR = os.path.join(SCRIPT_DIR, '..', '..', '..', 'public', 'prints', 'awe')
 
-def save(fig, name):
-    os.makedirs(OUTPUT_DIR, exist_ok=True)
-    if not name.endswith('.pdf'):
-        name = name + '.pdf'
-    fig.subplots_adjust(left=0, right=1, top=1, bottom=0)
-    fig.savefig(os.path.join(OUTPUT_DIR, name),
-                format='pdf', facecolor=MARGIN_COLOR)
-    plt.close(fig)
-    print(f'saved {name}')
-
-def render():
+def render(alpha_boost=1.0, lw_boost=1.0):
     fig, ax = make_fig()
     np.random.seed(11)
     moon_r = PW * 0.14
@@ -135,16 +126,22 @@ def render():
         if mask.sum() < 3: continue
         col = CORONA if i % 3 == 0 else (STARLIGHT if i % 3 == 1 else IVORY)
         for seg_xs, seg_ys in split_segments(xs, ys, mask):
-            draw_tapered(ax, seg_xs, seg_ys, col, 1.2, 0.05, 0.40, 0.01, zo=3)
+            draw_tapered(ax, seg_xs, seg_ys, col,
+                          1.2 * lw_boost, 0.05 * lw_boost,
+                          min(0.40 * alpha_boost, 0.95),
+                          min(0.01 * alpha_boost, 0.95), zo=3)
     # Inner corona glow
     for r_, a_ in [(moon_r * 1.8, 0.04), (moon_r * 1.4, 0.10), (moon_r * 1.15, 0.25)]:
         ax.add_patch(Circle((cx, cy), radius=r_,
-                    facecolor=rgba(CORONA, a_), edgecolor='none', zorder=4))
+                    facecolor=rgba(CORONA, min(a_ * alpha_boost, 0.95)),
+                    edgecolor='none', zorder=4))
     # Chromosphere — thin red ring
     theta = np.linspace(0, 2 * np.pi, 600)
     cr_xs = cx + moon_r * 1.02 * np.cos(theta)
     cr_ys = cy + moon_r * 1.02 * np.sin(theta)
-    draw_lc(ax, cr_xs, cr_ys, CRIMSON, lw=1.5, alpha=0.5, zo=5)
+    draw_lc(ax, cr_xs, cr_ys, CRIMSON,
+            lw=1.5 * lw_boost,
+            alpha=min(0.5 * alpha_boost, 0.95), zo=5)
     # Moon disk — pure black
     ax.add_patch(Circle((cx, cy), radius=moon_r,
                 facecolor=rgba(BG, 1.0), edgecolor='none', zorder=6))
@@ -153,10 +150,33 @@ def render():
     dr_x = cx + moon_r * np.cos(dr_angle)
     dr_y = cy + moon_r * np.sin(dr_angle)
     for r_, a_ in [(0.15, 0.06), (0.08, 0.15), (0.03, 0.50), (0.012, 0.90)]:
-        ax.add_patch(Circle((dr_x, dr_y), radius=r_,
-                    facecolor=rgba(STARLIGHT, a_), edgecolor='none', zorder=8))
+        ax.add_patch(Circle((dr_x, dr_y), radius=r_ * lw_boost,
+                    facecolor=rgba(STARLIGHT, min(a_ * alpha_boost, 0.98)),
+                    edgecolor='none', zorder=8))
     add_signature(fig, ax, MARGIN_COLOR, margin_piece=True, margin_bottom=FIG_H * 0.08)
-    save(fig, "awe_eclipse.pdf")
+    return fig
+
 
 if __name__ == '__main__':
-    render()
+    os.makedirs(OUTPUT_DIR, exist_ok=True)
+    os.makedirs(PRINT_DIR, exist_ok=True)
+    print("═══ Awe: Eclipse ═══")
+
+    # Print PDF — faithful to the original
+    fig = render(alpha_boost=1.0, lw_boost=1.0)
+    fig.subplots_adjust(left=0, right=1, top=1, bottom=0)
+    pdf_path = os.path.join(OUTPUT_DIR, "awe_eclipse.pdf")
+    fig.savefig(pdf_path, format='pdf', facecolor=MARGIN_COLOR)
+    print(f"  saved {pdf_path}")
+    plt.close(fig)
+
+    # Punchier version for web thumbnail
+    fig = render(alpha_boost=1.9, lw_boost=1.9)
+    fig.subplots_adjust(left=0, right=1, top=1, bottom=0)
+    jpg_path = os.path.join(PRINT_DIR, "awe_eclipse.jpg")
+    fig.savefig(jpg_path, facecolor=MARGIN_COLOR, dpi=DPI,
+                pil_kwargs={"quality": 96})
+    print(f"  saved {jpg_path}")
+    plt.close(fig)
+
+    print("═══ Done ═══")
