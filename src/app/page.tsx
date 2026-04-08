@@ -6,18 +6,25 @@ import EmailCapture from "@/components/EmailCapture";
 import { series, featuredSeriesIds, featuredPieceIds, getPieceBySlug } from "@/data/series";
 import type { Metadata } from "next";
 
+const homeTitle =
+  "Geometry of Feeling | Minimalist Generative & Mathematical Art Prints";
+const homeDescription =
+  "Minimalist modern art prints built from mathematical equations and hand-coded generative systems. Each piece maps a human emotion — awe, grief, peace, desire, connection — onto the geometry that shares its shape. Museum-grade giclée on Hahnemühle German Etching. From $45, free shipping.";
+
 export const metadata: Metadata = {
+  title: homeTitle,
+  description: homeDescription,
   openGraph: {
-    title:
-      "Geometry of Feeling — Minimalist Fine Art Prints | Mathematical Art for Home & Office",
-    description:
-      "Minimalist fine art prints where every piece begins with a human emotion — grief, awe, connection, desire — and renders it through the mathematical equation that shares its shape. Museum-quality giclée prints on Hahnemühle German Etching 310gsm. From $45 with free shipping.",
+    title: homeTitle,
+    description: homeDescription,
     images: [
       { url: "/prints/awe/awe_singularity.jpg", width: 1680, height: 1155 },
     ],
   },
   twitter: {
     card: "summary_large_image",
+    title: homeTitle,
+    description: homeDescription,
     images: ["/prints/awe/awe_singularity.jpg"],
   },
 };
@@ -37,9 +44,13 @@ export default function Home() {
 
       {/* Positioning statement */}
       <section className="max-w-content mx-auto px-6 py-24 md:text-center">
-        <h2 className="text-xl md:text-2xl font-mono font-light leading-relaxed text-primary max-w-3xl md:mx-auto mb-12">
+        <h2 className="text-xl md:text-2xl font-mono font-light leading-relaxed text-primary max-w-3xl md:mx-auto mb-6">
           I find the equation hiding inside real things — and I draw it.
         </h2>
+
+        <p className="text-body md:text-[15px] text-muted max-w-2xl md:mx-auto mb-12">
+          Geometry of Feeling is a collection of minimalist modern art prints — generative, hand-coded from mathematical equations — that render emotions like awe, grief, peace, desire, and connection into geometric form.
+        </p>
 
         <div className="max-w-2xl md:mx-auto space-y-6 mb-12">
           <p className="text-body md:text-[17px] md:leading-relaxed text-secondary md:text-primary/80">

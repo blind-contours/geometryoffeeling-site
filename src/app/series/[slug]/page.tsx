@@ -20,9 +20,15 @@ export function generateMetadata({ params }: Props): Metadata {
   const s = getSeriesBySlug(params.slug);
   if (!s) return { title: "Series Not Found" };
   const ogImage = s.pieces[0]?.imageUrl || "/prints/awe/awe_singularity.jpg";
-  const description = `The ${s.name} series — ${s.pieces.length} minimalist fine art prints exploring ${s.emotion}. ${s.tagline} From $45. Free shipping.`;
-  const emotion = s.emotion.split(",")[0].trim();
-  const title = `${s.name} Series — Mathematical Art Prints About ${emotion.replace(/^\w/, (c: string) => c.toUpperCase())} | Geometry of Feeling`;
+  // Proper-cased series name ("Awe" not "AWE") reads better in titles.
+  // Dropping the " — Geometry of Feeling" suffix keeps titles under the
+  // SERP truncation threshold; modern Google shows siteName separately
+  // and the openGraph siteName below handles social attribution.
+  const displayName = s.name.charAt(0) + s.name.slice(1).toLowerCase();
+  const descriptor =
+    s.seoDescriptor ?? "Minimalist Mathematical Fine Art Prints";
+  const title = `${displayName} | ${descriptor}`;
+  const description = `The ${displayName} series — ${s.pieces.length} minimalist fine art prints exploring ${s.emotion}. ${s.tagline} From $45. Free shipping.`;
   return {
     title,
     description,
