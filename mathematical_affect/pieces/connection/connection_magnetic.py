@@ -322,15 +322,15 @@ if __name__ == '__main__':
     os.makedirs(PRINT_DIR, exist_ok=True)
     print("═══ Connection: Magnetic ═══")
 
-    # Print PDF — original weight
-    fig = render(alpha_boost=1.0, lw_boost=1.0)
+    # Print PDF — matches the web thumbnail boost
+    fig = render(alpha_boost=1.35, lw_boost=1.35)
     pdf_path = os.path.join(OUTPUT_DIR, "connection_magnetic.pdf")
     fig.savefig(pdf_path, format='pdf', facecolor=MARGIN_COLOR)
     print(f"  saved {pdf_path}")
     plt.close(fig)
 
-    # Web thumbnail — punchier so field lines read boldly at thumbnail size
-    fig = render(alpha_boost=1.8, lw_boost=1.8)
+    # Web thumbnail — modest boost so field lines read at thumbnail size
+    fig = render(alpha_boost=1.35, lw_boost=1.35)
     jpg_path = os.path.join(PRINT_DIR, "connection_magnetic.jpg")
     fig.savefig(jpg_path, facecolor=MARGIN_COLOR, dpi=DPI,
                 pil_kwargs={"quality": 96})
