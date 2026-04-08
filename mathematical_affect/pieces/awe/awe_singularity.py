@@ -86,18 +86,9 @@ def draw_tapered(ax, xs, ys, col, lw_start, lw_end, a_start, a_end, zo=4):
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 OUTPUT_DIR = os.path.join(SCRIPT_DIR, '..', '..', 'output')
+PRINT_DIR = os.path.join(SCRIPT_DIR, '..', '..', '..', 'public', 'prints', 'awe')
 
-def save(fig, name):
-    os.makedirs(OUTPUT_DIR, exist_ok=True)
-    if not name.endswith('.pdf'):
-        name = name + '.pdf'
-    fig.subplots_adjust(left=0, right=1, top=1, bottom=0)
-    fig.savefig(os.path.join(OUTPUT_DIR, name),
-                format='pdf', facecolor=BG)
-    plt.close(fig)
-    print(f'saved {name}')
-
-def render():
+def render(alpha_boost=1.0, lw_boost=1.0):
     fig, ax = make_fig()
     np.random.seed(42)
     inclination = 0.38
@@ -120,8 +111,8 @@ def render():
         elif frac < 0.65: col = NEBULA_P
         elif frac < 0.82: col = COSMIC
         else: col = INDIGO
-        alpha = 0.55 * (1.0 - frac * 0.6) + 0.08
-        lw = 1.6 * (1.0 - frac * 0.5) + 0.15
+        alpha = min((0.55 * (1.0 - frac * 0.6) + 0.08) * alpha_boost, 0.95)
+        lw = (1.6 * (1.0 - frac * 0.5) + 0.15) * lw_boost
         for seg_xs, seg_ys in split_segments(xs_o, ys_o, mask):
             draw_lc(ax, seg_xs, seg_ys, col, lw=lw, alpha=alpha, zo=3)
     # Radiating lines
@@ -139,8 +130,8 @@ def render():
             pts = np.array([seg_xs, seg_ys]).T.reshape(-1, 1, 2)
             segs = np.concatenate([pts[:-1], pts[1:]], axis=1)
             n_s = len(segs)
-            alphas = np.linspace(0.30, 0.02, n_s)
-            lws = np.linspace(0.8, 0.10, n_s)
+            alphas = np.clip(np.linspace(0.30, 0.02, n_s) * alpha_boost, 0, 0.95)
+            lws = np.linspace(0.8, 0.10, n_s) * lw_boost
             col_ray = [CORONA, GOLD, AMBER, NEBULA_P][i % 4]
             colors = [rgba(col_ray, float(a_)) for a_ in alphas]
             lc = mc.LineCollection(segs, linewidths=lws, colors=colors,
@@ -159,7 +150,10 @@ def render():
             if mask_a.sum() < 3: continue
             arc_col = [CORONA, AMBER, NEBULA_P, COSMIC][min(int(j_frac * 4), 3)]
             for seg_xs, seg_ys in split_segments(xs_arc, ys_arc, mask_a):
-                draw_lc(ax, seg_xs, seg_ys, arc_col, lw=0.5, alpha=0.18 * (1 - j_frac * 0.7), zo=2)
+                draw_lc(ax, seg_xs, seg_ys, arc_col,
+                        lw=0.5 * lw_boost,
+                        alpha=min(0.18 * (1 - j_frac * 0.7) * alpha_boost, 0.95),
+                        zo=2)
     # Event horizon
     for r_, a_ in [(0.22, 1.0), (0.28, 0.7), (0.34, 0.4)]:
         ax.add_patch(Circle((cx, cy), radius=r_,
@@ -170,9 +164,33 @@ def render():
     xs_ring = cx + r_ring * np.cos(phi_ring)
     ys_ring = cy + r_ring * np.sin(phi_ring) * inclination
     for a_r, lw_r in [(0.55, 1.5), (0.35, 2.5), (0.18, 4.0)]:
-        draw_lc(ax, xs_ring, ys_ring, CORONA, lw=lw_r, alpha=a_r, zo=7)
+        draw_lc(ax, xs_ring, ys_ring, CORONA,
+                lw=lw_r * lw_boost,
+                alpha=min(a_r * alpha_boost, 0.95), zo=7)
     add_signature(fig, ax, BG)
-    save(fig, "awe_singularity.pdf")
+    return fig
+
 
 if __name__ == '__main__':
-    render()
+    os.makedirs(OUTPUT_DIR, exist_ok=True)
+    os.makedirs(PRINT_DIR, exist_ok=True)
+    print("═══ Awe: Singularity ═══")
+
+    # Print PDF — punchier so accretion disk reads boldly
+    fig = render(alpha_boost=1.8, lw_boost=1.8)
+    fig.subplots_adjust(left=0, right=1, top=1, bottom=0)
+    pdf_path = os.path.join(OUTPUT_DIR, "awe_singularity.pdf")
+    fig.savefig(pdf_path, format='pdf', facecolor=BG)
+    print(f"  saved {pdf_path}")
+    plt.close(fig)
+
+    # Web thumbnail — same punchy settings
+    fig = render(alpha_boost=1.8, lw_boost=1.8)
+    fig.subplots_adjust(left=0, right=1, top=1, bottom=0)
+    jpg_path = os.path.join(PRINT_DIR, "awe_singularity.jpg")
+    fig.savefig(jpg_path, facecolor=BG, dpi=DPI,
+                pil_kwargs={"quality": 96})
+    print(f"  saved {jpg_path}")
+    plt.close(fig)
+
+    print("═══ Done ═══")
