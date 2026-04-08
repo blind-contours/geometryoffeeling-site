@@ -100,17 +100,9 @@ def split_segments(xs, ys, mask):
         segments.append((xs[start:], ys[start:]))
     return segments
 
-def save(fig, name):
-    os.makedirs(OUTPUT_DIR, exist_ok=True)
-    if not name.endswith(".pdf"):
-        name = name + ".pdf"
-    fig.savefig(os.path.join(OUTPUT_DIR, name),
-                format='pdf', facecolor=MARGIN_COLOR)
-    plt.close(fig)
-    print(f"saved {name}")
-
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 OUTPUT_DIR = os.path.join(SCRIPT_DIR, '..', '..', 'output')
+PRINT_DIR = os.path.join(SCRIPT_DIR, '..', '..', '..', 'public', 'prints', 'connection')
 
 def trace_field_line(x, y, poles, step=0.012, max_steps=2000, direction=1):
     """Trace a field line through monopole field.
@@ -140,7 +132,7 @@ def trace_field_line(x, y, poles, step=0.012, max_steps=2000, direction=1):
                 return np.array(xs_f), np.array(ys_f)
     return np.array(xs_f), np.array(ys_f)
 
-def render():
+def render(alpha_boost=1.0, lw_boost=1.0):
     fig, ax = make_fig()
     np.random.seed(42)
     from matplotlib.patches import Circle
@@ -186,6 +178,8 @@ def render():
             lw = 0.85 - 0.30 * frac
             if alpha < 0.15: alpha = 0.15
             if lw < 0.30: lw = 0.30
+            alpha = min(alpha * alpha_boost, 0.95)
+            lw = lw * lw_boost
             for seg_xs, seg_ys in split_segments(xs_a, ys_a, mask):
                 if len(seg_xs) < 5: continue
                 draw_lc(ax, seg_xs, seg_ys, col, lw=lw, alpha=alpha, zo=4, smooth=1)
@@ -213,7 +207,10 @@ def render():
         col = gold_cols[i % len(gold_cols)]
         for seg_xs, seg_ys in split_segments(xs_e, ys_e, mask):
             if len(seg_xs) < 5: continue
-            draw_lc(ax, seg_xs, seg_ys, col, lw=0.7, alpha=0.45, zo=3, smooth=1)
+            draw_lc(ax, seg_xs, seg_ys, col,
+                    lw=0.7 * lw_boost,
+                    alpha=min(0.45 * alpha_boost, 0.95),
+                    zo=3, smooth=1)
 
     # --- C) Dense concentric spiral orbits around N pole (LEFT, LARGER) ---
     n_orbits_left = 35
@@ -235,6 +232,8 @@ def render():
         lw = 0.85 * (1.0 - 0.4 * frac)
         if alpha < 0.10: alpha = 0.10
         if lw < 0.20: lw = 0.20
+        alpha = min(alpha * alpha_boost, 0.95)
+        lw = lw * lw_boost
         for seg_xs, seg_ys in split_segments(xs_o, ys_o, mask):
             if len(seg_xs) < 5: continue
             draw_lc(ax, seg_xs, seg_ys, col, lw=lw, alpha=alpha, zo=5, smooth=1)
@@ -259,6 +258,8 @@ def render():
         lw = 0.80 * (1.0 - 0.40 * frac)
         if alpha < 0.10: alpha = 0.10
         if lw < 0.20: lw = 0.20
+        alpha = min(alpha * alpha_boost, 0.95)
+        lw = lw * lw_boost
         for seg_xs, seg_ys in split_segments(xs_o, ys_o, mask):
             if len(seg_xs) < 5: continue
             draw_lc(ax, seg_xs, seg_ys, col, lw=lw, alpha=alpha, zo=5, smooth=1)
@@ -282,7 +283,10 @@ def render():
         col = gold_cols[i % len(gold_cols)]
         for seg_xs, seg_ys in split_segments(xs_e, ys_e, mask):
             if len(seg_xs) < 5: continue
-            draw_lc(ax, seg_xs, seg_ys, col, lw=0.65, alpha=0.40, zo=3, smooth=1)
+            draw_lc(ax, seg_xs, seg_ys, col,
+                    lw=0.65 * lw_boost,
+                    alpha=min(0.40 * alpha_boost, 0.95),
+                    zo=3, smooth=1)
 
     # --- E) Glowing pole centers ---
     # Left pole — dark core with gold glow
@@ -291,9 +295,11 @@ def render():
     for r_c, a in [(0.50, 0.03), (0.30, 0.06), (0.18, 0.12),
                     (0.12, 0.20), (0.07, 0.35), (0.035, 0.55)]:
         ax.add_patch(Circle((n_x, n_y), radius=r_c,
-                     facecolor=rgba(GOLD, a), edgecolor='none', zorder=8))
+                     facecolor=rgba(GOLD, min(a * alpha_boost, 0.95)),
+                     edgecolor='none', zorder=8))
     ax.add_patch(Circle((n_x, n_y), radius=0.020,
-                 facecolor=rgba(WARM_WHITE, 0.70), edgecolor='none', zorder=9))
+                 facecolor=rgba(WARM_WHITE, min(0.70 * alpha_boost, 0.95)),
+                 edgecolor='none', zorder=9))
 
     # Right pole — dark core with gold glow (smaller)
     ax.add_patch(Circle((s_x, s_y), radius=0.10,
@@ -301,12 +307,34 @@ def render():
     for r_c, a in [(0.30, 0.03), (0.18, 0.05), (0.12, 0.10),
                     (0.07, 0.18), (0.04, 0.30), (0.020, 0.50)]:
         ax.add_patch(Circle((s_x, s_y), radius=r_c,
-                     facecolor=rgba(GOLD, a), edgecolor='none', zorder=8))
+                     facecolor=rgba(GOLD, min(a * alpha_boost, 0.95)),
+                     edgecolor='none', zorder=8))
     ax.add_patch(Circle((s_x, s_y), radius=0.015,
-                 facecolor=rgba(WARM_WHITE, 0.65), edgecolor='none', zorder=9))
+                 facecolor=rgba(WARM_WHITE, min(0.65 * alpha_boost, 0.95)),
+                 edgecolor='none', zorder=9))
 
     add_signature(fig, ax, MARGIN_COLOR, margin_piece=True, margin_bottom=FIG_H * 0.08)
-    save(fig, "connection_magnetic.pdf")
+    return fig
+
 
 if __name__ == '__main__':
-    render()
+    os.makedirs(OUTPUT_DIR, exist_ok=True)
+    os.makedirs(PRINT_DIR, exist_ok=True)
+    print("═══ Connection: Magnetic ═══")
+
+    # Print PDF — original weight
+    fig = render(alpha_boost=1.0, lw_boost=1.0)
+    pdf_path = os.path.join(OUTPUT_DIR, "connection_magnetic.pdf")
+    fig.savefig(pdf_path, format='pdf', facecolor=MARGIN_COLOR)
+    print(f"  saved {pdf_path}")
+    plt.close(fig)
+
+    # Web thumbnail — punchier so field lines read boldly at thumbnail size
+    fig = render(alpha_boost=1.8, lw_boost=1.8)
+    jpg_path = os.path.join(PRINT_DIR, "connection_magnetic.jpg")
+    fig.savefig(jpg_path, facecolor=MARGIN_COLOR, dpi=DPI,
+                pil_kwargs={"quality": 96})
+    print(f"  saved {jpg_path}")
+    plt.close(fig)
+
+    print("═══ Done ═══")
