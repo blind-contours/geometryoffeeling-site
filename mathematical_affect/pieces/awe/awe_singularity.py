@@ -119,8 +119,17 @@ def render(alpha_boost=1.0, lw_boost=1.0):
     n_rays = 180
     for i in range(n_rays):
         angle = i / n_rays * 2 * np.pi
+        # Boost rays near vertical (angle = π/2 or 3π/2) to suggest
+        # radiation emerging up and down from the singularity point.
+        ang_mod = angle % np.pi
+        vert_dist = abs(ang_mod - np.pi / 2)  # 0 at vertical, π/2 at horizontal
+        vert_factor = max(0.0, 1.0 - vert_dist / (np.pi * 0.09))  # ±16° window
+        length_mult = 1.0 + 0.28 * vert_factor
+        bright_mult = 1.0 + 1.6 * vert_factor
+        lw_mult = 1.0 + 0.6 * vert_factor
+
         t = np.linspace(0, 1, 800)
-        r_ray = r_max * 0.08 + t * (PW * 0.55)
+        r_ray = r_max * 0.08 + t * (PW * 0.55 * length_mult)
         xs_ray = cx + r_ray * np.cos(angle)
         ys_ray = cy + r_ray * np.sin(angle) * inclination
         mask = ((xs_ray > PAD_L) & (xs_ray < PAD_L + PW) &
@@ -130,8 +139,11 @@ def render(alpha_boost=1.0, lw_boost=1.0):
             pts = np.array([seg_xs, seg_ys]).T.reshape(-1, 1, 2)
             segs = np.concatenate([pts[:-1], pts[1:]], axis=1)
             n_s = len(segs)
-            alphas = np.clip(np.linspace(0.30, 0.02, n_s) * alpha_boost, 0, 0.95)
-            lws = np.linspace(0.8, 0.10, n_s) * lw_boost
+            alphas = np.clip(
+                np.linspace(0.30, 0.02, n_s) * alpha_boost * bright_mult,
+                0, 0.95,
+            )
+            lws = np.linspace(0.8, 0.10, n_s) * lw_boost * lw_mult
             col_ray = [CORONA, GOLD, AMBER, NEBULA_P][i % 4]
             colors = [rgba(col_ray, float(a_)) for a_ in alphas]
             lc = mc.LineCollection(segs, linewidths=lws, colors=colors,
