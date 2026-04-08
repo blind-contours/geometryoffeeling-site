@@ -64,8 +64,10 @@ def draw_lc_gradient(ax, xs, ys, col, lw_s, lw_e, a_s, a_e, zo=4):
     alphas = np.linspace(a_s, a_e, n)
     lws = np.linspace(lw_s, lw_e, n)
     colors = [rgba(col, float(a)) for a in alphas]
+    # butt capstyle prevents beading artifacts where adjacent segments
+    # are shorter than the line's width (happens in slow trajectory regions)
     lc = mc.LineCollection(segs, linewidths=lws, colors=colors,
-                           capstyle='round', joinstyle='round', zorder=zo)
+                           capstyle='butt', joinstyle='round', zorder=zo)
     ax.add_collection(lc)
 
 def head(ax, x, y):
@@ -75,29 +77,17 @@ def head(ax, x, y):
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 OUTPUT_DIR = os.path.join(SCRIPT_DIR, '..', '..', 'output')
-JPEG_DIR = os.path.join(SCRIPT_DIR, '..', '..', '..', 'public', 'prints', 'connection')
-
-def save(fig, name):
-    os.makedirs(OUTPUT_DIR, exist_ok=True)
-    os.makedirs(JPEG_DIR, exist_ok=True)
-    if not name.endswith(".pdf"):
-        name = name + ".pdf"
-    fig.savefig(os.path.join(OUTPUT_DIR, name),
-                format='pdf', facecolor=MARGIN_COLOR)
-    jpg_name = name.replace('.pdf', '.jpg')
-    fig.savefig(os.path.join(JPEG_DIR, jpg_name),
-                format='jpg', facecolor=MARGIN_COLOR,
-                dpi=150, pil_kwargs={'quality': 92})
-    plt.close(fig)
-    print(f"saved {name} + {jpg_name}")
+PRINT_DIR = os.path.join(SCRIPT_DIR, '..', '..', '..', 'public', 'prints', 'connection')
 
 
-def render():
+def render(alpha_boost=1.0, lw_boost=1.0):
     fig, ax = make_fig()
 
     sigma, rho, beta = 10.0, 28.0, 8.0 / 3.0
-    dt = 0.005
-    n_steps = 10000
+    # Densify integration so line segments are short relative to linewidth
+    # — this removes the beaded/dotted look in the slow-moving regions.
+    dt = 0.003
+    n_steps = 16000
 
     def lorenz_trajectory(x0, y0, z0):
         xs, ys, zs = [x0], [y0], [z0]
@@ -122,15 +112,42 @@ def render():
     px2 = normalize(lx2, PAD_L + PW * 0.05, PAD_L + PW * 0.95)
     py2 = normalize(lz2, PAD_B + PH * 0.05, PAD_B + PH * 0.95)
 
-    draw_lc_gradient(ax, px1, py1, AMBER, 0.3, 1.4, 0.08, 0.45, zo=4)
-    draw_lc_gradient(ax, px2, py2, GOLD, 0.3, 1.4, 0.08, 0.45, zo=5)
+    draw_lc_gradient(ax, px1, py1, AMBER,
+                     0.3 * lw_boost, 1.4 * lw_boost,
+                     min(0.08 * alpha_boost, 0.95),
+                     min(0.45 * alpha_boost, 0.95),
+                     zo=4)
+    draw_lc_gradient(ax, px2, py2, GOLD,
+                     0.3 * lw_boost, 1.4 * lw_boost,
+                     min(0.08 * alpha_boost, 0.95),
+                     min(0.45 * alpha_boost, 0.95),
+                     zo=5)
 
     head(ax, px1[-1], py1[-1])
     head(ax, px2[-1], py2[-1])
 
     add_signature(fig, ax, MARGIN_COLOR, margin_piece=True, margin_bottom=FIG_H * 0.08)
-    save(fig, "connection_lorenz.pdf")
+    return fig
 
 
 if __name__ == '__main__':
-    render()
+    os.makedirs(OUTPUT_DIR, exist_ok=True)
+    os.makedirs(PRINT_DIR, exist_ok=True)
+    print("═══ Connection: Lorenz ═══")
+
+    # Print PDF — modest boost matches the thumbnail
+    fig = render(alpha_boost=1.35, lw_boost=1.35)
+    pdf_path = os.path.join(OUTPUT_DIR, "connection_lorenz.pdf")
+    fig.savefig(pdf_path, format='pdf', facecolor=MARGIN_COLOR)
+    print(f"  saved {pdf_path}")
+    plt.close(fig)
+
+    # Web thumbnail — same boost, full DPI
+    fig = render(alpha_boost=1.35, lw_boost=1.35)
+    jpg_path = os.path.join(PRINT_DIR, "connection_lorenz.jpg")
+    fig.savefig(jpg_path, facecolor=MARGIN_COLOR, dpi=DPI,
+                pil_kwargs={"quality": 96})
+    print(f"  saved {jpg_path}")
+    plt.close(fig)
+
+    print("═══ Done ═══")
