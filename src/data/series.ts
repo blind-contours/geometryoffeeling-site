@@ -337,6 +337,7 @@ export const series: Series[] = [
     background: "#0A0A10",
     palette: ["#D0A040", "#C88030", "#D4AA40", "#3A5AA0", "#5A3A8A"],
     makingOf: "20 renders. 8 survived.",
+    homePieceIds: ["awe-eclipse", "awe-radiance", "awe-singularity"],
     pieces: [
       { id: "awe-eclipse", title: "Eclipse", series: "awe", equation: "I(r) = I_corona / r", description: "What the sun reveals only when it's hidden. Streamers of plasma radiating outward during totality, a diamond ring at the limb — the corona visible for a few minutes of darkness. Built from an inverse-distance field, the math the sun actually follows.", emotionalNote: "What the sun reveals only when it's hidden", background: "#534027", imageUrl: "/prints/awe/awe_eclipse.jpg", gumroadUrl: "https://gumroad.com/l/placeholder", price: 45 },
       { id: "awe-singularity", title: "Singularity", series: "awe", equation: "r(φ) = a(1-e²)/(1+e·cosφ)", description: "Where gravity bends light and time stops. An accretion disk spiraling into a black hole, light paths curving around the event horizon, time dilating to infinity at the photon sphere. The math is real. Built from relativistic orbital mechanics and gravitational lensing.", emotionalNote: "Where gravity bends light and time stops", background: "#0A0A10", imageUrl: "/prints/awe/awe_singularity.jpg", gumroadUrl: "https://gumroad.com/l/placeholder", price: 45 },
