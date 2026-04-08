@@ -176,16 +176,16 @@ if __name__ == '__main__':
     os.makedirs(PRINT_DIR, exist_ok=True)
     print("═══ Awe: Singularity ═══")
 
-    # Print PDF — punchier so accretion disk reads boldly
-    fig = render(alpha_boost=1.8, lw_boost=1.8)
+    # Print PDF — slight boost over original
+    fig = render(alpha_boost=1.3, lw_boost=1.3)
     fig.subplots_adjust(left=0, right=1, top=1, bottom=0)
     pdf_path = os.path.join(OUTPUT_DIR, "awe_singularity.pdf")
     fig.savefig(pdf_path, format='pdf', facecolor=BG)
     print(f"  saved {pdf_path}")
     plt.close(fig)
 
-    # Web thumbnail — same punchy settings
-    fig = render(alpha_boost=1.8, lw_boost=1.8)
+    # Web thumbnail — slight boost over original
+    fig = render(alpha_boost=1.3, lw_boost=1.3)
     fig.subplots_adjust(left=0, right=1, top=1, bottom=0)
     jpg_path = os.path.join(PRINT_DIR, "awe_singularity.jpg")
     fig.savefig(jpg_path, facecolor=BG, dpi=DPI,
