@@ -25,7 +25,18 @@ export default function HomeSeriesGrid({ series, index }: HomeSeriesGridProps) {
         <h3 className="text-headline uppercase tracking-widest text-primary mb-1">
           {series.name}
         </h3>
-        <p className="text-body text-secondary italic mb-6">{series.tagline}</p>
+        <p
+          className={`text-body text-secondary italic ${
+            series.homeDescriptor ? "mb-3" : "mb-6"
+          }`}
+        >
+          {series.tagline}
+        </p>
+        {series.homeDescriptor && (
+          <p className="text-caption md:text-[13px] text-muted mb-6">
+            {series.homeDescriptor}
+          </p>
+        )}
       </div>
 
       {/* Desktop: two equal images when only 2 featured pieces */}
