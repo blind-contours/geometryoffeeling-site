@@ -18,6 +18,11 @@ import type { Metadata } from "next";
 const baseUrl =
   process.env.NEXT_PUBLIC_URL || "https://geometryoffeeling.com";
 
+// Cache-buster for Vercel Blob PDFs. Vercel Blob sets max-age=2592000 and
+// doesn't always purge CDN edges on overwrite, so we append ?v=<build time>
+// to force a fresh fetch on every deploy.
+const PDF_VERSION = String(Date.now());
+
 interface Props {
   params: { slug: string };
 }
@@ -101,7 +106,7 @@ export default function PiecePage({ params }: Props) {
           width={1680}
           height={1155}
           background={piece.background}
-          pdfUrl={piece.pdfUrl ?? `https://9wbvpcvk2ch9x7ir.public.blob.vercel-storage.com/prints/${piece.id.replace(/-/g, "_")}.pdf`}
+          pdfUrl={`${piece.pdfUrl ?? `https://9wbvpcvk2ch9x7ir.public.blob.vercel-storage.com/prints/${piece.id.replace(/-/g, "_")}.pdf`}?v=${PDF_VERSION}`}
         />
       </div>
 
