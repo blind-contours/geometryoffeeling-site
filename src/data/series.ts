@@ -504,6 +504,31 @@ export const series: Series[] = [
     bundleGumroadUrl: "https://gumroad.com/l/placeholder-comprehending-bundle",
     bundlePrice: 119,
   },
+
+  // ── BELONGING ─────────────────────────────────────────────
+  {
+    id: "belonging",
+    name: "BELONGING",
+    seoDescriptor: "Warm Generative Art Prints About Shelter, Tenderness, and Being Held",
+    homeDescriptor: "Warm generative prints in honey, terracotta, and sage on linen ground, built from domain-warped radial fields, soft potential wells, and translucent layered forms that cradle and contain.",
+    emotion: "shelter, tenderness, the quiet relief of having a place to rest",
+    tagline: "Being held inside something. Gradient that cradles rather than flattens or pulls.",
+    description: "Belonging is a series of generative artworks about being held. Built in Python from softly interacting mathematical forms, each piece creates the feeling of one presence cradled within another — nested, sheltered, and gently contained. Translucent layers and calm, caring color shifts evoke warmth, tenderness, and the quiet relief of having a place to rest.",
+    story: "These pieces are built from domain-warped radial fields — concentric rings distorted by sinusoidal coordinate shifts until they lose their mathematical precision and begin to breathe. Each form is rendered as dozens of translucent color-mapped layers composited over a warm linen ground. The palette stays in the register of honey, terracotta, sage, and rose dust — domestic warmth, not cosmic intensity. Where two forms meet, a blue membrane marks the boundary between holder and held.",
+    mathematicalPrimitive: "domain-warped radial fields, soft potential wells, FBM noise, translucent alpha compositing",
+    background: "#E8DFD0",
+    palette: ["#D4A860", "#B87A60", "#8BA092", "#C89080", "#5A7A98"],
+    makingOf: "180+ renders across 7 rounds. 4 survived.",
+    homePieceIds: ["belonging-warmth", "belonging-nest", "belonging-held"],
+    pieces: [
+      { id: "belonging-warmth", title: "Warmth", series: "belonging", equation: "T(r) = exp(−r²/σ²)", description: "Radiance without a visible source. A single warm field fills the frame so completely you forget you're looking at it — the way real warmth works, felt before it's seen. The colors move from sand through honey to deep sienna at the center, and a faint blue membrane at the boundary reminds you that even warmth has an edge, a place where inside becomes outside.", emotionalNote: "Felt before it is seen", background: "#E8DFD0", imageUrl: "/prints/belonging/belonging_warmth.jpg", gumroadUrl: "https://gumroad.com/l/placeholder", price: 45 },
+      { id: "belonging-nest", title: "Nest", series: "belonging", equation: "f(r,θ) = e^(−r²/σ²)·[0.6 + 0.4·cos(kr)ⁿ]", description: "A received interior. Concentric rings warped just enough to stop being geometry and start being shelter — each one slightly imperfect, all holding a common dark core. The deepest reds sit at the center where the rings converge, the place that everything else is built around and oriented toward.", emotionalNote: "Where shape meets comfort", background: "#E8DFD0", imageUrl: "/prints/belonging/belonging_nest.jpg", gumroadUrl: "https://gumroad.com/l/placeholder", price: 45 },
+      { id: "belonging-held", title: "Held", series: "belonging", equation: "ψ = G_sling(r) + G_held(r_w), r_w = domain_warp(r)", description: "Two forms, one inside the other. The outer presence — cooler, sage-toned, open — curves around a warmer body that has settled into it. They don't merge. The held form keeps its own rings, its own center, its own temperature. Being held doesn't mean being absorbed. It means having something around you that is shaped by your weight.", emotionalNote: "Shaped by your weight", background: "#E8DFD0", imageUrl: "/prints/belonging/belonging_held.jpg", gumroadUrl: "https://gumroad.com/l/placeholder", price: 45 },
+      { id: "belonging-home", title: "Home", series: "belonging", equation: "H(r) = Σ Gᵢ(r) · veil(r) + ghost_rings(r)", description: "The settled version. Warmth without urgency, structure without tension. The ghost of a held form's rings floats beneath broad, overlapping warm zones — a memory of being cradled that has softened into simply being somewhere familiar. No single center dominates. The whole frame feels lived in.", emotionalNote: "The whole frame feels lived in", background: "#E8DFD0", imageUrl: "/prints/belonging/belonging_home.jpg", gumroadUrl: "https://gumroad.com/l/placeholder", price: 45 },
+    ],
+    bundleGumroadUrl: "https://gumroad.com/l/placeholder-belonging-bundle",
+    bundlePrice: 149,
+  },
 ];
 
 export const allPieces: Piece[] = series.flatMap((s) => s.pieces);
@@ -529,6 +554,7 @@ export const featuredSeriesIds = [
   "awe",
   "grief",
   "desire",
+  "belonging",
   "comprehending",
   "peace",
   "wonder",
