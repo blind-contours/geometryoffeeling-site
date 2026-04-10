@@ -516,7 +516,6 @@ export const featuredSeriesIds = [
   "belonging",
   "comprehending",
   "peace",
-  "wonder",
   "connection",
   "growth",
 ];
