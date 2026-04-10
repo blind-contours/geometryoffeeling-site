@@ -58,13 +58,13 @@ export default function ShopPage() {
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
             <div>
               <h2 className="text-headline text-primary mb-2">
-                Three Sizes, One Paper
+                Four Sizes, One Paper
               </h2>
               <p className="text-body text-secondary">
-                12&times;8&quot; — $45 &nbsp;|&nbsp; 24&times;16&quot; — $95 &nbsp;|&nbsp; 36&times;24&quot; — $175
+                12&times;8&quot; — $45 &nbsp;|&nbsp; 24&times;16&quot; — $95 &nbsp;|&nbsp; 36&times;24&quot; — $175 &nbsp;|&nbsp; 48&times;32&quot; — $295
               </p>
               <p className="text-caption text-muted mt-2">
-                Free shipping — 5-10 business days
+                48 &times; 32 available on select pieces &nbsp;&middot;&nbsp; Free shipping — 5-10 business days
               </p>
             </div>
           </div>

@@ -154,6 +154,13 @@ export default function PiecePage({ params }: Props) {
             >
               Framing guide
             </Link>
+            {" "}&nbsp;&middot;&nbsp;{" "}
+            <Link
+              href="/help"
+              className="underline hover:text-secondary transition-colors duration-500"
+            >
+              Help &amp; returns
+            </Link>
           </p>
 
           {/* Custom piece CTA */}

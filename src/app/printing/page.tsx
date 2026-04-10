@@ -97,6 +97,33 @@ const frames = {
       },
     ],
   },
+  xlarge: {
+    size: '48 \u00d7 32"',
+    prints: "Gallery piece — feature wall, above dining table, office lobby",
+    options: [
+      {
+        name: "MCS Floating Frame",
+        price: "$75",
+        note: "Floating canvas-style frame. The print appears to hover — dramatic at this scale.",
+        url: "https://www.amazon.com/MCS-Floating-Frame-32x48-Natural/dp/B08JQ7GLHP",
+        colors: "Black, Natural, Walnut",
+      },
+      {
+        name: "Craig Frames Colori",
+        price: "$55",
+        note: "Clean wide-profile frame. Solid wood, fits 32\u00d748 prints exactly.",
+        url: "https://www.amazon.com/Craig-Frames-Colori-Picture-Poster/dp/B00JGKR0UE",
+        colors: "Black, White, Grey",
+      },
+      {
+        name: "Americanflat 32x48 Frame",
+        price: "$65",
+        note: "Composite wood with shatter-resistant glass. Slim gallery profile.",
+        url: "https://www.amazon.com/Americanflat-Composite-Shatter-Resistant-Hanging-Hardware/dp/B0CYZ5ZZGZ",
+        colors: "Black, White",
+      },
+    ],
+  },
 };
 
 export default function PrintingPage() {
@@ -141,7 +168,7 @@ export default function PrintingPage() {
                 <span className="text-body text-primary">Sizes</span>
                 <span className="text-body text-secondary">
                   12&times;8&quot; &nbsp;|&nbsp; 24&times;16&quot; &nbsp;|&nbsp;
-                  36&times;24&quot;
+                  36&times;24&quot; &nbsp;|&nbsp; 48&times;32&quot;
                 </span>
               </div>
             </div>
@@ -220,9 +247,9 @@ export default function PrintingPage() {
               Want a matching set?
             </h2>
             <p className="text-body text-secondary mb-4">
-              The Craig Frames 1WB3BK comes in all three sizes with the same
-              clean profile. Order all three for a cohesive gallery wall — about
-              $80 total.
+              The Craig Frames 1WB3BK comes in all four sizes with the same
+              clean profile. Order a set for a cohesive gallery wall — from
+              about $80 total.
             </p>
             <Link
               href="/shop"

@@ -116,10 +116,10 @@ export default function SeriesPage({ params }: Props) {
             Hahnemuhle German Etching 310gsm — museum-grade matte.
           </p>
           <p className="text-body text-secondary">
-            12&times;8&quot; — $45 &nbsp;|&nbsp; 24&times;16&quot; — $95 &nbsp;|&nbsp; 36&times;24&quot; — $175
+            12&times;8&quot; — $45 &nbsp;|&nbsp; 24&times;16&quot; — $95 &nbsp;|&nbsp; 36&times;24&quot; — $175 &nbsp;|&nbsp; 48&times;32&quot; — $295
           </p>
           <p className="text-caption text-muted mt-2">
-            Free shipping — 5-10 business days &nbsp;&middot;&nbsp;{" "}
+            48 &times; 32 available on select pieces &nbsp;&middot;&nbsp; Free shipping — 5-10 business days &nbsp;&middot;&nbsp;{" "}
             <Link
               href="/printing"
               className="underline hover:text-secondary transition-colors duration-500"

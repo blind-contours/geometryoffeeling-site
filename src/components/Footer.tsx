@@ -71,6 +71,12 @@ export default function Footer() {
               >
                 Framing Guide
               </Link>
+              <Link
+                href="/help"
+                className="text-body text-secondary hover:text-primary transition-colors duration-500"
+              >
+                Help
+              </Link>
             </div>
           </div>
 

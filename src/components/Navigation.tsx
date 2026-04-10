@@ -43,6 +43,12 @@ export default function Navigation() {
             Framing
           </Link>
           <Link
+            href="/help"
+            className="text-caption uppercase tracking-widest text-secondary hover:text-primary transition-colors duration-500"
+          >
+            Help
+          </Link>
+          <Link
             href="/about"
             className="text-caption uppercase tracking-widest text-secondary hover:text-primary transition-colors duration-500"
           >
@@ -91,6 +97,13 @@ export default function Navigation() {
               className="py-3 text-caption uppercase tracking-widest text-secondary hover:text-primary"
             >
               Framing
+            </Link>
+            <Link
+              href="/help"
+              onClick={() => setOpen(false)}
+              className="py-3 text-caption uppercase tracking-widest text-secondary hover:text-primary"
+            >
+              Help
             </Link>
             <Link
               href="/about"
