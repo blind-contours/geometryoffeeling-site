@@ -319,7 +319,7 @@ export const series: Series[] = [
     background: "#F0EDE8",
     palette: ["#B0C8B8", "#90B0A0", "#A8C0B0", "#78A090", "#D0E0D0"],
     makingOf: "20 renders. 7 survived.",
-    homePieceIds: ["peace-field-guardian", "peace-horizon"],
+    homePieceIds: ["peace-field-guardian", "peace-horizon", "peace-breath"],
     pieces: [
       { id: "peace-field-guardian", title: "Guardian", series: "peace", equation: "V(r) = q₁/|r−r₁| + q₂/|r−r₂|", description: "Two charges, one large and one small. The larger field wraps around the smaller one the way a parent's calm extends around a child. Equipotential contour lines trace the invisible architecture of protection. Not symmetry — shelter.", emotionalNote: "The invisible architecture of protection", background: "#F0EDE8", imageUrl: "/prints/peace/peace_field_guardian.jpg", price: 45 },
       { id: "peace-horizon", title: "Horizon", series: "peace", equation: "y → c as x → ±∞", description: "Everything stripped down to one line. Layered atmospheric bands resolving into the single boundary between sky and earth — the simplest possible landscape. I kept removing things until only the horizon was left.", emotionalNote: "Everything stripped down to one line", background: "#F0EDE8", imageUrl: "/prints/peace/peace_horizon.jpg", price: 45 },
