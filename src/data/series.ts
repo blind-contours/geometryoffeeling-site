@@ -478,7 +478,7 @@ export const series: Series[] = [
     background: "#E8DFD0",
     palette: ["#D4A860", "#B87A60", "#8BA092", "#C89080", "#5A7A98"],
     makingOf: "180+ renders across 7 rounds. 4 survived.",
-    homePieceIds: ["belonging-warmth", "belonging-nest", "belonging-held"],
+    homePieceIds: ["belonging-nest", "belonging-warmth", "belonging-home"],
     pieces: [
       { id: "belonging-warmth", title: "Warmth", series: "belonging", equation: "T(r) = exp(−r²/σ²)", description: "Radiance without a visible source. A single warm field fills the frame so completely you forget you're looking at it — the way real warmth works, felt before it's seen. The colors move from sand through honey to deep sienna at the center, and a faint blue membrane at the boundary reminds you that even warmth has an edge, a place where inside becomes outside.", emotionalNote: "Felt before it is seen", background: "#E8DFD0", imageUrl: "/prints/belonging/belonging_warmth.jpg", price: 45 },
       { id: "belonging-nest", title: "Nest", series: "belonging", equation: "f(r,θ) = e^(−r²/σ²)·[0.6 + 0.4·cos(kr)ⁿ]", description: "A received interior. Concentric rings warped just enough to stop being geometry and start being shelter — each one slightly imperfect, all holding a common dark core. The deepest reds sit at the center where the rings converge, the place that everything else is built around and oriented toward.", emotionalNote: "Where shape meets comfort", background: "#E8DFD0", imageUrl: "/prints/belonging/belonging_nest.jpg", price: 45 },
