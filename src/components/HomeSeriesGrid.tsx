@@ -19,16 +19,6 @@ export default function HomeSeriesGrid({ series, index }: HomeSeriesGridProps) {
   const twoUpLayout = homePieces.length === 2;
   const threeUpLayout = homePieces.length === 3;
 
-  // Mobile carousel order: homePieces first (so the lead piece matches the
-  // desktop hero), then any remaining pieces in their original series order.
-  const mobilePieces = series.homePieceIds
-    ? [
-        ...homePieces,
-        ...series.pieces.filter(
-          (p) => !series.homePieceIds!.includes(p.id)
-        ),
-      ]
-    : series.pieces;
 
   return (
     <div className="mb-32">
@@ -308,41 +298,67 @@ export default function HomeSeriesGrid({ series, index }: HomeSeriesGridProps) {
       </div>
       )}
 
-      {/* Mobile: horizontal scroll carousel */}
-      <div className="md:hidden relative">
-        <div className="flex overflow-x-auto gap-4 scrollbar-hide -mx-6 px-6 snap-x snap-mandatory">
-          {mobilePieces.map((piece) => (
-            <Link
-              key={piece.id}
-              href={`/piece/${piece.id}`}
-              className="flex-shrink-0 block snap-start"
-              style={{ width: "80vw" }}
-            >
-              <div
-                className="overflow-hidden"
-                style={{ backgroundColor: piece.background || series.background }}
+      {/* Mobile: vertical layout — hero full-width, two supporting side-by-side */}
+      <div className="md:hidden">
+        {/* Hero piece — full width */}
+        <Link
+          href={`/piece/${heroPiece.id}`}
+          className="block mb-3"
+        >
+          <div
+            className="overflow-hidden"
+            style={{ backgroundColor: heroPiece.background || series.background }}
+          >
+            <Image
+              src={heroPiece.imageUrl}
+              alt={`${heroPiece.title} — mathematical art print from the ${series.name} series by Geometry of Feeling`}
+              width={800}
+              height={550}
+              className="w-full h-auto block"
+            />
+          </div>
+          <div className="flex items-baseline justify-between mt-2 px-1">
+            <p className="text-caption text-secondary truncate">
+              {heroPiece.title}
+            </p>
+            <p className="text-caption text-muted flex-shrink-0 ml-2">
+              From ${heroPiece.price}
+            </p>
+          </div>
+        </Link>
+        {/* Supporting pieces — two side-by-side */}
+        {supportingPieces.length > 0 && (
+          <div className="grid grid-cols-2 gap-3">
+            {supportingPieces.slice(0, 2).map((piece) => (
+              <Link
+                key={piece.id}
+                href={`/piece/${piece.id}`}
+                className="block"
               >
-                <Image
-                  src={piece.imageUrl}
-                  alt={`${piece.title} — mathematical art print from the ${series.name} series by Geometry of Feeling`}
-                  width={600}
-                  height={413}
-                  className="w-full h-auto block"
-                />
-              </div>
-              <div className="flex items-baseline justify-between mt-2 px-1">
-                <p className="text-caption text-secondary truncate">
-                  {piece.title}
-                </p>
-                <p className="text-caption text-muted flex-shrink-0 ml-2">
-                  From ${piece.price}
-                </p>
-              </div>
-            </Link>
-          ))}
-        </div>
-        {/* Right-edge gradient to signal scrollability */}
-        <div className="absolute right-0 top-0 bottom-8 w-12 bg-gradient-to-l from-bg to-transparent pointer-events-none" />
+                <div
+                  className="overflow-hidden"
+                  style={{ backgroundColor: piece.background || series.background }}
+                >
+                  <Image
+                    src={piece.imageUrl}
+                    alt={`${piece.title} — mathematical art print from the ${series.name} series by Geometry of Feeling`}
+                    width={400}
+                    height={275}
+                    className="w-full h-auto block"
+                  />
+                </div>
+                <div className="flex items-baseline justify-between mt-2 px-1">
+                  <p className="text-caption text-secondary truncate">
+                    {piece.title}
+                  </p>
+                  <p className="text-caption text-muted flex-shrink-0 ml-2">
+                    From ${piece.price}
+                  </p>
+                </div>
+              </Link>
+            ))}
+          </div>
+        )}
       </div>
 
       <div className={`mt-10 ${isRight ? "md:text-right" : ""}`}>
