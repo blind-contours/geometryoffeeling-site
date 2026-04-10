@@ -569,7 +569,7 @@ export const featuredPieceIds = [
   "peace-horizon",
   "belonging-home",
   "connection-magnetic",
-  "pride-guardian",
+  "peace-field-guardian",
   "desire-pursuit",
 ];
 
