@@ -543,10 +543,10 @@ export interface HeroSlide {
 
 export const heroSlides: HeroSlide[] = [
   { pieceId: "grief-void", textColor: "black" },
-  { pieceId: "awe-eclipse", textColor: "black" },
+  { pieceId: "awe-eclipse", textColor: "white" },
   { pieceId: "comprehending-gravity", textColor: "black" },
   { pieceId: "peace-horizon", textColor: "black" },
-  { pieceId: "connection-magnetic", textColor: "black" },
+  { pieceId: "connection-magnetic", textColor: "white" },
   { pieceId: "belonging-home", textColor: "black" },
 ];
 
