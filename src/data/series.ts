@@ -567,9 +567,9 @@ export const featuredPieceIds = [
   "awe-eclipse",
   "comprehending-gravity",
   "peace-horizon",
-  "wonder-apollonian-gasket",
+  "belonging-home",
   "connection-magnetic",
-  "growth-branch",
+  "pride-guardian",
   "desire-pursuit",
 ];
 
