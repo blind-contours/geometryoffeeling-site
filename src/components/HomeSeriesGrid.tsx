@@ -347,14 +347,9 @@ export default function HomeSeriesGrid({ series, index }: HomeSeriesGridProps) {
                     className="w-full h-auto block"
                   />
                 </div>
-                <div className="flex items-baseline justify-between mt-2 px-1">
-                  <p className="text-caption text-secondary truncate">
-                    {piece.title}
-                  </p>
-                  <p className="text-caption text-muted flex-shrink-0 ml-2">
-                    From ${piece.price}
-                  </p>
-                </div>
+                <p className="text-caption text-secondary truncate mt-2 px-1">
+                  {piece.title}
+                </p>
               </Link>
             ))}
           </div>
