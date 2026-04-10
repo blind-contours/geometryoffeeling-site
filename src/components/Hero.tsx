@@ -41,7 +41,9 @@ export default function Hero() {
 
   const current = slides[currentIndex];
   const textClasses =
-    current.textColor === "white" ? "text-white/80" : "text-black/80";
+    current.textColor === "white"
+      ? "text-white drop-shadow-[0_1px_3px_rgba(0,0,0,0.5)]"
+      : "text-black/90 drop-shadow-[0_1px_2px_rgba(255,255,255,0.3)]";
   const dotActive =
     current.textColor === "white" ? "bg-white/80" : "bg-black/60";
   const dotInactive =
@@ -65,7 +67,7 @@ export default function Hero() {
             priority={i === 0}
             style={{ backgroundColor: slide.piece.background }}
           />
-          <div className="absolute inset-0 bg-black/20" />
+          <div className="absolute inset-0 bg-black/25" />
         </div>
       ))}
 
@@ -87,9 +89,9 @@ export default function Hero() {
             href="/shop"
             className={`inline-block mt-8 px-8 py-3 border ${
               current.textColor === "white"
-                ? "border-white/60 text-white/80 hover:bg-white/10"
-                : "border-black/40 text-black/80 hover:bg-black/5"
-            } text-sm uppercase tracking-widest font-medium transition-all duration-500`}
+                ? "border-white/70 text-white hover:bg-white/10 drop-shadow-[0_1px_3px_rgba(0,0,0,0.5)]"
+                : "border-black/50 text-black/90 hover:bg-black/5 drop-shadow-[0_1px_2px_rgba(255,255,255,0.3)]"
+            } text-sm uppercase tracking-widest font-semibold transition-all duration-500`}
           >
             Shop Prints
           </Link>
