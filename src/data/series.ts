@@ -233,6 +233,7 @@ export const series: Series[] = [
     background: "#E8D8D0",
     palette: ["#9A2030", "#C88030", "#D06020", "#B83040", "#C4A040"],
     makingOf: "20 renders. 5 survived.",
+    homePieceIds: ["desire-pursuit", "desire-magnetism", "desire-threshold"],
     pieces: [
       { id: "desire-pursuit", title: "Pursuit", series: "desire", equation: "dx/dt=αx−βxy, dy/dt=δxy−γy", description: "I tried to make them meet. They won't — they circle each other endlessly, always closing the distance, never arriving. The system doesn't allow it. The approach is the point, not the arrival. That ache of almost-touching is where desire actually lives.", emotionalNote: "Endless approach, never arrival", background: "#E8D8D0", imageUrl: "/prints/desire/desire_pursuit.jpg", price: 45 },
       { id: "desire-threshold", title: "Threshold", series: "desire", equation: "y=L/(1+e^(−k(t−t₀)))", description: "There is a moment when wanting stops being quiet. What begins as pressure becomes certainty; what was held back starts to move. I kept looking for that point of no return — the instant feeling becomes action. Built from a logistic threshold, the curve of slow build, sudden turning, and irreversible change.", emotionalNote: "Rising toward a line that can never be crossed", background: "#E8D8D0", imageUrl: "/prints/desire/desire_threshold.jpg", price: 45 },
