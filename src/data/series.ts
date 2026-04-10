@@ -542,12 +542,12 @@ export interface HeroSlide {
 }
 
 export const heroSlides: HeroSlide[] = [
-  { pieceId: "desire-pursuit", textColor: "black" },
-  { pieceId: "growth-branch", textColor: "black" },
-  { pieceId: "pride-shelter", textColor: "black" },
   { pieceId: "grief-void", textColor: "black" },
-  { pieceId: "wonder-apollonian-gasket", textColor: "white" },
-  { pieceId: "humility-plumb", textColor: "white" },
+  { pieceId: "awe-eclipse", textColor: "black" },
+  { pieceId: "comprehending-gravity", textColor: "black" },
+  { pieceId: "peace-horizon", textColor: "black" },
+  { pieceId: "connection-magnetic", textColor: "black" },
+  { pieceId: "belonging-home", textColor: "black" },
 ];
 
 export const featuredSeriesIds = [
