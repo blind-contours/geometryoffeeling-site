@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { PRINT_SIZES } from "@/lib/products";
+import { getAvailableSizes } from "@/lib/products";
 import { createCheckoutSession } from "@/app/actions/checkout";
 
 interface StickyBuyButtonProps {
@@ -13,11 +13,12 @@ export default function StickyBuyButton({
   pieceId,
   title,
 }: StickyBuyButtonProps) {
+  const sizes = getAvailableSizes(pieceId);
   const [visible, setVisible] = useState(false);
-  const [selectedSize, setSelectedSize] = useState(PRINT_SIZES[0].id);
+  const [selectedSize, setSelectedSize] = useState(sizes[0].id);
   const [loading, setLoading] = useState(false);
 
-  const currentSize = PRINT_SIZES.find((s) => s.id === selectedSize)!;
+  const currentSize = sizes.find((s) => s.id === selectedSize)!;
 
   useEffect(() => {
     const handleScroll = () => {
@@ -45,7 +46,7 @@ export default function StickyBuyButton({
         <div className="min-w-0 flex-1">
           <p className="text-caption text-primary truncate">{title}</p>
           <div className="flex gap-1.5 mt-1">
-            {PRINT_SIZES.map((size) => (
+            {sizes.map((size) => (
               <button
                 key={size.id}
                 onClick={() => setSelectedSize(size.id)}

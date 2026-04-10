@@ -12,7 +12,7 @@ import {
   getSeriesBySlug,
   getPiecesBySeries,
 } from "@/data/series";
-import { PRINT_SIZES } from "@/lib/products";
+import { getAvailableSizes } from "@/lib/products";
 import type { Metadata } from "next";
 
 const baseUrl =
@@ -65,8 +65,9 @@ export default function PiecePage({ params }: Props) {
     (p) => p.id !== piece.id
   );
 
-  const lowPrice = (Math.min(...PRINT_SIZES.map((sz) => sz.priceCents)) / 100).toFixed(2);
-  const highPrice = (Math.max(...PRINT_SIZES.map((sz) => sz.priceCents)) / 100).toFixed(2);
+  const pieceSizes = getAvailableSizes(piece.id);
+  const lowPrice = (Math.min(...pieceSizes.map((sz) => sz.priceCents)) / 100).toFixed(2);
+  const highPrice = (Math.max(...pieceSizes.map((sz) => sz.priceCents)) / 100).toFixed(2);
 
   const pieceJsonLd = {
     "@context": "https://schema.org",
@@ -84,7 +85,7 @@ export default function PiecePage({ params }: Props) {
       highPrice,
       priceCurrency: "USD",
       availability: "https://schema.org/InStock",
-      offerCount: PRINT_SIZES.length,
+      offerCount: pieceSizes.length,
     },
     keywords: `minimalist fine art print, abstract wall art, ${s?.emotion ?? ""}, ${piece.title.toLowerCase()}, equation art, mathematical art`,
   };

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { PRINT_SIZES } from "@/lib/products";
+import { getAvailableSizes } from "@/lib/products";
 import { createCheckoutSession } from "@/app/actions/checkout";
 
 interface BuySectionProps {
@@ -9,10 +9,11 @@ interface BuySectionProps {
 }
 
 export default function BuySection({ pieceId }: BuySectionProps) {
-  const [selectedSize, setSelectedSize] = useState(PRINT_SIZES[0].id);
+  const sizes = getAvailableSizes(pieceId);
+  const [selectedSize, setSelectedSize] = useState(sizes[0].id);
   const [loading, setLoading] = useState(false);
 
-  const currentSize = PRINT_SIZES.find((s) => s.id === selectedSize)!;
+  const currentSize = sizes.find((s) => s.id === selectedSize)!;
   const priceDisplay = `$${currentSize.priceCents / 100}`;
 
   async function handleSubmit() {
@@ -34,7 +35,7 @@ export default function BuySection({ pieceId }: BuySectionProps) {
 
       {/* Size selector */}
       <div className="flex gap-2 mb-5">
-        {PRINT_SIZES.map((size) => (
+        {sizes.map((size) => (
           <button
             key={size.id}
             onClick={() => setSelectedSize(size.id)}

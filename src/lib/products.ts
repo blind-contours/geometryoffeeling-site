@@ -28,7 +28,33 @@ export const PRINT_SIZES: PrintSize[] = [
     priceCents: 17500,
     prodigiSku: "GLOBAL-HGE-24X36",
   },
+  {
+    id: "48x32",
+    label: '48" × 32"',
+    dimensions: "48x32",
+    priceCents: 29500,
+    prodigiSku: "GLOBAL-HGE-32X48",
+  },
 ];
+
+const LARGE_FORMAT_PIECE_IDS = new Set([
+  "grief-void",
+  "awe-eclipse",
+  "comprehending-gravity",
+  "peace-horizon",
+  "connection-magnetic",
+  "belonging-nest",
+  "belonging-home",
+  "belonging-warmth",
+  "belonging-held",
+  "peace-field-guardian",
+  "desire-pursuit",
+]);
+
+export function getAvailableSizes(pieceId: string): PrintSize[] {
+  if (LARGE_FORMAT_PIECE_IDS.has(pieceId)) return PRINT_SIZES;
+  return PRINT_SIZES.filter((s) => s.id !== "48x32");
+}
 
 export const SHIPPING_COUNTRIES = [
   "US",
