@@ -144,7 +144,7 @@ export const series: Series[] = [
     background: "#F5F0E6",
     palette: ["#1A4D2E", "#2E8B4A", "#6BBF6E", "#A8D86E", "#E8D878"],
     makingOf: "182 renders. 6 survived.",
-    homePieceIds: ["growth-branch", "growth-strata"],
+    homePieceIds: ["growth-branch", "growth-mycelium", "growth-arise"],
     pieces: [
       { id: "growth-branch", title: "Branch", series: "growth", equation: "A→F[−θA][+θA], 13 levels, θ=35°, r=0.82", description: "One rule, applied again and again: branch left, branch right. Thirteen levels deep, and a canopy emerges — alive, complex, unmistakably a tree. All of it from three characters of code. I watched it build itself and thought: that's how growth works.", emotionalNote: "Three characters of code, infinite complexity", background: "#F5F0E6", imageUrl: "/prints/growth/growth_branch.jpg", price: 45 },
       { id: "growth-strata", title: "Strata", series: "growth", equation: "h(n) = 0.1 + H·(n/N)^1.3, color(n) = palette[(n/N)^0.65]", description: "I struggled with this one. Most generative art about growth follows L-systems or reaction-diffusion — branching corals, fractal ferns. Beautiful, but it renders more as science than feeling. I wanted expansion. Something radiating from a core heat that ripples outward like the earth itself. Not the textbook kind of growth — the kind with real movement in it.", emotionalNote: "Reverberations pushing out from a core", background: "#F5F0E6", imageUrl: "/prints/growth/growth_strata.jpg", price: 45 },
