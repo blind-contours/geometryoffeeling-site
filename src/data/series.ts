@@ -120,6 +120,7 @@ export const series: Series[] = [
     background: "#DDD9D2",
     palette: ["#7A8B9A", "#9A8A9A", "#C8D4E0", "#A0A8B0", "#D0C8D0"],
     makingOf: "83 renders. 5 survived.",
+    homePieceIds: ["grief-void", "grief-absence", "grief-heat-diffusion"],
     pieces: [
       { id: "grief-void", title: "Void", series: "grief", equation: "|x/a|^p + |y/b|^q = 1", description: "Everything bends toward what's no longer there. Lines crowd toward the center of the frame, curving around an emptiness they cannot enter. The absence has weight — it shapes the space around it, pulls everything inward, refuses to be filled.", emotionalNote: "Everything bends toward what's no longer there", background: "#DDD9D2", imageUrl: "/prints/grief/grief_void.jpg", price: 45 },
       { id: "grief-heat-diffusion", title: "Heat Diffusion", series: "grief", equation: "∂u/∂t = α·∂²u/∂x²", description: "Warmth that was sharp and specific — here, in this place, from this person — spreading outward until you can't tell where it started. The edges soften. The source disappears. Eventually the whole field is the same temperature. I kept looking for where the warmth began. It was gone.", emotionalNote: "Warmth that spreads until you can't tell it was ever there", background: "#DDD9D2", imageUrl: "/prints/grief/grief_heat_diffusion.jpg", price: 45 },
