@@ -76,7 +76,7 @@ PW = FIG_W - PAD_L - PAD_R; PH = FIG_H - PAD_T - PAD_B
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 ROOT_DIR = os.path.join(SCRIPT_DIR, '..', '..', '..')
-OUTPUT_DIR = os.path.join(ROOT_DIR, 'output')
+OUTPUT_DIR = os.path.join(ROOT_DIR, 'mathematical_affect', 'output')
 PRINT_DIR = os.path.join(ROOT_DIR, 'public', 'prints', 'peace')
 
 def save(fig, name):

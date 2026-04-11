@@ -119,7 +119,7 @@ def save(fig, name):
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 ROOT_DIR = os.path.join(SCRIPT_DIR, '..', '..', '..')
-OUTPUT_DIR = os.path.join(ROOT_DIR, 'output')
+OUTPUT_DIR = os.path.join(ROOT_DIR, 'mathematical_affect', 'output')
 PRINT_DIR = os.path.join(ROOT_DIR, 'public', 'prints', 'peace')
 
 # ============================================================================
