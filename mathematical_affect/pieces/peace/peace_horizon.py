@@ -104,16 +104,23 @@ def draw_lc(ax, xs, ys, col, lw, alpha, zo=4, smooth=0):
 def save(fig, name):
     fig.subplots_adjust(left=0, right=1, top=1, bottom=0)
     os.makedirs(OUTPUT_DIR, exist_ok=True)
-    # Ensure name ends with .pdf
     if not name.endswith(".pdf"):
         name = name + ".pdf"
-    fig.savefig(os.path.join(OUTPUT_DIR, name),
-                format='pdf', facecolor=BG)
+    pdf_path = os.path.join(OUTPUT_DIR, name)
+    fig.savefig(pdf_path, format='pdf', facecolor=BG)
+    print(f"saved {pdf_path}")
+    os.makedirs(PRINT_DIR, exist_ok=True)
+    jpg_name = name.replace('.pdf', '.jpg')
+    jpg_path = os.path.join(PRINT_DIR, jpg_name)
+    fig.savefig(jpg_path, facecolor=BG, dpi=DPI, format='jpg',
+                pil_kwargs={"quality": 96})
+    print(f"saved {jpg_path}")
     plt.close(fig)
-    print(f"saved {name}")
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
-OUTPUT_DIR = os.path.join(SCRIPT_DIR, '..', '..', 'output')
+ROOT_DIR = os.path.join(SCRIPT_DIR, '..', '..', '..')
+OUTPUT_DIR = os.path.join(ROOT_DIR, 'output')
+PRINT_DIR = os.path.join(ROOT_DIR, 'public', 'prints', 'peace')
 
 # ============================================================================
 # 9. HORIZON — Rothko-style color field bands
@@ -122,19 +129,30 @@ def render():
     fig, ax = make_fig()
     # Horizontal bands of color, soft-edged
     bands = [
-        (0.00, 0.18, CEDAR, 0.43),
-        (0.15, 0.35, EARTH, 0.51),
-        (0.30, 0.48, CLAY, 0.48),
-        (0.45, 0.58, SAND_COL, 0.37),
-        (0.55, 0.68, WARM_GREY, 0.31),
-        (0.65, 0.78, SKY, 0.37),
-        (0.75, 0.88, OCEAN, 0.48),
+        (0.00, 0.15, CEDAR, 0.44),
+        (0.12, 0.31, EARTH, 0.41),
+        (0.27, 0.42, CLAY, 0.48),
+        (0.39, 0.52, SAND_COL, 0.37),
+        (0.50, 0.60, WARM_GREY, 0.31),
+        (0.57, 0.75, SKY, 0.37),
+        (0.70, 0.88, OCEAN, 0.48),
         (0.85, 1.00, DEEP_SAGE, 0.43),
     ]
     t = np.linspace(0, 1, 2000)
     for y_start, y_end, col, alpha_max in bands:
         # Many horizontal lines in this band
-        n_lines = 30
+        if col in (OCEAN,): 
+            n_lines = 40
+        elif col in (SKY,):         
+            n_lines = 37
+        elif col in (WARM_GREY,):
+            n_lines = 26
+        elif col in (CEDAR): 
+            n_lines = 27
+        elif col in (DEEP_SAGE,):
+            n_lines = 32
+        else: 
+            n_lines = 30
         for li in range(n_lines):
             li_frac = li / (n_lines - 1)
             y_pos = PAD_B + PH * (y_start + (y_end - y_start) * li_frac)
