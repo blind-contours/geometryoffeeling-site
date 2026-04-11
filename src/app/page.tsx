@@ -54,12 +54,6 @@ export default function Home() {
 
         <div className="max-w-2xl md:mx-auto space-y-6 mb-12">
           <p className="text-body md:text-[17px] md:leading-relaxed text-secondary md:text-primary/80">
-            How a tree bifurcates as it grows. How stress travels through
-            cracking glass. How heat diffuses until you can&apos;t tell it
-            was ever there. I research real phenomena, find the equation
-            that governs them, and strip it down to its purest visual form.
-          </p>
-          <p className="text-body md:text-[17px] md:leading-relaxed text-secondary md:text-primary/80">
             Each series connects a human emotion to the mathematics that
             shares its shape. Grief follows exponential decay. Connection
             mirrors coupled oscillators. Growth traces branching fractals.
