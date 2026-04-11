@@ -11,7 +11,7 @@ import matplotlib
 import sys as _sys; import os as _os
 _sys.path.insert(0, _os.path.join(_os.path.dirname(_os.path.abspath(__file__)), ".."))
 from signature_utils import add_signature
-#matplotlib.use('Agg')
+matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import matplotlib.collections as mc
 from scipy.ndimage import gaussian_filter1d
@@ -93,7 +93,7 @@ def save(fig, name):
     fig.savefig(jpg_path, facecolor=BG, dpi=DPI, format='jpg',
                 pil_kwargs={"quality": 96})
     print(f'saved {jpg_path}')
-    # plt.close(fig)
+    plt.close(fig)
 
 
 def render():
