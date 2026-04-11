@@ -116,13 +116,15 @@ def render():
         # fairly similarly wavy." Now the upper-mid is calm and
         # only the top ~5 lines carry visible motion.
         # -----------------------------------------------------------
-        energy = frac ** 2.2
+        energy = frac ** 1.1
 
         # FREQUENCY: gentle base, climbs steeply only at top
         mode = 0.4 + energy * 9.0  # 0.4 → ~9.4
 
         # AMPLITUDE: same nonlinear shape
-        amp = PH * (0.008 + energy * 0.030)  # ~0.008 → ~0.038
+        
+        mid_bump = 0.012 * np.exp(-((frac - 0.5)**2) / 0.03)
+        amp = PH * (0.008 + energy * 0.030 + mid_bump)
 
         # Bottom 4 lines settle further into stillness — anchor
         if frac < 0.18:
