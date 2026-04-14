@@ -47,7 +47,6 @@ const heavyEmotions = [
 ];
 const tenseEmotions = [
   "tension",
-  "fractured",
 ];
 const warmEmotions = [
   "connection",

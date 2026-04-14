@@ -38,9 +38,9 @@ export interface Series {
   makingOf: string;
 }
 
-export const series: Series[] = [
-  // ── FRACTURED ───────────────────────────────────────────
-  {
+// Fractured series — hidden from site, data preserved for future use
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const _fracturedSeries: Series = {
     id: "fractured",
     name: "FRACTURED",
     seoDescriptor: "Minimalist Abstract Art Prints About Breaking and Rupture",
@@ -57,8 +57,9 @@ export const series: Series[] = [
       { id: "fractured-erosion", title: "Erosion", series: "fractured", equation: "∂z/∂t = D·∇²z", description: "Time does not break stone. It reshapes it — slowly, patiently, without force. I rendered the same cliff face twenty-eight times, each one softer than the last, sharp edges rounding into curves over geological time. The patience of water against stone.", emotionalNote: "The patience of water against stone", background: "#F5F0E0", imageUrl: "/prints/fractured/fractured_erosion.jpg", price: 45 },
       { id: "fractured-glass-fracture", title: "Glass Fracture", series: "fractured", equation: "K_I = σ√(πa)", description: "A break doesn't happen at random. It follows every weakness that was already there — the invisible fault lines, the places where structure was thinnest. I kept looking at the pattern and realized: cracks don't choose where to go. The material already decided that long before the impact.", emotionalNote: "Every crack follows where the structure was already weakest", background: "#F5F0E0", imageUrl: "/prints/fractured/fractured_glass_fracture.jpg", price: 45 },
     ],
-  },
+};
 
+export const series: Series[] = [
   // ── CONNECTION ──────────────────────────────────────────
   {
     id: "connection",
@@ -254,6 +255,7 @@ export const series: Series[] = [
     background: "#E4E0DC",
     palette: ["#5A5048", "#7A7068", "#9A9088", "#B0A898", "#C8C0B4"],
     makingOf: "59 renders. 5 survived.",
+    homePieceIds: ["surrender-settle", "surrender-melt", "surrender-flow"],
     pieces: [
       { id: "surrender-settle", title: "Settle", series: "surrender", equation: "y(t) = y_eq + (y₀ − y_eq)·e^(−t/τ)·cos(ω_d·t)", description: "Everything finding the same quiet. Twenty-four oscillations releasing their energy symmetrically around a rest point — each swing smaller than the last, the motion softening until stillness arrives. Not forced. Earned.", emotionalNote: "Everything finding the same quiet", background: "#E8E4DE", imageUrl: "/prints/surrender/surrender_settle.jpg", price: 45 },
       { id: "surrender-melt", title: "Melt", series: "surrender", equation: "r(θ,s) = (1−s)·r_sq(θ) + s·r_circ", description: "Letting go of edges without breaking. A rigid square softening into a circle through twenty-two stages — not collapsing, not failing, just releasing the tension of holding a shape it no longer needs. Built from geometric interpolation between angular and circular forms.", emotionalNote: "Letting go of edges without breaking", background: "#E8E4DE", imageUrl: "/prints/surrender/surrender_melt.jpg", price: 45 },
@@ -509,6 +511,7 @@ export const featuredSeriesIds = [
   "comprehending",
   "peace",
   "connection",
+  "surrender",
   "growth",
 ];
 

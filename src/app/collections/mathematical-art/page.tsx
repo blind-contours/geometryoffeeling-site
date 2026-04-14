@@ -30,7 +30,6 @@ const baseUrl =
 const featuredSeriesIds = [
   "awe",
   "connection",
-  "fractured",
   "cycles",
   "growth",
   "tension",

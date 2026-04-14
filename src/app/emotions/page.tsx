@@ -72,7 +72,7 @@ const moodGroups = [
   },
   {
     label: "Holds tension",
-    ids: ["tension", "fractured"],
+    ids: ["tension"],
   },
   {
     label: "Quiet proportion",
