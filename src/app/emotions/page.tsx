@@ -6,6 +6,7 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title:
     "Emotional Art by Theme | Awe, Grief, Peace, Connection, Belonging & More — Geometry of Feeling",
+  alternates: { canonical: "/emotions" },
   description:
     "Explore emotional minimalist art by theme. Browse awe, grief, peace, connection, belonging, desire, growth, and 13 more hand-coded abstract print series — each built from the mathematics of a feeling.",
   keywords: [
@@ -49,6 +50,9 @@ function getLeadTitle(s: (typeof series)[number]): string {
   return s.pieces[0]?.title ?? s.name;
 }
 
+const baseUrl =
+  process.env.NEXT_PUBLIC_URL || "https://geometryoffeeling.com";
+
 const moodGroups = [
   {
     label: "Calmer",
@@ -81,8 +85,29 @@ const moodGroups = [
 ];
 
 export default function EmotionsPage() {
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    name: "Emotional Art by Theme — Geometry of Feeling",
+    description: `Browse ${series.length} series of emotional minimalist art organized by feeling. Each series maps a human emotion onto the mathematical equation that shares its shape.`,
+    mainEntity: {
+      "@type": "ItemList",
+      numberOfItems: series.length,
+      itemListElement: series.map((s, i) => ({
+        "@type": "ListItem",
+        position: i + 1,
+        url: `${baseUrl}/series/${s.id}`,
+        name: `${s.name} — ${s.emotion}`,
+      })),
+    },
+  };
+
   return (
     <div className="pt-28 pb-16">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <div className="max-w-content mx-auto px-6">
         <h1 className="text-2xl md:text-3xl font-mono font-light text-primary mb-4">
           Emotional Art by Theme

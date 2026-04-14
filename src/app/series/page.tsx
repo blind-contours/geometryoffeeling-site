@@ -5,6 +5,7 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title:
     "Art Collections by Emotion | Abstract Mathematical Art Series — Geometry of Feeling",
+  alternates: { canonical: "/series" },
   description:
     "26 series of minimalist fine art prints, each exploring a different emotion through mathematics — grief, awe, connection, desire, solitude, and more. Museum-quality giclée prints from $45.",
   openGraph: {

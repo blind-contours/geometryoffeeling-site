@@ -24,7 +24,7 @@ export const metadata: Metadata = {
   metadataBase: new URL(baseUrl),
   title: defaultTitle,
   description: defaultDescription,
-  alternates: { canonical: baseUrl },
+  alternates: { canonical: "/" },
   keywords: [
     // Aesthetic/decor intent
     "minimalist fine art prints",

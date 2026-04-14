@@ -6,6 +6,7 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title:
     "Emotional Art Prints | Minimalist Art About Grief, Connection, Awe & More — Geometry of Feeling",
+  alternates: { canonical: "/collections/art-about-emotion" },
   description:
     "Emotional art that means something. Minimalist fine art prints exploring grief, connection, awe, desire, solitude, joy, and surrender through mathematics. Art that expresses feelings through the equations that share their shape. Museum-quality prints from $45.",
   keywords: [

@@ -3,6 +3,7 @@ import CustomInquiryForm from "@/components/CustomInquiryForm";
 
 export const metadata: Metadata = {
   title: "Commission a Custom Piece — Geometry of Feeling",
+  alternates: { canonical: "/custom" },
   description:
     "Commission a custom mathematical art print with your choice of colors, parameters, dimensions, or an entirely new composition.",
   openGraph: {

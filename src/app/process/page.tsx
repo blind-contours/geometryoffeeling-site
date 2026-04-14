@@ -4,6 +4,7 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title:
     "Hand-Coded, Not AI-Generated | How Geometry of Feeling Is Made",
+  alternates: { canonical: "/process" },
   description:
     "See how Geometry of Feeling creates minimalist generative art by hand-coding equations in Python. No prompts, no image generators — just mathematics, structure, and feeling.",
   keywords: [

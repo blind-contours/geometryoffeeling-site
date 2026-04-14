@@ -6,6 +6,7 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title:
     "Calm Art for Interiors | Minimalist Prints for Quiet Modern Spaces — Geometry of Feeling",
+  alternates: { canonical: "/collections/calm-art-for-interiors" },
   description:
     "Shop calm minimalist art for interiors from Geometry of Feeling. Hand-coded abstract prints in blue, sage, sand, and warm neutral palettes for quiet modern spaces. Museum-quality giclée on Hahnemühle German Etching 310gsm. From $45 with free shipping.",
   keywords: [

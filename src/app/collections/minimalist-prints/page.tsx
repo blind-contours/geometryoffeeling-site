@@ -6,6 +6,7 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title:
     "Minimalist Fine Art Prints | Calm Abstract Wall Art for Home — Geometry of Feeling",
+  alternates: { canonical: "/collections/minimalist-prints" },
   description:
     "Minimalist fine art prints with emotional depth — calm, meaningful wall art for your living room, bedroom, or office. Each piece expresses a feeling through mathematical equations. Museum-quality giclée on Hahnemühle German Etching 310gsm. From $45 with free shipping.",
   keywords: [

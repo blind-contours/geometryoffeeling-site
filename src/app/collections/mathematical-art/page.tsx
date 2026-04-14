@@ -6,6 +6,7 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title:
     "Mathematical Art Prints | Equation Art & Generative Art — Geometry of Feeling",
+  alternates: { canonical: "/collections/mathematical-art" },
   description:
     "Art prints derived from real mathematical equations — Lorenz attractors, Fourier series, bifurcation diagrams, coupled oscillators, and more. Every piece is code-generated from a specific function. Museum-quality giclée prints from $45.",
   openGraph: {

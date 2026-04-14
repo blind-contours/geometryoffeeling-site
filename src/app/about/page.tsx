@@ -5,6 +5,7 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title:
     "About the Artist — David McCoy, Ph.D. | Geometry of Feeling",
+  alternates: { canonical: "/about" },
   description:
     "David McCoy, Ph.D. — statistician, researcher, and mathematical artist. Creator of Geometry of Feeling: minimalist fine art prints where every piece begins with a human emotion and renders it through the equation that shares its shape.",
   openGraph: {
@@ -20,9 +21,37 @@ export const metadata: Metadata = {
   },
 };
 
+const personJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Person",
+  name: "David McCoy",
+  honorificSuffix: "Ph.D.",
+  jobTitle: "Mathematical Artist",
+  description:
+    "Statistician, researcher, and mathematical artist. Creator of Geometry of Feeling — minimalist fine art prints where every piece begins with a human emotion and renders it through the equation that shares its shape.",
+  url: "https://geometryoffeeling.com/about",
+  image: "https://geometryoffeeling.com/david-mccoy.jpg",
+  sameAs: ["https://instagram.com/geometryoffeeling"],
+  alumniOf: {
+    "@type": "CollegeOrUniversity",
+    name: "University of California, Berkeley",
+  },
+  knowsAbout: [
+    "causal inference",
+    "targeted learning",
+    "mathematical art",
+    "generative art",
+    "biostatistics",
+  ],
+};
+
 export default function AboutPage() {
   return (
     <div className="pt-28 pb-16">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(personJsonLd) }}
+      />
       <div className="max-w-content mx-auto px-6">
           {/* About the Artist */}
           <section className="mb-20 max-w-4xl lg:grid lg:grid-cols-[340px_1fr] lg:gap-14 lg:items-start">

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "License — Geometry of Feeling",
+  alternates: { canonical: "/license" },
   description: "Personal use license terms for Geometry of Feeling fine art prints.",
   openGraph: {
     title: "License — Geometry of Feeling",

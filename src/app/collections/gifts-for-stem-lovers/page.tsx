@@ -6,6 +6,7 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title:
     "Gifts for Math Lovers & Engineers | Unique STEM Art Prints — Geometry of Feeling",
+  alternates: { canonical: "/collections/gifts-for-stem-lovers" },
   description:
     "The perfect gift for math lovers, engineers, physicists, and data scientists. Fine art prints derived from real equations — Lorenz attractors, Fourier series, coupled oscillators. Beautiful enough for anyone, meaningful for those who read the math. From $45.",
   openGraph: {

@@ -3,6 +3,7 @@ import Link from "next/link";
 
 export const metadata: Metadata = {
   title: "Framing Guide — Geometry of Feeling",
+  alternates: { canonical: "/printing" },
   description:
     "How to frame your Geometry of Feeling fine art print. Recommended frames for every size with direct links.",
   openGraph: {
