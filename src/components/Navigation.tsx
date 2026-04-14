@@ -54,6 +54,12 @@ export default function Navigation() {
           >
             About
           </Link>
+          <Link
+            href="/process"
+            className="text-caption uppercase tracking-widest text-secondary hover:text-primary transition-colors duration-500"
+          >
+            Process
+          </Link>
         </div>
 
         {/* Mobile toggle */}
@@ -111,6 +117,13 @@ export default function Navigation() {
               className="py-3 text-caption uppercase tracking-widest text-secondary hover:text-primary"
             >
               About
+            </Link>
+            <Link
+              href="/process"
+              onClick={() => setOpen(false)}
+              className="py-3 text-caption uppercase tracking-widest text-secondary hover:text-primary"
+            >
+              Process
             </Link>
           </div>
         </div>
