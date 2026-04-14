@@ -1,0 +1,54 @@
+# Geometry of Feeling
+
+> Minimalist fine art prints where every piece begins with a human emotion and renders it through the mathematical equation that shares its shape.
+
+## About
+Geometry of Feeling is an art studio by David McCoy. Every piece is hand-coded in Python from real mathematical equations — no AI, no image generators, no prompts. Museum-quality giclée prints on Hahnemühle German Etching 310gsm. Three sizes from $45 with free shipping.
+
+## Key Pages
+- Homepage: https://geometryoffeeling.com/
+- Shop (all prints): https://geometryoffeeling.com/shop
+- Browse by Emotion: https://geometryoffeeling.com/emotions
+- All Series: https://geometryoffeeling.com/series
+- Process (how it's made): https://geometryoffeeling.com/process
+- About the Artist: https://geometryoffeeling.com/about
+- Printing & Paper: https://geometryoffeeling.com/printing
+- Custom Commissions: https://geometryoffeeling.com/custom
+
+## Collections
+- Calm Art for Interiors: https://geometryoffeeling.com/collections/calm-art-for-interiors
+- Art About Emotion: https://geometryoffeeling.com/collections/art-about-emotion
+- Mathematical Art: https://geometryoffeeling.com/collections/mathematical-art
+- Gifts for Thinkers & Life Moments: https://geometryoffeeling.com/collections/gifts-for-stem-lovers
+- Minimalist Prints: https://geometryoffeeling.com/collections/minimalist-prints
+- Art for Wellness & Therapeutic Spaces: https://geometryoffeeling.com/collections/art-for-wellness-spaces
+
+## Series (19 emotional themes)
+- Awe: https://geometryoffeeling.com/series/awe
+- Belonging: https://geometryoffeeling.com/series/belonging
+- Comprehending: https://geometryoffeeling.com/series/comprehending
+- Connection: https://geometryoffeeling.com/series/connection
+- Cycles: https://geometryoffeeling.com/series/cycles
+- Desire: https://geometryoffeeling.com/series/desire
+- Grief: https://geometryoffeeling.com/series/grief
+- Growth: https://geometryoffeeling.com/series/growth
+- Humility: https://geometryoffeeling.com/series/humility
+- Longing: https://geometryoffeeling.com/series/longing
+- Nostalgia: https://geometryoffeeling.com/series/nostalgia
+- Peace: https://geometryoffeeling.com/series/peace
+- Pride: https://geometryoffeeling.com/series/pride
+- Resilience: https://geometryoffeeling.com/series/resilience
+- Solitude: https://geometryoffeeling.com/series/solitude
+- Surrender: https://geometryoffeeling.com/series/surrender
+- Tension: https://geometryoffeeling.com/series/tension
+- Trust: https://geometryoffeeling.com/series/trust
+- Wonder: https://geometryoffeeling.com/series/wonder
+
+## Printing
+All prints are museum-quality giclée on Hahnemühle German Etching 310gsm — a heavyweight, textured cotton rag paper. Sizes: 12×8" ($45), 24×16" ($95), 36×24" ($175). Free shipping on every order. Ships flat in rigid mailers.
+
+## What Makes This Different
+- Every piece is hand-coded in Python — not AI-generated, not prompted, not style-transferred
+- Each series maps a specific emotion onto the mathematical system that behaves like it
+- The equation is not a caption — it is the cause of the image
+- Over 1,200 renders produced; fewer than 170 survived curation

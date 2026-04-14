@@ -18,6 +18,15 @@ export const metadata: Metadata = {
     "neutral art for modern home",
     "serene minimalist prints",
     "calming office art",
+    "japandi wall art",
+    "wabi-sabi art prints",
+    "warm minimalism art",
+    "earth tone abstract art",
+    "neutral abstract wall art",
+    "organic abstract art",
+    "art for therapy office",
+    "art for meditation room",
+    "art for wellness space",
   ],
   openGraph: {
     title:

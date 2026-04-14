@@ -18,6 +18,11 @@ export const metadata: Metadata = {
     "art about belonging",
     "emotional minimalist art",
     "mathematical art by emotion",
+    "art about feelings",
+    "abstract art with meaning",
+    "emotional modern art",
+    "art for grief",
+    "art for healing",
   ],
   openGraph: {
     title:

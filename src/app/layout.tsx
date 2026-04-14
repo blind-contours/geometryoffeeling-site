@@ -51,6 +51,15 @@ export const metadata: Metadata = {
     "art about solitude",
     "calming emotional art",
     "meaningful wall art",
+    // Wellness & aesthetic intent
+    "emotional modern art",
+    "warm minimalist art",
+    "japandi wall art",
+    "earth tone abstract art",
+    "human-made art prints",
+    "art that means something",
+    "art for healing",
+    "contemplative art prints",
     // Brand
     "geometry of feeling",
   ],

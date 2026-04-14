@@ -15,6 +15,12 @@ export const metadata: Metadata = {
     "Python generative art",
     "hand-coded art prints",
     "mathematical art process",
+    "code-generated art",
+    "algorithm art",
+    "human-made art prints",
+    "not AI generated art prints",
+    "artist-made wall art",
+    "original art not mass produced",
   ],
   openGraph: {
     title:
@@ -126,7 +132,7 @@ export default function ProcessPage() {
           {/* What hand-coded means */}
           <section className="mb-16">
             <h2 className="text-headline uppercase tracking-widest text-primary mb-6">
-              What Hand-Coded Means Here
+              What Does Hand-Coded Art Mean?
             </h2>
             <p className="text-body text-secondary mb-4">
               For me, hand-coded means the image is built from rules I choose and
@@ -184,7 +190,7 @@ export default function ProcessPage() {
           {/* How a piece gets made */}
           <section className="mb-16">
             <h2 className="text-headline uppercase tracking-widest text-primary mb-6">
-              How a Piece Gets Made
+              How Is Each Piece Made?
             </h2>
             <div className="space-y-6">
               <div>
@@ -374,7 +380,7 @@ export default function ProcessPage() {
           {/* What this is not saying */}
           <section className="mb-16">
             <h2 className="text-headline uppercase tracking-widest text-primary mb-6">
-              What This Page Is Not Saying
+              Is This AI-Generated Art?
             </h2>
             <p className="text-body text-secondary">
               This is not a claim that one way of making images is morally pure and

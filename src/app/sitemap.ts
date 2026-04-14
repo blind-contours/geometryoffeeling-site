@@ -25,6 +25,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "gifts-for-stem-lovers",
     "art-about-emotion",
     "calm-art-for-interiors",
+    "art-for-wellness-spaces",
   ].map((slug) => ({
     url: `${baseUrl}/collections/${slug}`,
     changeFrequency: "weekly" as const,

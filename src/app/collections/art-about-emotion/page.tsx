@@ -20,6 +20,14 @@ export const metadata: Metadata = {
     "abstract art about emotion",
     "art about solitude",
     "art about awe",
+    "art for grief",
+    "art for healing",
+    "art about loss",
+    "contemplative art",
+    "meditative art prints",
+    "abstract art with meaning",
+    "art that means something",
+    "emotional modern art",
   ],
   openGraph: {
     title:
