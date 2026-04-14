@@ -24,6 +24,7 @@ export const metadata: Metadata = {
   metadataBase: new URL(baseUrl),
   title: defaultTitle,
   description: defaultDescription,
+  alternates: { canonical: baseUrl },
   keywords: [
     // Aesthetic/decor intent
     "minimalist fine art prints",
@@ -76,6 +77,8 @@ const organizationJsonLd = {
   description:
     "Geometry of Feeling creates minimalist fine art prints derived from mathematical equations. Each museum-quality giclée print begins with a human emotion — grief, connection, awe, desire — and renders it through the mathematical function that shares its shape. Printed on Hahnemühle German Etching 310gsm. Equation-based generative art for collectors, homes, and offices.",
   brand: { "@type": "Brand", name: "Geometry of Feeling" },
+  sameAs: ["https://instagram.com/geometryoffeeling"],
+  founder: { "@type": "Person", name: "David McCoy" },
 };
 
 const websiteJsonLd = {

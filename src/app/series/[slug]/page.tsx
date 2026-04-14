@@ -32,6 +32,7 @@ export function generateMetadata({ params }: Props): Metadata {
   return {
     title,
     description,
+    alternates: { canonical: `${baseUrl}/series/${s.id}` },
     openGraph: {
       title,
       description,
@@ -71,6 +72,19 @@ export default function SeriesPage({ params }: Props) {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(collectionJsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "BreadcrumbList",
+            itemListElement: [
+              { "@type": "ListItem", position: 1, name: "Home", item: baseUrl },
+              { "@type": "ListItem", position: 2, name: s.name, item: `${baseUrl}/series/${s.id}` },
+            ],
+          }),
+        }}
       />
       <div className="max-w-content mx-auto px-6">
         {/* Series header */}

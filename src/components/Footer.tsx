@@ -77,6 +77,14 @@ export default function Footer() {
               >
                 Help
               </Link>
+              <a
+                href="https://instagram.com/geometryoffeeling"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-body text-secondary hover:text-primary transition-colors duration-500"
+              >
+                Instagram
+              </a>
             </div>
           </div>
 

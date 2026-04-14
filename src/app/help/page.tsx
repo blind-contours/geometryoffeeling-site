@@ -15,9 +15,60 @@ export const metadata: Metadata = {
   },
 };
 
+const faqJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: [
+    {
+      "@type": "Question",
+      name: "How long does shipping take?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "Free worldwide shipping on every order, with delivery in 5-10 business days. Prints are produced and shipped from the facility nearest to you via Prodigi's global network. Tracking is provided via email once your order ships.",
+      },
+    },
+    {
+      "@type": "Question",
+      name: "What paper are the prints on?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "All prints use Hahnemühle German Etching 310gsm — a museum-grade, warm white, velvety matte paper. Printed with archival pigment inks (giclée) by a Fine Art Trade Guild approved printer. Prints feel richer and more tactile in person than on screen.",
+      },
+    },
+    {
+      "@type": "Question",
+      name: "What sizes are available?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "Four sizes are available: 12×8\" ($45), 24×16\" ($95), 36×24\" ($175), and 48×32\" ($295). The 48×32\" size is available on select pieces. All prints are landscape orientation.",
+      },
+    },
+    {
+      "@type": "Question",
+      name: "What if my print arrives damaged?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "Email hello@geometryoffeeling.com with a photo of the damage. We offer free reprinting and free reshipping for any quality issue — no questions asked. Please notify within 14 days of delivery.",
+      },
+    },
+    {
+      "@type": "Question",
+      name: "How should I care for my print?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "Handle prints by the edges to avoid fingerprints. For UV protection, use frames with acrylic or UV glass in sunlit rooms. Store flat in a cool, dry place if not immediately framing. See our framing guide for recommended frames at every size.",
+      },
+    },
+  ],
+};
+
 export default function HelpPage() {
   return (
     <div className="pt-28 pb-16">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
+      />
       <div className="max-w-content mx-auto px-6">
         <div className="max-w-2xl">
           <h1 className="text-2xl font-mono font-light text-primary mb-4">

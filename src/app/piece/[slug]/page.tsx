@@ -41,6 +41,7 @@ export function generateMetadata({ params }: Props): Metadata {
   return {
     title,
     description,
+    alternates: { canonical: `${baseUrl}/piece/${piece.id}` },
     openGraph: {
       title,
       description,
@@ -95,6 +96,20 @@ export default function PiecePage({ params }: Props) {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(pieceJsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "BreadcrumbList",
+            itemListElement: [
+              { "@type": "ListItem", position: 1, name: "Home", item: baseUrl },
+              { "@type": "ListItem", position: 2, name: seriesName, item: `${baseUrl}/series/${piece.series}` },
+              { "@type": "ListItem", position: 3, name: piece.title, item: `${baseUrl}/piece/${piece.id}` },
+            ],
+          }),
+        }}
       />
       {/* Full-width image with lightbox */}
       <div
