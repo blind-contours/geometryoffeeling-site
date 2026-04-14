@@ -15,6 +15,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${baseUrl}/license`, changeFrequency: "monthly", priority: 0.3, lastModified: lastmod },
     { url: `${baseUrl}/custom`, changeFrequency: "monthly", priority: 0.6, lastModified: lastmod },
     { url: `${baseUrl}/help`, changeFrequency: "monthly", priority: 0.5, lastModified: lastmod },
+    { url: `${baseUrl}/process`, changeFrequency: "monthly", priority: 0.7, lastModified: lastmod },
+    { url: `${baseUrl}/emotions`, changeFrequency: "weekly", priority: 0.8, lastModified: lastmod },
   ];
 
   const collectionPages: MetadataRoute.Sitemap = [
@@ -22,6 +24,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "mathematical-art",
     "gifts-for-stem-lovers",
     "art-about-emotion",
+    "calm-art-for-interiors",
   ].map((slug) => ({
     url: `${baseUrl}/collections/${slug}`,
     changeFrequency: "weekly" as const,
