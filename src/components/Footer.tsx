@@ -31,7 +31,7 @@ export default function Footer() {
   return (
     <footer className="border-t border-border bg-surface mt-24">
       <div className="max-w-content mx-auto px-6 py-16">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-12">
           <div>
             <p className="text-caption uppercase tracking-widest text-primary mb-4">
               geometryoffeeling.com
@@ -91,6 +91,50 @@ export default function Footer() {
               >
                 Instagram
               </a>
+            </div>
+          </div>
+
+          <div>
+            <p className="text-caption uppercase tracking-widest text-primary mb-4">
+              Collections
+            </p>
+            <div className="flex flex-col gap-2">
+              <Link
+                href="/collections/calm-art-for-interiors"
+                className="text-body text-secondary hover:text-primary transition-colors duration-500"
+              >
+                Calm Art for Interiors
+              </Link>
+              <Link
+                href="/collections/art-for-wellness-spaces"
+                className="text-body text-secondary hover:text-primary transition-colors duration-500"
+              >
+                Wellness Spaces
+              </Link>
+              <Link
+                href="/collections/art-about-emotion"
+                className="text-body text-secondary hover:text-primary transition-colors duration-500"
+              >
+                Art About Emotion
+              </Link>
+              <Link
+                href="/collections/mathematical-art"
+                className="text-body text-secondary hover:text-primary transition-colors duration-500"
+              >
+                Mathematical Art
+              </Link>
+              <Link
+                href="/collections/gifts-for-stem-lovers"
+                className="text-body text-secondary hover:text-primary transition-colors duration-500"
+              >
+                Gifts & Life Moments
+              </Link>
+              <Link
+                href="/collections/minimalist-prints"
+                className="text-body text-secondary hover:text-primary transition-colors duration-500"
+              >
+                Minimalist Prints
+              </Link>
             </div>
           </div>
 

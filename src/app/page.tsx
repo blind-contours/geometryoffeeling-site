@@ -100,6 +100,83 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Browse by collection */}
+      <section className="max-w-content mx-auto px-6 pb-24">
+        <h2 className="text-headline-lg uppercase tracking-widest text-primary mb-8">
+          Browse by Collection
+        </h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-x-8 gap-y-4">
+          <Link
+            href="/collections/calm-art-for-interiors"
+            className="group"
+          >
+            <p className="text-body text-primary group-hover:opacity-70 transition-opacity duration-500">
+              Calm Art for Interiors
+            </p>
+            <p className="text-caption text-muted">
+              Quiet palettes for living rooms, bedrooms, and offices
+            </p>
+          </Link>
+          <Link
+            href="/collections/art-for-wellness-spaces"
+            className="group"
+          >
+            <p className="text-body text-primary group-hover:opacity-70 transition-opacity duration-500">
+              Art for Wellness Spaces
+            </p>
+            <p className="text-caption text-muted">
+              Therapy offices, yoga studios, meditation rooms
+            </p>
+          </Link>
+          <Link
+            href="/collections/art-about-emotion"
+            className="group"
+          >
+            <p className="text-body text-primary group-hover:opacity-70 transition-opacity duration-500">
+              Art About Emotion
+            </p>
+            <p className="text-caption text-muted">
+              Every series organized by the feeling it holds
+            </p>
+          </Link>
+          <Link
+            href="/collections/mathematical-art"
+            className="group"
+          >
+            <p className="text-body text-primary group-hover:opacity-70 transition-opacity duration-500">
+              Mathematical Art
+            </p>
+            <p className="text-caption text-muted">
+              Lorenz attractors, Fourier series, bifurcation diagrams
+            </p>
+          </Link>
+          <Link
+            href="/collections/gifts-for-stem-lovers"
+            className="group"
+          >
+            <p className="text-body text-primary group-hover:opacity-70 transition-opacity duration-500">
+              Gifts for Thinkers & Life Moments
+            </p>
+            <p className="text-caption text-muted">
+              PhD graduations, new homes, sympathy, and milestones
+            </p>
+          </Link>
+          <Link
+            href="/collections/minimalist-prints"
+            className="group"
+          >
+            <p className="text-body text-primary group-hover:opacity-70 transition-opacity duration-500">
+              Minimalist Prints
+            </p>
+            <p className="text-caption text-muted">
+              The quietest, most restrained pieces across all series
+            </p>
+          </Link>
+        </div>
+      </section>
+
+      <hr className="border-border max-w-gallery mx-auto" />
+
       {/* Custom prints callout */}
       <section className="max-w-content mx-auto px-6 pb-24">
         <div className="border border-border p-8 md:p-12 text-center">
