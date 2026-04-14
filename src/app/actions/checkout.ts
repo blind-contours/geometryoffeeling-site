@@ -30,6 +30,7 @@ export async function createCheckoutSession(pieceId: string, sizeId: string) {
         quantity: 1,
       },
     ],
+    allow_promotion_codes: true,
     shipping_address_collection: {
       allowed_countries:
         SHIPPING_COUNTRIES as Stripe.Checkout.SessionCreateParams.ShippingAddressCollection.AllowedCountry[],
