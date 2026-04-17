@@ -144,7 +144,10 @@ def render():
     n_curves = 30
     # Overshoot both edges so lines are clipped by the frame, not ending at it
     t = np.linspace(-0.04, 1.04, 1800)
-    flow_y = cy + PH * 0.06 * np.sin(2 * np.pi * t * 0.7)
+    # Gentle upward lift peaking ~65-70% across, then curves down to exit
+    flow_y = (cy
+              + PH * 0.06 * np.sin(2 * np.pi * t * 0.7)
+              + PH * 0.08 * np.exp(-((t - 0.67) / 0.18) ** 2))  # Gaussian bump at ~67%
     TARGET = WARM       # the color everything surrenders into
     COMMON_LW = 1.4     # the width everything surrenders into
 
@@ -159,7 +162,7 @@ def render():
 
         # Selective spread: outer strands pushed further, center cluster stays present
         spread_frac = frac + 0.08 * np.sin(np.pi * frac) * (2 * abs(frac - 0.5))
-        spread_frac = np.clip(spread_frac, 0.03, 0.97)
+        spread_frac = np.clip(spread_frac, 0.03, 0.88)
         y_start = PAD_B + PH * (0.02 + spread_frac * 0.96)
 
         merge_rate = 1.4 + np.random.uniform(0, 1.4)
@@ -167,25 +170,31 @@ def render():
         # Outer strands: both top and bottom join faster so they curve toward center
         edge_dist = abs(frac - 0.5) * 2
         if edge_dist > 0.85:
-            merge_rate *= 2.8   # very outermost — pull in hard
+            merge_rate *= 3.5   # very outermost — pull in hard
         elif edge_dist > 0.6:
             merge_rate *= 1.7
 
         # Late surrenderers: slightly slower spatial convergence
         if i in late:
-            merge_rate *= 0.72
+            merge_rate *= 0.84
 
         blend = 1 - np.exp(-merge_rate * t)
         noise = np.cumsum(np.random.randn(len(t)) * PH * 0.003 * (1 - blend))
         noise = gaussian_filter1d(noise, 15)
         ys_f = y_start * (1 - blend) + flow_y * blend + noise
 
+        # Closing funnel: soft proportional pull toward flow_y on the right
+        # No hard clamp — just gently reduces deviation so outliers drift in
+        funnel_t = np.clip((t - 0.65) / 0.35, 0, 1) ** 3   # very gentle ease-in from 65%
+        deviation = ys_f - flow_y
+        ys_f = flow_y + deviation * (1 - funnel_t * 0.25)
+
         mask = (ys_f > PAD_B) & (ys_f < PAD_B + PH)
         if mask.sum() < 3: continue
 
         cols = [DARK, MED_DARK, SOFT, RUST, CLAY, BLUE_GR, WARM, LAVENDER, MIST]
         col = cols[i % len(cols)]
-        alpha = 0.22 + 0.70 * (1 - abs(frac - 0.5) * 1.2)
+        alpha = 0.38 + 0.58 * (1 - abs(frac - 0.5) * 1.2)
 
         # Width hierarchy — two forms carry more weight, integrated into the tonal field
         if i == 9:
