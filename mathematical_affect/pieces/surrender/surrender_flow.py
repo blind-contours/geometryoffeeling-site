@@ -1,21 +1,24 @@
 """
-Geometry of Feeling — Surrender: Surrender Flow
-Standalone render script
-"""
+Geometry of Feeling:
+Standalone render script (revision 3)
 
-"""
-Geometry of Feeling -- Surrender v2 (20 candidates)
+REAL DIAGNOSIS (finally):
+The lines DO reach the right margin mathematically � they just stop feeling
+alive. By ~70% across: width has collapsed to a uniform COMMON_LW, color has
+blended fully to WARM (which is close to the BG cream), and flow_y has very
+little amplitude. So the eye reads the right third as "empty" even though
+lines are technically there.
 
-Surrender is letting go — not defeat but completion.
-The moment a system stops resisting and allows the natural process to finish.
+Fix: keep the lines feeling active all the way to the right crop. They should
+be calmer on the right than the left, but still CARRYING tone, width variation,
+and some gentle motion.
 
-User feedback on v1: All too light. Dissolution needs to be bigger.
-Settle needs centering. Melt bigger. Shed too boring.
-
-Direction: More contrast while maintaining softness. Elements bigger on canvas.
-Darker starting states that dissolve to light.
-
-Dependencies: matplotlib, numpy, scipy
+Changes from rev 2:
+  1. flow_y gets a secondary slower wave so there's still motion at right edge
+  2. Width blend capped � lines don't fully collapse to COMMON_LW
+  3. Color blend capped at 0.65 � lines keep substantial tonal identity
+  4. Alpha baseline raised further so right side has real presence
+  5. Removed the width convergence � retain hierarchy all the way across
 """
 
 import numpy as np
@@ -23,16 +26,15 @@ import matplotlib
 import sys as _sys; import os as _os
 _sys.path.insert(0, _os.path.join(_os.path.dirname(_os.path.abspath(__file__)), ".."))
 from signature_utils import add_signature
-matplotlib.use('Agg')
+#matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import matplotlib.collections as mc
 from scipy.ndimage import gaussian_filter1d
 import os, glob
 
 DPI = 300; FIG_W = 12; FIG_H = 8
-BG = "#E8E4DE"  # slightly darker warm cream for more contrast
+BG = "#E8E4DE"
 
-# Deeper palette -- more visible than v1
 DARK     = "#5A5048"
 MED_DARK = "#7A7068"
 SOFT     = "#9A9088"
@@ -56,13 +58,19 @@ def make_fig():
     fig = plt.figure(figsize=(FIG_W, FIG_H), dpi=DPI)
     ax = fig.add_subplot(111)
     fig.patch.set_facecolor(BG); ax.set_facecolor(BG)
+    # Remove default axes padding � otherwise matplotlib shrinks the drawable
+    # area by ~10% on each side and margins render incorrectly.
+    fig.subplots_adjust(left=0, right=1, top=1, bottom=0)
     ax.set_xlim(0, FIG_W); ax.set_ylim(0, FIG_H)
     ax.set_aspect('equal'); ax.axis('off')
     return fig, ax
 
-PAD_L = 0.72; PAD_R = 0.60; PAD_T = 0.65; PAD_B = 0.88
-PW = FIG_W - PAD_L - PAD_R; PH = FIG_H - PAD_T - PAD_B
-cx = PAD_L + PW / 2; cy = PAD_B + PH / 2
+MARGIN = 0.7
+PAD_L = PAD_R = PAD_T = PAD_B = MARGIN
+PW = FIG_W - PAD_L - PAD_R
+PH = FIG_H - PAD_T - PAD_B
+cx = PAD_L + PW / 2
+cy = PAD_B + PH / 2
 
 def split_segments(xs, ys, mask):
     segments = []
@@ -84,80 +92,147 @@ def draw_lc(ax, xs, ys, col, lw, alpha, zo=4, smooth=0):
     pts = np.array([xs, ys]).T.reshape(-1, 1, 2)
     segs = np.concatenate([pts[:-1], pts[1:]], axis=1)
     lc = mc.LineCollection(segs, linewidths=lw, colors=[rgba(col, alpha)],
-                           capstyle='round', joinstyle='round', zorder=zo)
+                           capstyle='butt', joinstyle='round', zorder=zo)
     ax.add_collection(lc)
 
-def draw_lc_gradient(ax, xs, ys, col, lw_s, lw_e, a_s, a_e, zo=4, smooth=0):
+def brush_jitter(lw_arr, strength=0.18, grain=25):
+    n = len(lw_arr) if hasattr(lw_arr, '__len__') else 1
+    if n <= 1:
+        return lw_arr
+    noise = np.random.randn(n)
+    noise = gaussian_filter1d(noise, grain)
+    noise = noise / (np.abs(noise).max() + 1e-9) * strength
+    return np.clip(lw_arr * (1 + noise), 0.15, None)
+
+def draw_lc_color_blend(ax, xs, ys, col_start, col_end, blend_arr, lw, alpha,
+                         zo=4, smooth=0, brush=True):
     if smooth > 0:
         ys = gaussian_filter1d(ys, smooth)
     pts = np.array([xs, ys]).T.reshape(-1, 1, 2)
     segs = np.concatenate([pts[:-1], pts[1:]], axis=1)
     n = len(segs)
-    alphas = np.linspace(a_s, a_e, n)
-    lws = np.linspace(lw_s, lw_e, n)
-    colors = [rgba(col, float(a)) for a in alphas]
-    lc = mc.LineCollection(segs, linewidths=lws, colors=colors,
-                           capstyle='round', joinstyle='round', zorder=zo)
-    ax.add_collection(lc)
-
-def draw_lc_gradient_xy(ax, xs, ys, col, lw_s, lw_e, a_s, a_e, zo=4, smooth=0):
-    """Gradient that also smooths xs."""
-    if smooth > 0:
-        xs = gaussian_filter1d(xs, smooth)
-        ys = gaussian_filter1d(ys, smooth)
-    pts = np.array([xs, ys]).T.reshape(-1, 1, 2)
-    segs = np.concatenate([pts[:-1], pts[1:]], axis=1)
-    n = len(segs)
-    alphas = np.linspace(a_s, a_e, n)
-    lws = np.linspace(lw_s, lw_e, n)
-    colors = [rgba(col, float(a)) for a in alphas]
-    lc = mc.LineCollection(segs, linewidths=lws, colors=colors,
-                           capstyle='round', joinstyle='round', zorder=zo)
+    lw_arr = np.full(n, lw) if np.isscalar(lw) else np.asarray(lw[:n], dtype=float)
+    if brush and n > 1:
+        lw_arr = brush_jitter(lw_arr)
+    r1, g1, b1 = hex_to_rgb(col_start)
+    r2, g2, b2 = hex_to_rgb(col_end)
+    scalar_alpha = np.isscalar(alpha)
+    colors = []
+    for j in range(n):
+        b = float(np.clip(blend_arr[j], 0, 1))
+        a = float(np.clip(alpha, 0, 1)) if scalar_alpha else float(np.clip(alpha[j], 0, 1))
+        colors.append((r1 + (r2 - r1) * b, g1 + (g2 - g1) * b,
+                        b1 + (b2 - b1) * b, a))
+    lc = mc.LineCollection(segs, linewidths=lw_arr, colors=colors,
+                           capstyle='butt', joinstyle='round', zorder=zo)
     ax.add_collection(lc)
 
 def save(fig, name):
     fig.subplots_adjust(left=0, right=1, top=1, bottom=0)
     os.makedirs(OUTPUT_DIR, exist_ok=True)
-    # Ensure name ends with .pdf
     if not name.endswith(".pdf"):
         name = name + ".pdf"
-    fig.savefig(os.path.join(OUTPUT_DIR, name),
-                format='pdf', facecolor=BG)
-    plt.close(fig)
+    fig.savefig(os.path.join(OUTPUT_DIR, name), format='pdf', facecolor=BG)
     print(f"saved {name}")
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 OUTPUT_DIR = os.path.join(SCRIPT_DIR, '..', '..', 'output')
 
-# =============================================================================
-# 4. FLOW (improved — more visible, stronger convergence)
-# =============================================================================
 def render():
     fig, ax = make_fig()
     np.random.seed(33)
     n_curves = 30
-    t = np.linspace(0, 1, 1500)
+    # Overshoot both edges so lines are clipped by the frame, not ending at it
+    t = np.linspace(-0.04, 1.04, 1800)
     flow_y = cy + PH * 0.06 * np.sin(2 * np.pi * t * 0.7)
+    TARGET = WARM       # the color everything surrenders into
+    COMMON_LW = 1.4     # the width everything surrenders into
+
+    # Hierarchy: two slightly more present voices, not a featured cast
+    dominant = {9, 20}
+    late     = {11, 22}     # delayed surrender — trace of independence
+    linger   = {25}         # one upper strand holds individuality a beat longer
+
     for i in range(n_curves):
         frac = i / (n_curves - 1)
         xs_f = PAD_L + PW * t
-        y_start = PAD_B + PH * (0.05 + frac * 0.90)
-        merge_rate = 2.5 + np.random.uniform(0, 2.5)
+
+        # Selective spread: outer strands pushed further, center cluster stays present
+        spread_frac = frac + 0.08 * np.sin(np.pi * frac) * (2 * abs(frac - 0.5))
+        spread_frac = np.clip(spread_frac, 0.03, 0.97)
+        y_start = PAD_B + PH * (0.02 + spread_frac * 0.96)
+
+        merge_rate = 1.4 + np.random.uniform(0, 1.4)
+
+        # Outer strands: both top and bottom join faster so they curve toward center
+        edge_dist = abs(frac - 0.5) * 2
+        if edge_dist > 0.85:
+            merge_rate *= 2.8   # very outermost — pull in hard
+        elif edge_dist > 0.6:
+            merge_rate *= 1.7
+
+        # Late surrenderers: slightly slower spatial convergence
+        if i in late:
+            merge_rate *= 0.72
+
         blend = 1 - np.exp(-merge_rate * t)
         noise = np.cumsum(np.random.randn(len(t)) * PH * 0.003 * (1 - blend))
         noise = gaussian_filter1d(noise, 15)
         ys_f = y_start * (1 - blend) + flow_y * blend + noise
+
         mask = (ys_f > PAD_B) & (ys_f < PAD_B + PH)
         if mask.sum() < 3: continue
+
         cols = [DARK, MED_DARK, SOFT, RUST, CLAY, BLUE_GR, WARM, LAVENDER, MIST]
         col = cols[i % len(cols)]
         alpha = 0.22 + 0.70 * (1 - abs(frac - 0.5) * 1.2)
-        lw = 0.7 + 1.4 * (1 - abs(frac - 0.5))
+
+        # Width hierarchy — two forms carry more weight, integrated into the tonal field
+        if i == 9:
+            lw_start = 2.5 + np.random.uniform(0, 0.7)
+            alpha = min(alpha * 1.12, 0.85)
+        elif i in dominant:
+            lw_start = 3.0 + np.random.uniform(0, 1.0)
+            alpha = min(alpha * 1.15, 0.88)
+        else:
+            lw_start = 0.7 + 1.4 * (1 - abs(frac - 0.5))
+
         for seg_xs, seg_ys in split_segments(xs_f, ys_f, mask):
-            draw_lc(ax, seg_xs, seg_ys, col, lw=lw, alpha=alpha, zo=3, smooth=5)
-    draw_lc(ax, PAD_L + PW * t, flow_y, DARK, lw=2.1, alpha=0.42, zo=2, smooth=5)
+            seg_t = (seg_xs - PAD_L) / PW
+
+            # Color blend timing — still surrendering as lines hit the crop
+            if i in late:
+                color_t = np.clip((seg_t - 0.50) / 0.50, 0, 1)
+            elif i in linger:
+                color_t = np.clip((seg_t - 0.46) / 0.56, 0, 1)
+            else:
+                color_t = np.clip((seg_t - 0.38) / 0.52, 0, 1)
+            seg_blend = color_t ** 2  # ease-in for smooth transition
+
+            # Width blend — all lines converge to COMMON_LW
+            seg_lw = lw_start + (COMMON_LW - lw_start) * seg_blend
+
+            # Middle-left depth: Gaussian opacity boost centered ~35% across canvas
+            depth_boost = np.exp(-((seg_t - 0.35) / 0.15) ** 2) * 0.10
+            seg_alpha = np.clip(alpha + depth_boost, 0, 1)
+
+            # Glow — subliminal radiance, strongest in the middle zones
+            # Reads as stained air, not an outline aura
+            glow_envelope = np.exp(-((seg_t - 0.45) / 0.30) ** 2)  # peaks ~45%, fades at edges
+            for glow_mult, glow_base_alpha in [(8.0, 0.03), (4.5, 0.06)]:
+                glow_lw = seg_lw * glow_mult
+                glow_alpha = np.clip(seg_alpha * glow_base_alpha * glow_envelope, 0, 1)
+                draw_lc_color_blend(ax, seg_xs, seg_ys, col, TARGET, seg_blend,
+                                    lw=glow_lw, alpha=glow_alpha, zo=2, smooth=5,
+                                    brush=False)
+            # Core line on top
+            draw_lc_color_blend(ax, seg_xs, seg_ys, col, TARGET, seg_blend,
+                                lw=seg_lw, alpha=seg_alpha, zo=3, smooth=5)
+
+    #draw_lc(ax, PAD_L + PW * t, flow_y, TARGET, lw=2.1, alpha=0.42, zo=2, smooth=5)
     add_signature(fig, ax, BG)
     save(fig, "surrender_flow")
+    plt.show()
 
 if __name__ == '__main__':
     render()
